@@ -13,7 +13,7 @@ Verify:
 
 ## Step 2: API Testing
 ```
-BASE=https://learner-orchestrator.preview.emergentagent.com
+BASE=https://repo-validator-15.preview.emergentagent.com
 
 # Register
 curl -c cookies.txt -X POST $BASE/api/auth/register \
