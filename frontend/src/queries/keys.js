@@ -39,6 +39,10 @@ export const qk = {
   // `useDashboard()` for the general case.
   missionToday: (userId) => [USER, userId ?? 'anon', 'dashboard', 'today'],
 
+  // Phase 3D — canonical Mission Context projection (/missions/today/context).
+  // Fetched ONCE and shared by every page through MissionContextProvider.
+  missionContext: (userId) => [USER, userId ?? 'anon', 'mission', 'today', 'context'],
+
   // Weekly-activity roll-up (RC1.3 endpoint).
   weeklyActivity: (userId) => [USER, userId ?? 'anon', 'dashboard', 'weekly-activity'],
 

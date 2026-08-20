@@ -109,6 +109,38 @@ original_prd_step1: "PrepOS Phase 4 · Step 1 — Adaptive Planning Foundation.
 original_prd: "PrepOS RC1.3.4 – Knowledge Experience & Learning Workspace. Extend the existing Knowledge Base into a full learning workspace with seven lenses (All Topics, Continue Learning, Bookmarks, Favorites, Weak Topics, Revision Due, Recently Viewed). All lenses derive from data already exposed by `/api/roadmap`, `/api/roadmap/summary` and `/api/revisions/queue` — no new endpoint, no new Mongo collection, no schema change. Bookmark/Favorite toggles reuse the existing RC1.3.2B mutation hooks (`useToggleBookmark`, `useToggleFavorite`) so a single toggle updates deep node, tree, workspace list, and Mission Control together. Recently-viewed tracking is a user-scoped localStorage list (`prepos:recently-viewed:v1:<userId>`) recorded when DeepTopicPage loads a node — cross-user isolation matches RC1.3.3 React Query key scheme. `useProgressTree` is now a thin backwards-compat shim over `useRoadmapTree`, removing a hidden global-cache leak. Stat strip reuses `useRoadmapSummary` — no extra API call. Search + filters remain client-side and stack on top of the active view. Weak-topic filter reuses the same signals the adaptive planner already uses (confidence, weakness_score, revision_due) — no new algorithm."
 
 backend:
+  - task: "Phase 3D Slice A — Mission Context projection endpoint (GET /api/missions/today/context) + canonical activity->CTA mapping"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/routes_missions.py, /app/backend/services/mission_context.py, /app/backend/tests/test_mission_context_cta.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: |
+          PHASE 3D Slice A (frontend integration layer, backend part). PURE
+          pytest only (server cannot boot here — no .env). Additive, read-only.
+          - Added GET /api/missions/today/context: a pure PROJECTION of the
+            frozen MissionContext (build_mission_context) for each of today's
+            tasks + the canonical activity->CTA map. NO planner/scoring/filter/
+            rank/inference. Existing endpoints untouched.
+          - Added cta_for_activity() to services/mission_context.py (static
+            presentation map: study->KB, coding->Arena, quiz/behavioral/design/
+            system_design->Assessment, flashcards->Flashcards).
+          - Verified by direct pytest: test_mission_context_cta.py (5) +
+            test_mission_context.py + selector/migration/prompts suites = 27
+            passed; python lint clean. Endpoint HTTP path is unit-covered at the
+            logic level; live integration is user-run (no server in this env).
+          FRONTEND (Slice A, delivered, user will live-test):
+            src/contexts/MissionContextProvider.jsx (fetch-once shared provider +
+            useMissionContext), mounted in App.js; src/services/mission.service.js
+            (getTodayContext), src/queries/keys.js (missionContext key);
+            MissionControl.jsx now renders exactly ONE primary CTA per task from
+            Mission Context (removed the dual Open-Arena+Open-KB buttons), coding
+            empty-state, mentor auxiliary preserved. ESLint clean.
+
   - task: "Phase 3C.1 — Foundation Stabilization Freeze (MissionContext + canonical ProblemSelector + activity_type migration + Arena/Assessment dedup + no random fallbacks + provider-agnostic prompt scaffold)"
     implemented: true
     working: "NA"

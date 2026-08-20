@@ -34,7 +34,7 @@ from leetcode_catalog import get_by_id as catalog_get_by_id
 from services.learning_engine.planner import get_today_learning_node
 from services.learning_engine.pacing import compute_pacing_state
 from services.problem_selection import select_representative, select_one, arena_problem_count
-from services.mission_context import build_mission_context
+from services.mission_context import build_mission_context, cta_for_activity
 
 router = APIRouter(prefix="/api", tags=["missions"])
 
@@ -469,7 +469,68 @@ async def get_todays_mission(user=Depends(get_current_user)):
     return await _generate_today_mission(db, user["id"])
 
 
-# ============ Task toggle (replaces one-way complete) ============
+@router.get("/missions/today/context")
+async def get_todays_mission_context(user=Depends(get_current_user)):
+    """Phase 3D — read-only projection of the canonical Mission Context.
+
+    Frontend integration layer. This endpoint performs NO planner logic,
+    scoring, filtering, ranking or inference: it simply serialises the frozen
+    MissionContext (built by services.mission_context.build_mission_context)
+    for each of today's tasks, plus the canonical activity->CTA mapping so the
+    frontend renders the correct button entirely from Mission Context.
+
+    Existing endpoints are untouched; this is purely additive.
+    """
+    from server import db
+
+    # Resolve today's mission via the exact same path as GET /missions/today.
+    today = today_date_str()
+    doc = await db.daily_missions.find_one({"user_id": user["id"], "date": today})
+    if doc:
+        mission = DailyMission(**_clean(doc))
+    else:
+        mission = await _generate_today_mission(db, user["id"])
+
+    onboarding = await _get_onboarding(db, user["id"])
+    target_companies = (onboarding or {}).get("target_companies", []) or []
+
+    tasks_out = []
+    for task in mission.tasks:
+        ctx = None
+        if task.node_id:
+            ctx = build_mission_context(
+                task.node_id,
+                target_companies=target_companies,
+                mission_id=mission.id,
+            )
+        activity_type = ctx.activity_type if ctx else None
+        tasks_out.append({
+            "task_id": task.id,
+            "title": task.title,
+            "kind": task.kind,
+            "topic": task.topic,
+            "node_id": task.node_id,
+            "completed": bool(task.completed),
+            "status": "completed" if task.completed else "not_started",
+            "is_revision": task.id in (mission.revision_task_ids or []),
+            "activity_type": activity_type,
+            "cta": cta_for_activity(activity_type),
+            "mission_context": ctx.to_dict() if ctx else None,
+        })
+
+    return {
+        "mission_id": mission.id,
+        "date": mission.date,
+        "status": mission.status,
+        "title": mission.title,
+        "focus_area": mission.focus_area,
+        "estimated_duration_minutes": mission.estimated_duration_minutes,
+        # Explainability is served as-is (backend-owned); React must not
+        # generate explanation text.
+        "recommendation_insight": mission.recommendation_insight,
+        "ai_narrative": mission.ai_narrative,
+        "tasks": tasks_out,
+    }
 
 @router.post("/missions/{mission_id}/tasks/{task_id}/toggle", response_model=DailyMission)
 async def toggle_task(mission_id: str, task_id: str, user=Depends(get_current_user)):

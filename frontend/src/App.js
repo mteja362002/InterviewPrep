@@ -7,6 +7,7 @@ import { ThemeProvider } from '@/contexts/ThemeContext';
 import { UILayoutProvider } from '@/contexts/UILayoutContext';
 import { AIPanelProvider } from '@/contexts/AIPanelContext';
 import { MentorProvider } from '@/contexts/MentorContext';
+import { MissionContextProvider } from '@/contexts/MissionContextProvider';
 import { ProtectedRoute, PublicOnlyRoute } from '@/components/ProtectedRoute';
 import { AppShell } from '@/components/layout/AppShell';
 
@@ -43,6 +44,7 @@ function App() {
             <UILayoutProvider>
               <AIPanelProvider>
                 <MentorProvider>
+                  <MissionContextProvider>
                   <Routes>
                     {/* Public */}
                     <Route path="/login" element={<PublicOnlyRoute><Login /></PublicOnlyRoute>} />
@@ -86,6 +88,7 @@ function App() {
                     <Route path="/" element={<RootRedirect />} />
                     <Route path="*" element={<RootRedirect />} />
                   </Routes>
+                  </MissionContextProvider>
                 </MentorProvider>
               </AIPanelProvider>
             </UILayoutProvider>

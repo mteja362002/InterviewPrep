@@ -2,6 +2,9 @@ import api from './api';
 
 export const missionService = {
   getToday: () => api.get('/missions/today').then((r) => r.data),
+  // Phase 3D — canonical Mission Context projection (read-only). One fetch,
+  // shared across every page via MissionContextProvider.
+  getTodayContext: () => api.get('/missions/today/context').then((r) => r.data),
   toggleTask: (missionId, taskId) =>
     api.post(`/missions/${missionId}/tasks/${taskId}/toggle`).then((r) => r.data),
   completeMission: (missionId) =>

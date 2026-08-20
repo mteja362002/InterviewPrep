@@ -27,6 +27,27 @@ from services.problem_selection import representative_pool
 # Coding-family activity types share the representative-problem pipeline.
 _CODING_ACTIVITIES = {"coding"}
 
+# Canonical activity_type -> call-to-action mapping (Phase 3D). This is a pure
+# PRESENTATION projection (label + action) with NO logic/scoring/inference, so
+# the frontend renders the correct button entirely from Mission Context and
+# never infers the activity type itself.
+CTA_FOR_ACTIVITY: Dict[str, Dict[str, str]] = {
+    "study": {"action": "open_knowledge_base", "label": "Open Knowledge Base"},
+    "coding": {"action": "open_coding_arena", "label": "Open Coding Arena"},
+    "quiz": {"action": "start_assessment", "label": "Start Assessment"},
+    "behavioral": {"action": "start_assessment", "label": "Start Assessment"},
+    "design": {"action": "start_assessment", "label": "Start Assessment"},
+    "system_design": {"action": "start_assessment", "label": "Start Assessment"},
+    "flashcards": {"action": "open_flashcards", "label": "Open Flashcards"},
+}
+
+
+def cta_for_activity(activity_type: Optional[str]) -> Optional[Dict[str, str]]:
+    """Return the canonical CTA for an activity_type (presentation only)."""
+    if not activity_type:
+        return None
+    return CTA_FOR_ACTIVITY.get(activity_type)
+
 
 @dataclass
 class MissionContext:

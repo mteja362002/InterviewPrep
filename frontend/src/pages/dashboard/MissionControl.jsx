@@ -17,8 +17,91 @@ import { TARGET_COMPANIES } from '@/config/companies';
 import { formatApiError } from '@/utils/formatApiError';
 import { cn } from '@/lib/utils';
 import { useMentorContext } from '@/contexts/MentorContext';
+import { useMissionContext } from '@/contexts/MissionContextProvider';
 import { ProgressBar } from '@/components/progress/ProgressBar';
 import { WhyThisMissionDialog } from '@/components/mission/WhyThisMissionDialog';
+
+/**
+ * Phase 3D — the primary action button for every task comes ENTIRELY from
+ * Mission Context (`taskCtx.cta`). React never infers the activity type or
+ * decides which page to open. Exactly ONE primary CTA renders per task
+ * (constraint #12: never both Open KB and Open Arena), plus an auxiliary
+ * "Ask Mentor" affordance.
+ */
+function TaskActions({
+  task, taskCtx, onOpenKB, onOpenArena, onStartAssessment, onFlashcards,
+  onOpenMentor, busyAction,
+}) {
+  const cta = taskCtx?.cta || null;
+  const activity = taskCtx?.activity_type || null;
+  const repIds = taskCtx?.mission_context?.representative_problem_ids;
+  const arenaEmpty = activity === 'coding' && Array.isArray(repIds) && repIds.length === 0;
+
+  const baseBtn = 'h-10 inline-flex items-center gap-2 px-3 rounded-lg border text-xs font-medium transition-colors';
+  const primaryCls = 'border-primary/30 bg-primary/10 hover:bg-primary/15 text-primary';
+  const neutralCls = 'border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.05] text-foreground';
+
+  let primary = null;
+  if (cta?.action === 'open_knowledge_base') {
+    primary = (
+      <button type="button" onClick={() => onOpenKB(task.node_id)}
+        className={cn(baseBtn, neutralCls)}
+        data-testid={`mission-task-cta-${task.id}`} data-cta="open_knowledge_base">
+        {cta.label}
+      </button>
+    );
+  } else if (cta?.action === 'open_coding_arena') {
+    primary = arenaEmpty ? (
+      <button type="button" disabled
+        title="No representative problems available for this learning node."
+        className={cn(baseBtn, 'border-white/[0.08] bg-white/[0.02] text-muted-foreground cursor-not-allowed opacity-70')}
+        data-testid={`mission-task-cta-${task.id}`} data-cta="open_coding_arena">
+        No problems available
+      </button>
+    ) : (
+      <button type="button" onClick={() => onOpenArena(task)}
+        className={cn(baseBtn, primaryCls)}
+        data-testid={`mission-task-cta-${task.id}`} data-cta="open_coding_arena">
+        {cta.label}
+      </button>
+    );
+  } else if (cta?.action === 'start_assessment') {
+    primary = (
+      <button type="button" onClick={() => onStartAssessment(task)}
+        className={cn(baseBtn, primaryCls)}
+        data-testid={`mission-task-cta-${task.id}`} data-cta="start_assessment">
+        {cta.label}
+      </button>
+    );
+  } else if (cta?.action === 'open_flashcards') {
+    primary = (
+      <button type="button" onClick={() => onFlashcards(task)}
+        className={cn(baseBtn, primaryCls)}
+        data-testid={`mission-task-cta-${task.id}`} data-cta="open_flashcards">
+        {cta.label}
+      </button>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-2">
+      {primary}
+      {task.node_id && (
+        <button
+          type="button"
+          onClick={() => onOpenMentor(task.node_id)}
+          disabled={busyAction === `mentor-${task.node_id}`}
+          className="h-10 inline-flex items-center justify-center w-10 rounded-lg border border-primary/30 bg-primary/10 hover:bg-primary/15 text-primary transition-colors disabled:opacity-50"
+          data-testid={`mission-task-mentor-${task.id}`}
+          aria-label="Ask Mentor"
+          title="Ask Mentor"
+        >
+          <Sparkles className="h-4 w-4" />
+        </button>
+      )}
+    </div>
+  );
+}
 
 const ACTIVITY_META = {
   mission_completed:  { dot: 'bg-emerald-400',  label: 'Mission completed' },
@@ -79,6 +162,8 @@ export default function MissionControl() {
   const [expandedDomain, setExpandedDomain] = useState(null);
   const navigate = useNavigate();
   const mentor = useMentorContext();
+  // Phase 3D — the shared, fetch-once Mission Context. CTAs derive from here.
+  const { getTaskContext } = useMissionContext();
 
   // Which task, if any, is currently mid-flight. Derived from the
   // toggle mutation so we don't need to track it in local state.
@@ -112,6 +197,14 @@ export default function MissionControl() {
   const onOpenKnowledgeNode = (nodeId) => {
     navigate(`/app/knowledge-base/nodes/${encodeURIComponent(nodeId)}`);
   };
+
+  // Phase 3D — CTA handlers. Each simply routes to the correct page; the
+  // decision of WHICH cta to show is made by the backend (Mission Context).
+  const onOpenArena = () => navigate('/app/coding-arena');
+  const onStartAssessment = () => {
+    if (missionId) navigate(`/app/assessment/${missionId}`);
+  };
+  const onFlashcards = () => toast('Flashcards are coming soon.');
 
   const onOpenMentorForNode = async (nodeId) => {
     setBusyAction(`mentor-${nodeId}`);
@@ -346,7 +439,7 @@ export default function MissionControl() {
             <div className="mt-5 space-y-2">
               {tasks.map((t) => {
                 const isBusy = busyTask === t.id;
-                const isPractice = t.kind === 'practice' && t.pattern;
+                const taskCtx = getTaskContext({ taskId: t.id, nodeId: t.node_id });
                 const taskLocked = missionSkipped || missionCompleted;
                 return (
                   <div key={t.id} className="flex items-stretch gap-2">
@@ -378,38 +471,16 @@ export default function MissionControl() {
                         {t.kind}
                       </span>
                     </button>
-                    {isPractice && (
-                      <a
-                        href="/app/coding-arena"
-                        data-testid={`mission-task-arena-${t.id}`}
-                        className="inline-flex items-center gap-1.5 px-3 rounded-lg border border-primary/30 bg-primary/10 hover:bg-primary/15 text-xs font-medium text-primary transition-colors"
-                      >
-                        Open Arena
-                      </a>
-                    )}
-                    {t.node_id && (
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={() => onOpenKnowledgeNode(t.node_id)}
-                          className="h-10 inline-flex items-center gap-2 px-3 rounded-lg border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.05] text-xs font-medium text-foreground transition-colors"
-                          data-testid={`mission-task-kb-${t.id}`}
-                        >
-                          Open KB
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => onOpenMentorForNode(t.node_id)}
-                          disabled={busyAction === `mentor-${t.node_id}`}
-                          className="h-10 inline-flex items-center justify-center w-10 rounded-lg border border-primary/30 bg-primary/10 hover:bg-primary/15 text-primary transition-colors disabled:opacity-50"
-                          data-testid={`mission-task-mentor-${t.id}`}
-                          aria-label="Ask Mentor"
-                          title="Ask Mentor"
-                        >
-                          <Sparkles className="h-4 w-4" />
-                        </button>
-                      </div>
-                    )}
+                    <TaskActions
+                      task={t}
+                      taskCtx={taskCtx}
+                      onOpenKB={onOpenKnowledgeNode}
+                      onOpenArena={onOpenArena}
+                      onStartAssessment={onStartAssessment}
+                      onFlashcards={onFlashcards}
+                      onOpenMentor={onOpenMentorForNode}
+                      busyAction={busyAction}
+                    />
                   </div>
                 );
               })}
