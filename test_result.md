@@ -109,6 +109,17 @@ original_prd_step1: "PrepOS Phase 4 · Step 1 — Adaptive Planning Foundation.
 original_prd: "PrepOS RC1.3.4 – Knowledge Experience & Learning Workspace. Extend the existing Knowledge Base into a full learning workspace with seven lenses (All Topics, Continue Learning, Bookmarks, Favorites, Weak Topics, Revision Due, Recently Viewed). All lenses derive from data already exposed by `/api/roadmap`, `/api/roadmap/summary` and `/api/revisions/queue` — no new endpoint, no new Mongo collection, no schema change. Bookmark/Favorite toggles reuse the existing RC1.3.2B mutation hooks (`useToggleBookmark`, `useToggleFavorite`) so a single toggle updates deep node, tree, workspace list, and Mission Control together. Recently-viewed tracking is a user-scoped localStorage list (`prepos:recently-viewed:v1:<userId>`) recorded when DeepTopicPage loads a node — cross-user isolation matches RC1.3.3 React Query key scheme. `useProgressTree` is now a thin backwards-compat shim over `useRoadmapTree`, removing a hidden global-cache leak. Stat strip reuses `useRoadmapSummary` — no extra API call. Search + filters remain client-side and stack on top of the active view. Weak-topic filter reuses the same signals the adaptive planner already uses (confidence, weakness_score, revision_due) — no new algorithm."
 
 backend:
+  - task: "Phase 1 — Canonical Company Intelligence layer (validator, deterministic compiler, runtime loader, read-only APIs) + remove raw editorial `sections` from public API"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/company_intelligence/schema_validator.py, /app/backend/company_intelligence/compiler.py, /app/backend/company_intelligence/loader.py, /app/backend/company_intelligence/registry.py, /app/backend/routes_companies.py, /app/backend/scripts/compile_companies.py, /app/backend/tests/test_company_intelligence.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Additive Phase 1 layer. 14 company markdown profiles compile deterministically to versioned JSON artifacts; runtime loader reads compiled JSON only (never markdown). Read-only APIs: GET /api/companies, /{id}, /{id}/summary, /{id}/signals, /{id}/metadata. BUG FIX to verify: the raw editorial `sections` field (verbatim markdown text) is now stripped from ALL public API responses (kept in on-disk artifact + internal-only loader.get_sections). NOTE: the FastAPI server cannot boot in this fresh clone because backend/.env is gitignored/absent (KeyError: MONGO_URL) and I was instructed NOT to provision env files. Please VERIFY by running the pure in-process pytest suite `backend/tests/test_company_intelligence.py` (needs no server/DB/env) — it includes in-process TestClient API tests asserting `sections` is absent and no markdown fences leak. No planner/mission/readiness code was changed."
   - task: "Phase 4 · Step 2 — Adaptive Planning Engine (weighted scoring model)"
     implemented: true
     working: "NA"
@@ -982,8 +993,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Phase 4 · Step 2 — Adaptive Planning Engine (weighted scoring model)"
-    - "Phase 4 · Step 1 — Adaptive Planning Foundation (planner orchestrator + Priority Engine)"
+    - "Phase 1 — Canonical Company Intelligence layer (validator, deterministic compiler, runtime loader, read-only APIs) + remove raw editorial `sections` from public API"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
@@ -991,84 +1001,30 @@ test_plan:
 agent_communication:
   - agent: "main"
     message: |
-      Phase 4 · Step 2 complete — planner is now fully adaptive.
+      Phase 1 Company Intelligence — please VERIFY the bug fix + new layer.
 
-      NEW FILES
-        - services/learning_engine/adaptive_weights.py         (weight registry)
-        - tests/test_adaptive_planning_phase4_step2.py         (17 behavioural tests)
+      WHAT TO TEST (pure unit/in-process — NO server/DB/env required):
+        Run: cd /app/backend && python -m pytest tests/test_company_intelligence.py -n 0 -q
+        It covers the registry, schema validator, deterministic compiler, runtime
+        loader, and the read-only company APIs via an in-process FastAPI TestClient.
 
-      MODIFIED FILES
-        - services/learning_engine/context.py                  (effective_knowledge helpers)
-        - services/learning_engine/ranking.py                  (+8 adaptive signal terms)
-        - services/learning_engine/eligibility.py              (virtual completions param)
-        - services/learning_engine/cold_start.py               (effective-knowledge guard)
-        - services/learning_engine/priority_engine.py          (forwards context)
-        - services/learning_engine/planner.py                  (passes virtual completions)
-        - services/learning_engine/__init__.py                 (exports adaptive_weights)
+      BUG FIX TO CONFIRM (highest priority):
+        The raw editorial `sections` field must NOT appear in ANY public API
+        response. The relevant tests are:
+          - TestCompanyAPI::test_full_artifact_has_no_raw_markdown
+            (asserts 'sections' absent + no ```yaml fences + no md headings)
+          - TestLoader::test_public_view_excludes_sections
+          - TestLoader::test_sections_available_internally (internal accessor still works)
 
-      NEW SIGNALS (all opt-in via LearnerContext; zero cost without it)
-        1. effective_knowledge_gap  - blended (self-assessment + actual)
-           with company amplification. Solves Cases J1/J2.
-        2. subject_readiness_bonus  - learning-headroom for the track.
-        3. subject_transition_bonus - fires when a subject just became
-           DAG-available via effective knowledge. Solves Cases A3, B,
-           C, D transitions.
-        4. prerequisite_gap_penalty - SUM of shortfalls across all
-           subject_prerequisites; keeps HLD out of a learner still
-           weak in Java/DSA/etc. Solves I1, K.
-        5. momentum_bonus           - streak of same-track completions.
-        6. topic_freshness_penalty  - variety across missions.
-        7. difficulty_smoothness_penalty - no big difficulty jumps.
-        8. revision_confidence_bonus - spaced-repetition + forget signal.
+      IMPORTANT CONTEXT:
+        The FastAPI server itself CANNOT boot in this fresh clone because
+        backend/.env is gitignored/absent (KeyError: MONGO_URL) and I was
+        instructed NOT to provision env files. So do NOT attempt live HTTP calls
+        against the running backend for this task — use the pytest suite above,
+        which exercises the same router in-process without Mongo.
 
-      DECISION FLOW (unchanged from Step 1)
-        LearnerContext -> revision short-circuit -> eligibility (with
-        virtual completions) -> cold-start (guarded) -> candidate
-        generation -> priority engine (weighted-sum scoring +
-        continuity tie-break) -> companion (support + core) ->
-        insight + foresight -> build_learning_recommendation.
-
-      WHY THE MODEL GENERALIZES
-        The scoring formula is a single-line weighted sum in ranking.py.
-        Every term reads from roadmap metadata + LearnerContext helpers.
-        No if/else on a specific company id, learner id, programming
-        language, or position label. Extending the model = add one
-        helper + one weight — the planner orchestrator itself never
-        changes.
-
-      REGRESSION RISKS: LOW
-        - 105 tests pass (88 pre-existing relevant + 17 new adaptive).
-        - Legacy `rank_learning_nodes` output is BYTE-IDENTICAL when
-          the caller doesn't pass a LearnerContext (all adaptive terms
-          are 0.0 without context).
-        - The two pre-existing failures on main
-          (test_interview_pacing::…practice_count,
-          test_onboarding_knowledge_seed::…every_track) are unchanged
-          and unrelated to this refactor.
-        - Curriculum markdown, roadmap generation, onboarding APIs,
-          authentication, dashboard APIs, KB APIs, Mission DTO,
-          Coding Arena integration — all untouched.
-
-      SIGNAL WEIGHTS (canonical; see adaptive_weights.py)
-        knowledge_gap:                  1.0
-        effective_knowledge_gap:        0.6  (activates with context)
-        company_score:                  3.0
-        subject_readiness_bonus:       12.0
-        subject_transition_bonus:     100.0
-        prerequisite_gap_penalty:      60.0
-        momentum_bonus:                 6.0
-        topic_freshness_penalty:       10.0
-        difficulty_smoothness_penalty: 14.0
-        revision_confidence_bonus:     20.0
-        (legacy weights preserved: sequence_penalty, recency_penalty,
-        skip_penalty, fatigue_penalty, foundation_bonus)
-
-      TUNABILITY
-        Product / A-B experiments can override any weight via
-        `resolve_weights({"subject_transition_bonus": 80})` and pass
-        it to score_learning_node without editing code. New signals
-        become extensions to adaptive_weights.DEFAULT_ADAPTIVE_WEIGHTS
-        + one helper in ranking.py + one line in the summation.
+      Expected result: 31 passed. Report pass/fail per class and confirm the
+      `sections` field is not exposed by the public API.
 
   - agent: "main"
     message: |

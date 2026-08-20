@@ -12,6 +12,7 @@ Artifact layout (see scripts/compile_companies.py):
 """
 from __future__ import annotations
 
+import copy
 import json
 import logging
 import threading
@@ -109,10 +110,38 @@ class CompanyIntelligenceService:
             out.sort(key=lambda e: order.index(e["company_id"]) if e["company_id"] in order else 999)
         return out
 
-    def get_company(self, company_id: str) -> Optional[dict]:
+    # Fields that are compiled from raw editorial markdown and must NOT be
+    # served on the public runtime API. They remain in the on-disk artifact and
+    # are retrievable via internal-only accessors (get_sections).
+    _INTERNAL_ONLY_FIELDS = ("sections",)
+
+    def _artifact(self, company_id: str) -> Optional[dict]:
+        """Return a defensive deep copy of the full on-disk artifact (INTERNAL
+        use only). Deep-copied so callers can never mutate the shared cache."""
         self._ensure_loaded()
         art = self._cache.get(company_id)
-        return dict(art) if art else None
+        return copy.deepcopy(art) if art else None
+
+    def get_company(self, company_id: str) -> Optional[dict]:
+        """Public runtime view: normalized data only.
+
+        The raw editorial ``sections`` block (verbatim markdown text) is
+        stripped so the public API never exposes markdown.
+        """
+        art = self._artifact(company_id)
+        if art is None:
+            return None
+        for field in self._INTERNAL_ONLY_FIELDS:
+            art.pop(field, None)
+        return art
+
+    def get_sections(self, company_id: str) -> Optional[dict]:
+        """INTERNAL/admin-only: raw editorial section text. Not exposed on the
+        public API. Reserved for future explainability/admin tooling."""
+        art = self._artifact(company_id)
+        if art is None:
+            return None
+        return art.get("sections", {})
 
     def get_summary(self, company_id: str) -> Optional[dict]:
         art = self.get_company(company_id)
