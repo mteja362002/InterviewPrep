@@ -35,11 +35,14 @@ from __future__ import annotations
 
 from collections import Counter
 from dataclasses import dataclass, field
-from typing import Dict, Iterable, List, Optional, Set
+from typing import TYPE_CHECKING, Dict, Iterable, List, Optional, Set
 
 from services.learning_engine.composition import (
     ContinuityChain, chain_from_history,
 )
+
+if TYPE_CHECKING:  # avoid any runtime import cost / cycle
+    from services.learning_engine.company_context import CompanyContext
 
 _COMPLETED_STATUSES = {"completed", "mastered", "revision_due"}
 
@@ -108,6 +111,14 @@ class LearnerContext:
 
     # ---- Company targeting --------------------------------------------------
     target_companies: List[str] = field(default_factory=list)
+
+    # ---- Company Intelligence (Phase 2A · additive, planner-inert) ----------
+    # Normalized company-intelligence bundle built from the compiled runtime
+    # artifacts (Company Runtime Loader). It TRAVELS ALONGSIDE the planner
+    # state for future phases. No scoring / ranking / unlock / readiness code
+    # reads it yet, so its presence never changes planner output. Defaults to
+    # None so any caller that does not opt in behaves exactly as before.
+    company_context: Optional["CompanyContext"] = None
 
     # ---- Cross-cut helpers --------------------------------------------------
     # knowledge_rows is a separate view over knowledge (topic-level scores
@@ -366,6 +377,7 @@ def build_learner_context(
     completed_dates: Optional[Iterable[str]] = None,
     knowledge_rows: Optional[Iterable[dict]] = None,
     skip_node_ids: Optional[Iterable[str]] = None,
+    company_context: Optional["CompanyContext"] = None,
 ) -> LearnerContext:
     """Assemble a LearnerContext from raw inputs.
 
@@ -373,15 +385,28 @@ def build_learner_context(
     LearnerContext that behaves identically to the pre-Phase-4 planner
     when it was invoked with only `user_id + db`. The planner is the
     canonical caller; tests can also build contexts directly.
+
+    Phase 2A: a normalized :class:`CompanyContext` is attached (built from
+    ``target_companies`` via the Company Runtime Loader when not supplied
+    explicitly). This is ADDITIVE and planner-inert — no scoring path reads
+    it, so the recommendation output is unchanged.
     """
     rows = list(progress_rows or [])
     progress_map = {row.get("node_id"): row for row in rows if row.get("node_id")}
+    resolved_companies = [str(c) for c in (target_companies or [])]
+
+    if company_context is None:
+        # Local import avoids any import cycle at module load time and keeps
+        # context.py free of a hard dependency on the loader for pure callers.
+        from services.learning_engine.company_context import build_company_context
+        company_context = build_company_context(resolved_companies)
+
     return LearnerContext(
         onboarding=dict(onboarding or {}),
         progress_rows=rows,
         progress_map=progress_map,
         pacing_state=dict(pacing_state or {}),
-        target_companies=[str(c) for c in (target_companies or [])],
+        target_companies=resolved_companies,
         recent_completions=list(recent_completions or []),
         recent_node_ids=list(recent_node_ids or []),
         recent_track_ids=list(recent_track_ids or []),
@@ -389,4 +414,5 @@ def build_learner_context(
         completed_dates=list(completed_dates or []),
         knowledge_rows=list(knowledge_rows or []),
         skip_node_ids=set(skip_node_ids or []),
+        company_context=company_context,
     )

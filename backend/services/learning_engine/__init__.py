@@ -25,6 +25,9 @@ from .adaptive_weights import (
     DEFAULT_ADAPTIVE_WEIGHTS, ResolvedWeights, resolve_weights,
 )
 from .builder import build_learning_recommendation
+from .company_context import (
+    CompanyContext, CompanyProfileContext, build_company_context,
+)
 from .context import LearnerContext, build_learner_context
 from .planner import get_today_learning_node
 from .priority_engine import (
@@ -46,6 +49,9 @@ __all__ = [
     "resolve_weights",
     "LearnerContext",
     "build_learner_context",
+    "CompanyContext",
+    "CompanyProfileContext",
+    "build_company_context",
     "get_today_learning_node",
     "PriorityScore",
     "rank_by_priority",

@@ -109,6 +109,17 @@ original_prd_step1: "PrepOS Phase 4 · Step 1 — Adaptive Planning Foundation.
 original_prd: "PrepOS RC1.3.4 – Knowledge Experience & Learning Workspace. Extend the existing Knowledge Base into a full learning workspace with seven lenses (All Topics, Continue Learning, Bookmarks, Favorites, Weak Topics, Revision Due, Recently Viewed). All lenses derive from data already exposed by `/api/roadmap`, `/api/roadmap/summary` and `/api/revisions/queue` — no new endpoint, no new Mongo collection, no schema change. Bookmark/Favorite toggles reuse the existing RC1.3.2B mutation hooks (`useToggleBookmark`, `useToggleFavorite`) so a single toggle updates deep node, tree, workspace list, and Mission Control together. Recently-viewed tracking is a user-scoped localStorage list (`prepos:recently-viewed:v1:<userId>`) recorded when DeepTopicPage loads a node — cross-user isolation matches RC1.3.3 React Query key scheme. `useProgressTree` is now a thin backwards-compat shim over `useRoadmapTree`, removing a hidden global-cache leak. Stat strip reuses `useRoadmapSummary` — no extra API call. Search + filters remain client-side and stack on top of the active view. Weak-topic filter reuses the same signals the adaptive planner already uses (confidence, weakness_score, revision_due) — no new algorithm."
 
 backend:
+  - task: "Phase 2A — Company Context Layer (additive bridge from Company Intelligence runtime loader to Adaptive Planner; planner-inert)"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/services/learning_engine/company_context.py, /app/backend/services/learning_engine/context.py, /app/backend/services/learning_engine/__init__.py, /app/backend/tests/test_company_context_phase2a.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Additive Phase 2A. New CompanyContext/CompanyProfileContext built ONLY from the Phase 1 runtime loader (compiled JSON, never markdown). Attached to LearnerContext as optional field `company_context` (auto-built from target_companies in build_learner_context). CRITICAL: it is planner-INERT — no scoring/ranking/unlock/readiness/mission code reads it, so planner outputs must be byte-identical. Handles multiple companies, empty selection, unknown/UI-only ids ('others'). VERIFY via pytest (no server/DB/env needed): (1) tests/test_company_context_phase2a.py, and REGRESSION (2) tests/test_learning_engine.py tests/test_adaptive_planning_phase4_step2.py tests/test_company_aware_ranking.py tests/test_candidate_generation.py tests/test_eligibility_engine.py tests/test_learning_stage_engine.py tests/test_recommendation_insight.py — all must still pass unchanged."
   - task: "Phase 1 — Canonical Company Intelligence layer (validator, deterministic compiler, runtime loader, read-only APIs) + remove raw editorial `sections` from public API"
     implemented: true
     working: "NA"
@@ -993,6 +1004,7 @@ metadata:
 
 test_plan:
   current_focus:
+    - "Phase 2A — Company Context Layer (additive bridge from Company Intelligence runtime loader to Adaptive Planner; planner-inert)"
     - "Phase 1 — Canonical Company Intelligence layer (validator, deterministic compiler, runtime loader, read-only APIs) + remove raw editorial `sections` from public API"
   stuck_tasks: []
   test_all: false
@@ -1001,30 +1013,32 @@ test_plan:
 agent_communication:
   - agent: "main"
     message: |
-      Phase 1 Company Intelligence — please VERIFY the bug fix + new layer.
+      Please VERIFY Phase 2A (Company Context) + the still-unverified Phase 1
+      `sections` fix. Everything is PURE unit/in-process — NO server, DB, or env
+      is required (and the server cannot boot here: backend/.env is absent and I
+      was told not to provision it). Use pytest only; do NOT attempt live HTTP.
 
-      WHAT TO TEST (pure unit/in-process — NO server/DB/env required):
-        Run: cd /app/backend && python -m pytest tests/test_company_intelligence.py -n 0 -q
-        It covers the registry, schema validator, deterministic compiler, runtime
-        loader, and the read-only company APIs via an in-process FastAPI TestClient.
+      RUN (from /app/backend), report pass/fail per file/class:
+        1) Phase 2A + Phase 1 (new):
+           python -m pytest tests/test_company_context_phase2a.py tests/test_company_intelligence.py -n 0 -q
+           Expected: 46 passed.
+        2) Planner/learning-engine REGRESSION (backward compatibility):
+           python -m pytest tests/test_learning_engine.py tests/test_adaptive_planning_phase4_step2.py tests/test_company_aware_ranking.py tests/test_candidate_generation.py tests/test_eligibility_engine.py tests/test_learning_stage_engine.py tests/test_recommendation_insight.py -n 0 -q
+           Expected: 62 passed.
 
-      BUG FIX TO CONFIRM (highest priority):
-        The raw editorial `sections` field must NOT appear in ANY public API
-        response. The relevant tests are:
-          - TestCompanyAPI::test_full_artifact_has_no_raw_markdown
-            (asserts 'sections' absent + no ```yaml fences + no md headings)
-          - TestLoader::test_public_view_excludes_sections
-          - TestLoader::test_sections_available_internally (internal accessor still works)
+      CONFIRM EXPLICITLY:
+        - Phase 1 bug fix: `sections` NOT exposed by the public company API
+          (TestCompanyAPI::test_full_artifact_has_no_raw_markdown,
+           TestLoader::test_public_view_excludes_sections,
+           TestLoader::test_sections_available_internally).
+        - Phase 2A: CompanyContext is planner-inert — ranking + score_candidate
+          identical with/without company_context
+          (TestBackwardCompatibility::test_ranking_identical_with_and_without_company_context,
+           TestBackwardCompatibility::test_score_candidate_unaffected_by_company_context).
+        - Empty selection, multiple companies, and unknown/UI-only ('others') ids
+          are handled without raising.
 
-      IMPORTANT CONTEXT:
-        The FastAPI server itself CANNOT boot in this fresh clone because
-        backend/.env is gitignored/absent (KeyError: MONGO_URL) and I was
-        instructed NOT to provision env files. So do NOT attempt live HTTP calls
-        against the running backend for this task — use the pytest suite above,
-        which exercises the same router in-process without Mongo.
-
-      Expected result: 31 passed. Report pass/fail per class and confirm the
-      `sections` field is not exposed by the public API.
+      Do NOT modify source files; this is a verification run only.
 
   - agent: "main"
     message: |
