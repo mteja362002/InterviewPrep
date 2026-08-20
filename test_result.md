@@ -1217,3 +1217,43 @@ agent_communication:
       additive & bounded and defaults OFF; it is enabled only inside the mission
       planner path. If the learner has no progress yet, the snapshot is empty and
       the planner falls back (this is expected, not a bug).
+
+#====================================================================================================
+# PHASE 3A — ASSESSMENT ENGINE
+#====================================================================================================
+
+backend:
+  - task: "Assessment Engine (Phase 3A) — reusable deterministic assessment platform + REST API"
+    implemented: true
+    working: "NA"
+    file: "assessment/* (new package), server.py (router + index registration)"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: |
+            New backend-only Assessment Engine at backend/assessment/ (modular, SOLID,
+            deterministic — NO LLM/AI grading). Coding assessment implemented end-to-end;
+            all 8 future types registered (unimplemented -> HTTP 422). Reuses problem_bank
+            (no problem duplication). New `assessments` collection. One-way evidence flow;
+            engine NEVER writes planner/LI/mission state. 64 new unit tests pass; existing
+            suite unchanged (only the 2 known PRE-EXISTING failures remain).
+
+agent_communication:
+  - agent: "main"
+    message: |
+      Phase 3A (Assessment Engine) implemented — BACKEND ONLY, no UI. Test the Coding
+      assessment lifecycle via /api/assessments (Bearer JWT from admin@prepos.io/Admin@123):
+      (1) POST "" {"assessment_type":"coding","roadmap_node_id":"dsa.sliding_window.core","target_company":"google"}
+          -> 200 status "pending", question.problem_id set (e.g. lc-3), rubric present.
+      (2) POST /{id}/start -> 200 "started". (3) POST /{id}/submit strong attempt
+          (passed_tests=10,total_tests=10,edge_cases_passed=3,edge_cases_total=3,
+          claimed_time_complexity="O(n)", explanation>=80 chars, code non-empty, solved=true)
+          -> 200 "submitted". (4) POST /{id}/evaluate -> 200 "completed", result.verdict
+          "correct", feedback + evidence (weakness_confirmation=false, topic_confidence_delta>0).
+      (5) GET /{id}, /{id}/result, /{id}/feedback, /{id}/evidence, /history, /evidence -> 200.
+      (6) Negative: submit BEFORE start -> 409. (7) Negative: create system_design -> 422.
+      Also confirm no regressions: auth/login, onboarding, mission generation, roadmap,
+      companies return 200 with no 500s.
