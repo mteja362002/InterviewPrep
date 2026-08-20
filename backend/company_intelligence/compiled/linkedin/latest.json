@@ -1,0 +1,357 @@
+{
+  "artifact_schema_version": "1.0",
+  "company_id": "linkedin",
+  "content_checksum": "sha256:c7704301a29d058bee24a3d49c1bb051228452d6fa0a7214f6424a25d200ec89",
+  "levels": {
+    "new_grad": {
+      "primary_focus": [
+        "DSA",
+        "Coding",
+        "Fundamentals",
+        "Values"
+      ],
+      "system_design": "Low"
+    },
+    "senior": {
+      "primary_focus": [
+        "System Design",
+        "Engineering Judgment",
+        "Leadership",
+        "Values Leadership"
+      ],
+      "system_design": "Very High"
+    },
+    "software_engineer": {
+      "primary_focus": [
+        "DSA",
+        "Coding",
+        "Ownership",
+        "Values"
+      ],
+      "system_design": "Medium"
+    },
+    "staff": {
+      "primary_focus": [
+        "Architecture",
+        "Technical Leadership",
+        "Cross-Team Influence",
+        "Strategic Values"
+      ],
+      "system_design": "Critical"
+    }
+  },
+  "metadata": {
+    "accent": "#0A66C2",
+    "categories": [
+      "Product Company",
+      "Social Network",
+      "SaaS",
+      "Enterprise Software"
+    ],
+    "confidence": "Medium",
+    "display_name": "LinkedIn",
+    "last_reviewed": "2026-08-14",
+    "name": "LinkedIn",
+    "primary_category": "Product Company"
+  },
+  "planner": {
+    "adaptive": {
+      "difficulty_requires_prerequisite_mastery": true,
+      "experience_sensitive": true,
+      "learner_readiness_overrides_company_priority": true,
+      "timeline_sensitive": true
+    },
+    "philosophy": [
+      "Problem Solving First",
+      "Strong Fundamentals",
+      "Algorithmic Execution",
+      "Engineering Judgment",
+      "Scalable Thinking",
+      "Technical Leadership",
+      "Values Alignment"
+    ],
+    "priority": [
+      "DSA",
+      "Programming",
+      "Behavioral/Values",
+      "System Design",
+      "Core CS",
+      "Role-Specific",
+      "LinkedIn Domain Awareness"
+    ]
+  },
+  "profile_version": "1.1",
+  "registry_schema_version": "1.0",
+  "sections": {
+    "behavioral": "## 16.1 Values Alignment\n\n**Importance:** High\n\nCandidates should demonstrate alignment with LinkedIn values:\n\n- Members first\n- Relationships matter\n- Demand excellence\n- Take intelligent risks\n- Act like an owner\n\n**Confidence:** Medium-High\n\n## 16.2 Communication\n\n**Importance:** Critical\n\nCandidates should:\n\n- Clarify requirements\n- State assumptions\n- Explain reasoning\n- Communicate trade-offs\n- Ask relevant questions\n- Respond constructively to feedback\n\n## 16.3 Collaboration\n\n**Importance:** High\n\nExamples should demonstrate:\n\n- Working across teams\n- Resolving disagreement\n- Sharing knowledge\n- Supporting peers\n- Handling stakeholder conflict\n\n## 16.4 Ownership\n\n**Importance:** High\n\nCandidates should demonstrate:\n\n- Responsibility for outcomes\n- Proactive problem identification\n- Follow-through\n- Operational awareness\n- Willingness to address problems beyond narrow task boundaries\n\n## 16.5 Data-Driven Thinking\n\n**Importance:** Medium-High\n\nCandidates should demonstrate:\n\n- Evidence-based reasoning\n- Metrics awareness\n- Impact measurement\n- Decision-making with data\n- Familiarity with experimentation or A-B testing concepts where relevant\n\n## 16.6 Learning Mindset\n\n**Importance:** High\n\nStrong evidence includes:\n\n- Learning from failures\n- Changing a decision when evidence changes\n- Seeking feedback\n- Improving engineering processes\n- Demonstrating intellectual humility\n\n## 16.7 Behavioral Preparation Format\n\nSTAR is recommended as a preparation framework:\n\n```text\nSituation\n   ↓\nTask\n   ↓\nAction\n   ↓\nResult\n   ↓\nLesson / What Changed\n```\n\nSTAR is a preparation technique, not asserted here as a mandatory LinkedIn interview format.\n\n---",
+    "company_overview": "## 2.1 Company Profile\n\nLinkedIn is a global professional networking platform and subsidiary of Microsoft. Engineering organizations span social networking, cloud infrastructure, data platforms, AI/ML, enterprise SaaS, and developer tools.\n\nFor PrepOS, LinkedIn should be modeled as a **high-bar data-driven engineering organization** with strong emphasis on large-scale systems, experimentation, product-focused engineering, coding, and values alignment. LinkedIn interviews are known for balanced technical and behavioral evaluation, with design questions frequently framed around social graph, feed, search, and data systems.\n\n## 2.2 Company Categories\n\n```yaml\ncompany_categories:\n  - Product Company\n  - Social Network\n  - SaaS\n  - Enterprise Software\n```\n\n## 2.3 Engineering Characteristics\n\n| Characteristic | PrepOS Interpretation | Confidence |\n|---|---|---|\n| Large-scale distributed systems | Strong relevance | Medium |\n| Data-driven engineering | Strong relevance | Medium |\n| Social graph and feed systems | Domain-relevant for many teams | Medium |\n| Search and relevance | Domain-relevant for search/ranking teams | Medium |\n| Experimentation / A-B testing | Strong relevance for product decisions | Medium |\n| Algorithmic problem solving | Core interview preparation area | Medium |\n| System design | High importance, especially senior roles | Medium |\n| Software engineering fundamentals | Important foundation | Medium |\n| Values alignment | High cultural signal | Medium-High |\n| AI-assisted engineering | Emerging / pilot-dependent | Low |\n\n## 2.4 LinkedIn Product Domains vs Interview Evaluation\n\nThis section separates what LinkedIn engineers may work on from what interviews are reported to evaluate.\n\n| Domain | What LinkedIn engineers may work on | Reported interview relevance | PrepOS priority |\n|---|---|---|---|\n| Professional Social Graph | Graph processing, connection recommendations, network analytics | Role-dependent; may appear in system design or graph problems | Medium |\n| Feed / Content Distribution | Feed ranking, relevance, content delivery | Role-dependent; may appear in system design for feed systems | Medium |\n| Search and Ranking | Query understanding, relevance, ranking models | Role-dependent; may appear in system design or technical deep-dive | Medium |\n| Messaging | Real-time messaging, notifications, delivery | Role-dependent; may appear in system design | Medium |\n| Experimentation Platform | A/B testing, metrics, statistical analysis | Data-driven thinking may be behavioral; not universal | Medium |\n| Data Infrastructure | Large-scale data pipelines, storage, processing | Role-dependent; may appear in system design | Medium |\n| Enterprise SaaS Products | Recruiter, Sales Navigator, Marketing Solutions | Role-dependent; may appear in product thinking | Medium |\n| Machine Learning Infrastructure | Model training, serving, features | Role-dependent; not universal for SWE interviews | Low–Medium |\n\nDo not assume every LinkedIn interview covers graph, feed, ranking, or ML topics.\n\n---",
+    "contradiction_register": "| Topic | Contradiction | Resolution |\n|---|---|---|\n| Values Interview | Some sources report it as formal, others embedded | Treat as high priority but confirm actual invitation |\n| Online Assessment | Platform varies by region/role | Confirm actual invitation |\n| LLD requirement | Some loops embed OOD, others have dedicated design | Treat as role/team dependent |\n| System design at mid-level | Some mid-level backend roles report HLD, others do not | Treat as role-dependent |\n| LinkedIn-domain questions | Some candidates report domain-specific design; others report generic design | Treat as role-dependent; not universal |\n\n---",
+    "engineering_philosophy": "## 3.1 Engineering Philosophy Summary\n\nLinkedIn engineering philosophy emphasizes:\n\n1. Members first\n2. Relationships matter\n3. Demand excellence\n4. Take intelligent risks\n5. Act like an owner\n6. Data-driven decision-making\n\nThe exact formal internal terminology should not be treated as permanently fixed.\n\n## 3.2 Engineering Progression\n\n```text\nProblem Solving\n      ↓\nStrong Fundamentals\n      ↓\nAlgorithmic Execution\n      ↓\nEngineering Judgment\n      ↓\nScalable Thinking\n      ↓\nTechnical Ownership\n      ↓\nCross-Team Influence\n```\n\n## 3.3 Core Engineering Principle\n\nPrepOS should interpret LinkedIn preparation as:\n\n> Solve the right problem, explain the reasoning, implement correctly, understand trade-offs, and demonstrate values alignment, ownership, and data-informed judgment as seniority increases.\n\n**Confidence:** Medium\n\n**Evidence Type:** Internal company knowledge + candidate pattern synthesis\n\n---",
+    "evaluation_signals": "| Signal | Importance | Description | Typical Interview Stage | Confidence |\n|---|---|---|---|---|\n| Problem Solving | Critical | Structured decomposition, algorithms, reasoning | Technical Screen, Coding | Medium |\n| Coding Ability | Critical | Correct, readable, efficient implementation | Coding | Medium |\n| System Design | High for Senior+ | Architecture, scale, reliability, trade-offs | Design | Medium |\n| Low-Level Design | Medium | OOP, modularity, extensibility | Coding/Design | Medium |\n| Technical Depth | High | Systems, technologies, engineering choices | Technical/Design | Medium |\n| Communication | Critical | Clear reasoning and concise technical explanation | All stages | Medium |\n| Collaboration | High | Working effectively across teams | Behavioral / Values | High |\n| Ownership | High | End-to-end responsibility | Behavioral / Values | Medium-High |\n| Values Alignment | High | Alignment with LinkedIn values | Behavioral / Values | Medium-High |\n| Data-Driven Thinking | Medium-High | Evidence-based reasoning, metrics awareness, experimentation | Behavioral / Design | Medium |\n| Learning Ability | High | Adaptation, reflection, updating assumptions | Behavioral / Technical | Medium |\n| Leadership | High for Senior+ | Influence, ownership, technical leadership | Behavioral / Design | Medium |\n| Domain Aptitude for LinkedIn Systems | Low–Medium | Familiarity with social graph, feed, search, or data systems where role-relevant | Role-dependent | Low–Medium |\n\n---",
+    "evidence_summary": "| Finding | Classification | Confidence | PrepOS Treatment |\n|---|---|---|---|\n| Coding and algorithmic reasoning are central | Reported | Medium | High planning priority |\n| Structured reasoning matters | Reported | Medium | High |\n| Values alignment is important | Strongly Reported | Medium-High | High behavioral/values priority |\n| Design importance increases with seniority | Reported Pattern | Medium | Strong level-dependent bias |\n| Data-driven thinking and experimentation are valued | Reported | Medium | Include in behavioral/design |\n| LinkedIn-domain knowledge is not universally required | Reported Pattern | Medium | Role-dependent only |\n| Behavioral evidence matters | Reported | Medium | Include behavioral preparation |\n| Team-specific hiring variance | Reported | Medium | Do not hardcode one process |\n| Universal AI-assisted interview | Not Supported | Low | Do not hardcode |\n| Universal coding platform | Not Supported | Low | Confirm invitation |\n\n---",
+    "hiring_philosophy": "## 4.1 Hiring Philosophy\n\nLinkedIn SWE evaluation is holistic and values-driven. A candidate should not be modeled as interview-ready merely because they can solve algorithmic problems.\n\nPrepOS should evaluate readiness across:\n\n- Problem solving\n- Coding\n- System design\n- Communication\n- Collaboration\n- Ownership\n- Values alignment\n- Data-driven thinking\n- Learning ability\n\n## 4.2 Hiring Progression\n\n```text\nFoundational Competence\n        ↓\nTechnical Execution\n        ↓\nIndependent Engineering\n        ↓\nArchitectural Ownership\n        ↓\nTechnical Leadership\n        ↓\nOrganizational Influence\n```\n\n## 4.3 Hiring Philosophy Constraints\n\nPrepOS MUST NOT assume:\n\n- A fixed interview count\n- A universal online assessment\n- A universal coding platform\n- A universal interview format\n- A universal system design round for all levels\n- A universal values interview format\n- A universal team matching process\n- A universal AI-assisted interview\n- Universal LinkedIn-domain knowledge as a hiring requirement\n\nThese are treated as role-, level-, team-, region-, or cycle-dependent unless stronger evidence becomes available.\n\n**Confidence:** Medium\n\n---",
+    "interview_pipeline": "## 5.1 Pipeline Model\n\n```text\nApplication / Referral\n        ↓\nRecruiter / Initial Alignment\n        ↓\nPotential Online Assessment\n        ↓\nTechnical Screen\n        ↓\nInterview Loop\n        ↓\nValues / Behavioral Interview\n        ↓\nInterview Feedback\n        ↓\nHiring Decision\n        ↓\nOffer\n```\n\nActual sequence may vary by team and role.\n\n## 5.2 Pipeline Stages\n\n| Stage | Purpose | Duration | Evaluation Criteria | Difficulty | Confidence | Evidence Source |\n|---|---|---|---|---|---|---|\n| Application / Referral | Establish candidate eligibility | Varies | Resume, experience, role fit | Medium | Medium | Internal knowledge |\n| Recruiter Screen | Validate role, experience, process | 20–30 min | Fit, communication, motivation | Low–Medium | Medium | Internal knowledge |\n| Potential Online Assessment | Pre-screen coding | Varies | Coding, DSA | Medium–High | Medium | Interview Reports |\n| Technical Screen | Validate baseline coding | 45–60 min | Coding, reasoning, communication | High | Medium | Interview Reports |\n| Interview Loop | Holistic technical evaluation | Varies, often 3–5 interviews | Coding, design, technical depth | Very High | Medium | Interview Reports |\n| Values / Behavioral Interview | Evaluate alignment with LinkedIn values | Reported as formal behavioral component | Behavioral consistency, values alignment | Medium-High | Medium-High | Interview Reports |\n| Feedback / Decision | Aggregate interview evaluations | Varies | Holistic evidence | Very High | Medium | Reported Process |\n| Offer | Complete hiring process | Varies | Level, role, headcount | Varies | Low | Reported Process |\n\n---\n\n## 5.3 LinkedIn Values\n\n### Status\n\n**Reported / Strongly Indicated as Cultural Component**\n\nLinkedIn is known for its corporate values, which often appear in behavioral interviews:\n\n- Members first\n- Relationships matter\n- Demand excellence\n- Take intelligent risks\n- Act like an owner\n\n### PrepOS Rule\n\nTreat behavioral preparation as high priority. Candidates should prepare examples that demonstrate LinkedIn values explicitly.\n\n```yaml\nvalues:\n  status: Strongly Reported\n  universal_requirement: Likely for most SWE roles\n  coding_test: No\n  confidence: Medium-High\n  planner_behavior: High priority behavioral prep\n```\n\n---",
+    "negative_evidence": "Do NOT treat the following as core LinkedIn SWE preparation requirements unless role-specific evidence exists:\n\n- Universal LLD for all roles\n- Universal HLD for all levels\n- Universal OS/DBMS/Networking depth\n- One universal interview template\n- Universal coding platform\n- Universal AI interview\n- Universal team matching\n- Universal graph/feed/ranking/ML knowledge as an interview requirement\n\n---",
+    "preparation_strategy": "## 21.1 Core Preparation Sequence\n\n```text\nPhase 1: Programming Fundamentals\n        ↓\nPhase 2: DSA Foundations\n        ↓\nPhase 3: Advanced DSA\n        ↓\nPhase 4: Timed Coding + Communication\n        ↓\nPhase 5: Low-Level Design\n        ↓\nPhase 6: High-Level System Design\n        ↓\nPhase 7: Behavioral / Values Preparation\n        ↓\nPhase 8: Mock Interview Loop\n```\n\n## 21.2 Preparation Priorities\n\n### Priority 1 — DSA\n\nFocus on:\n\n- Arrays\n- Strings\n- Hashing\n- Trees\n- Graphs\n- BFS\n- DFS\n- Heaps\n- Queues\n- Recursion\n- Dynamic Programming\n- Greedy\n- Backtracking\n- Complexity analysis\n\n### Priority 2 — Coding Execution\n\nPractice:\n\n- Clarifying requirements\n- Selecting an approach\n- Writing clean code\n- Testing\n- Debugging\n- Complexity analysis\n- Optimization\n\n### Priority 3 — System Design\n\nIncrease preparation according to seniority.\n\n### Priority 4 — Behavioral / Values\n\nDevelop evidence-backed stories that demonstrate LinkedIn values explicitly.\n\n### Priority 5 — Core CS\n\nUse role-specific evidence to determine whether OS, DBMS, networking or other fundamentals should receive additional weighting.\n\n### Priority 6 — Role-Specific Domain Awareness\n\nOnly relevant if the target role clearly involves feed, search, ranking, data infrastructure, or ML platforms.\n\n---",
+    "role_differences": "## 17.1 Role Matrix\n\n| Level | Coding | Design | Leadership | Values | Expected Autonomy | Confidence |\n|---|---|---|---|---|---|---|\n| New Graduate | Critical | Low | Low-Medium | High | Scoped tasks | Medium |\n| Software Engineer | Critical | Medium | Medium | High | Independent execution | Medium |\n| Senior | Very High | Very High | High | High | Broad technical ownership | Medium |\n| Staff | High | Critical | Critical | High | Cross-team influence | Medium |\n\n## 17.2 LinkedIn Role-Domain Variation\n\nThis section is a non-universal, evidence-limited guide to how role families may shift emphasis.\n\n| Role Family | Likely Emphasis | Confidence | Evidence Level |\n|---|---|---|---|\n| General SWE | DSA, coding, fundamentals, product thinking | Medium | Reported pattern |\n| Backend / Platform | APIs, concurrency, storage, distributed systems | Medium | Reported pattern |\n| Feed / Search / Ranking | Large-scale systems, ranking/relevance, data pipelines | Medium | Role-dependent |\n| Data Infrastructure | Data pipelines, storage, processing systems | Medium | Role-dependent |\n| Machine Learning Infrastructure | ML fundamentals, model serving, features, experimentation | Medium | Role-dependent |\n| Enterprise SaaS Products | Product thinking, enterprise integration, application development | Medium | Role-dependent |\n\nThese are preparation priorities, not universal LinkedIn requirements.\n\n---",
+    "subject_importance": "| Subject | Importance | Interview Stage | Experience Level | Reason | Confidence |\n|---|---|---|---|---|---|\n| Programming Fundamentals | High | Coding | All | Foundation for implementation | Medium |\n| Java | Medium | Coding | Role/candidate dependent | LinkedIn uses Java, C++, Python; language fluency supports implementation | Medium |\n| Data Structures & Algorithms | Critical | Technical Screen / Coding | All | Central technical signal | Medium |\n| Database Management Systems | Medium | Design/Technical | Mid+ | Data modeling and system reasoning | Medium |\n| Operating Systems | Medium | Technical/Design | Contextual | Systems relevance | Low-Medium |\n| Computer Networks | Medium | Design/Technical | Contextual | Distributed systems and networking | Medium |\n| Low-Level Design | Medium | Coding/Design | Mid+ | Role-dependent design | Medium |\n| High-Level Design | High | Design | Senior+ | Increasingly important with seniority | Medium |\n\n---"
+  },
+  "signals": [
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "coding",
+      "importance": "Critical",
+      "level_dependency": false,
+      "name": "Coding",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "problem_solving",
+      "importance": "Critical",
+      "level_dependency": false,
+      "name": "Problem Solving",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "system_design",
+      "importance": "High",
+      "level_dependency": true,
+      "name": "System Design",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "low_level_design",
+      "importance": "Medium",
+      "level_dependency": false,
+      "name": "Low Level Design",
+      "role_dependency": true
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "behavioral",
+      "importance": "High",
+      "level_dependency": false,
+      "name": "Behavioral",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium-High",
+      "formal_component": true,
+      "id": "values_alignment",
+      "importance": "High",
+      "level_dependency": false,
+      "name": "Values Alignment",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "data_driven_thinking",
+      "importance": "Medium-High",
+      "level_dependency": false,
+      "name": "Data Driven Thinking",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Low-Medium",
+      "formal_component": false,
+      "id": "linkedin_domain_aptitude",
+      "importance": "Low-Medium",
+      "level_dependency": false,
+      "name": "Linkedin Domain Aptitude",
+      "role_dependency": true
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "communication",
+      "importance": "Critical",
+      "level_dependency": false,
+      "name": "Communication",
+      "role_dependency": false
+    }
+  ],
+  "source_checksum": "sha256:87b75b20eb61e31c9a0f2966bf93a9a02fd3bf98068c8492405eef09fd14d981",
+  "subjects": {
+    "computer_networks": "Medium",
+    "dbms": "Medium",
+    "dsa": "Critical",
+    "high_level_design": "High",
+    "java": "Medium",
+    "low_level_design": "Medium",
+    "operating_systems": "Medium",
+    "programming_fundamentals": "High"
+  },
+  "summary": {
+    "company": {
+      "categories": [
+        "Product Company",
+        "Social Network",
+        "SaaS",
+        "Enterprise Software"
+      ],
+      "name": "LinkedIn"
+    },
+    "interview": {
+      "behavioral": {
+        "confidence": "Medium",
+        "importance": "High"
+      },
+      "coding": {
+        "confidence": "Medium",
+        "importance": "Critical"
+      },
+      "communication": {
+        "confidence": "Medium",
+        "importance": "Critical"
+      },
+      "data_driven_thinking": {
+        "confidence": "Medium",
+        "importance": "Medium-High"
+      },
+      "linkedin_domain_aptitude": {
+        "confidence": "Low-Medium",
+        "importance": "Low-Medium",
+        "role_dependency": true
+      },
+      "low_level_design": {
+        "confidence": "Medium",
+        "importance": "Medium",
+        "role_dependency": true
+      },
+      "problem_solving": {
+        "confidence": "Medium",
+        "importance": "Critical"
+      },
+      "system_design": {
+        "confidence": "Medium",
+        "importance": "High",
+        "level_dependency": true
+      },
+      "values_alignment": {
+        "confidence": "Medium-High",
+        "formal_component": true,
+        "importance": "High"
+      }
+    },
+    "levels": {
+      "new_grad": {
+        "primary_focus": [
+          "DSA",
+          "Coding",
+          "Fundamentals",
+          "Values"
+        ],
+        "system_design": "Low"
+      },
+      "senior": {
+        "primary_focus": [
+          "System Design",
+          "Engineering Judgment",
+          "Leadership",
+          "Values Leadership"
+        ],
+        "system_design": "Very High"
+      },
+      "software_engineer": {
+        "primary_focus": [
+          "DSA",
+          "Coding",
+          "Ownership",
+          "Values"
+        ],
+        "system_design": "Medium"
+      },
+      "staff": {
+        "primary_focus": [
+          "Architecture",
+          "Technical Leadership",
+          "Cross-Team Influence",
+          "Strategic Values"
+        ],
+        "system_design": "Critical"
+      }
+    },
+    "planner": {
+      "adaptive": {
+        "difficulty_requires_prerequisite_mastery": true,
+        "experience_sensitive": true,
+        "learner_readiness_overrides_company_priority": true,
+        "timeline_sensitive": true
+      },
+      "philosophy": [
+        "Problem Solving First",
+        "Strong Fundamentals",
+        "Algorithmic Execution",
+        "Engineering Judgment",
+        "Scalable Thinking",
+        "Technical Leadership",
+        "Values Alignment"
+      ],
+      "priority": [
+        "DSA",
+        "Programming",
+        "Behavioral/Values",
+        "System Design",
+        "Core CS",
+        "Role-Specific",
+        "LinkedIn Domain Awareness"
+      ]
+    },
+    "profile": {
+      "confidence": "Medium",
+      "last_reviewed": "2026-08-14",
+      "version": "1.1"
+    },
+    "subjects": {
+      "computer_networks": "Medium",
+      "dbms": "Medium",
+      "dsa": "Critical",
+      "high_level_design": "High",
+      "java": "Medium",
+      "low_level_design": "Medium",
+      "operating_systems": "Medium",
+      "programming_fundamentals": "High"
+    },
+    "trends": {
+      "ai_assisted_interview": {
+        "confidence": "Low",
+        "status": "Insufficient Evidence"
+      },
+      "experimentation_data_driven": {
+        "confidence": "Medium",
+        "status": "Reported"
+      },
+      "regional_variation": {
+        "confidence": "Low",
+        "status": "Insufficient Evidence"
+      }
+    }
+  },
+  "summary_variant": "interview",
+  "trends": {
+    "ai_assisted_interview": {
+      "confidence": "Low",
+      "status": "Insufficient Evidence"
+    },
+    "experimentation_data_driven": {
+      "confidence": "Medium",
+      "status": "Reported"
+    },
+    "regional_variation": {
+      "confidence": "Low",
+      "status": "Insufficient Evidence"
+    }
+  },
+  "validation": {
+    "warnings": []
+  }
+}

@@ -1,0 +1,333 @@
+{
+  "artifact_schema_version": "1.0",
+  "company_id": "microsoft",
+  "content_checksum": "sha256:cd899c2de5271754bdb8aa16123540d9f6086b7e5cb2062338ef62fde03cbe73",
+  "levels": {
+    "new_grad": {
+      "primary_focus": [
+        "DSA",
+        "Coding",
+        "Fundamentals"
+      ],
+      "system_design": "Low"
+    },
+    "principal": {
+      "primary_focus": [
+        "Architecture",
+        "Technical Leadership",
+        "Cross-Team Influence"
+      ],
+      "system_design": "Critical"
+    },
+    "sde1": {
+      "primary_focus": [
+        "DSA",
+        "Coding",
+        "Fundamentals",
+        "Ownership"
+      ],
+      "system_design": "Low-Medium"
+    },
+    "sde2": {
+      "primary_focus": [
+        "DSA",
+        "Coding",
+        "LLD",
+        "Ownership"
+      ],
+      "system_design": "Medium-High"
+    },
+    "senior": {
+      "primary_focus": [
+        "System Design",
+        "Engineering Judgment",
+        "Leadership",
+        "DSA"
+      ],
+      "system_design": "Very High"
+    }
+  },
+  "metadata": {
+    "accent": "#00A4EF",
+    "categories": [
+      "Product Company",
+      "Cloud Provider",
+      "Enterprise Software",
+      "AI Company"
+    ],
+    "confidence": "Medium",
+    "display_name": "Microsoft",
+    "last_reviewed": "2026-08-14",
+    "name": "Microsoft",
+    "primary_category": "Product Company"
+  },
+  "planner": {
+    "adaptive": {
+      "difficulty_requires_prerequisite_mastery": true,
+      "experience_sensitive": true,
+      "learner_readiness_overrides_company_priority": true,
+      "timeline_sensitive": true
+    },
+    "philosophy": [
+      "Problem Solving First",
+      "Strong Fundamentals",
+      "Algorithmic Execution",
+      "Engineering Judgment",
+      "Scalable Thinking",
+      "Technical Leadership"
+    ],
+    "priority": [
+      "DSA",
+      "Programming",
+      "Behavioral/Growth Mindset",
+      "LLD",
+      "HLD",
+      "Core CS",
+      "Role-Specific Knowledge"
+    ]
+  },
+  "profile_version": "1.0",
+  "registry_schema_version": "1.0",
+  "sections": {
+    "behavioral": "## 16.1 Leadership\n\n**Importance:** High for Senior+\n\nCandidates should demonstrate:\n\n- Influence without formal authority\n- Technical decision ownership\n- Conflict resolution\n- Cross-functional collaboration\n- Team success over personal credit\n- Appropriate delegation\n\n## 16.2 Communication\n\n**Importance:** Critical\n\nCandidates should:\n\n- Clarify requirements\n- State assumptions\n- Explain reasoning\n- Communicate trade-offs\n- Ask relevant questions\n- Respond constructively to feedback\n\n## 16.3 Collaboration\n\n**Importance:** High\n\nExamples should demonstrate:\n\n- Working across teams\n- Resolving disagreement\n- Sharing knowledge\n- Supporting peers\n- Handling stakeholder conflict\n\n## 16.4 Ownership\n\n**Importance:** High\n\nCandidates should demonstrate:\n\n- Responsibility for outcomes\n- Proactive problem identification\n- Follow-through\n- Operational awareness\n- Willingness to address problems beyond narrow task boundaries\n\n## 16.5 Growth Mindset\n\n**Importance:** High\n\nStrong evidence includes:\n\n- Learning from failures\n- Changing a decision when evidence changes\n- Seeking feedback\n- Improving engineering processes\n- Demonstrating intellectual humility\n\n## 16.6 Customer Focus\n\n**Importance:** Medium-High\n\nCandidates should demonstrate:\n\n- Understanding user impact\n- Business context\n- Stakeholder awareness\n- Delivering value\n\n## 16.7 Behavioral Preparation Format\n\nSTAR is recommended as a preparation framework:\n\n```text\nSituation\n   ↓\nTask\n   ↓\nAction\n   ↓\nResult\n   ↓\nLesson / What Changed\n```\n\nSTAR is a preparation technique, not asserted here as a mandatory Microsoft interview format.\n\n---",
+    "company_overview": "## 2.1 Company Profile\n\nMicrosoft is a global technology and enterprise-software company. Engineering organizations span cloud infrastructure, artificial intelligence, productivity software, operating systems, security, developer platforms, gaming, and enterprise services.\n\nFor PrepOS, Microsoft should be modeled as a **high-bar, team-specific engineering organization** where problem solving, coding, communication, growth mindset, and design sophistication become progressively more important with seniority.\n\n## 2.2 Company Categories\n\n```yaml\ncompany_categories:\n  - Product Company\n  - Cloud Provider\n  - Enterprise Software\n  - AI Company\n```\n\n## 2.3 Engineering Characteristics\n\n| Characteristic | PrepOS Interpretation | Confidence |\n|---|---|---|\n| Large-scale engineering | Strong relevance | Medium |\n| Distributed systems | Strong relevance, especially Azure/cloud teams | Medium |\n| Algorithmic problem solving | Core interview preparation area | Medium |\n| Software engineering fundamentals | Important foundation | Medium |\n| Scalability | Increasing importance with seniority | Medium |\n| Growth mindset | Strong Microsoft cultural signal | Medium-High |\n| Team-specific hiring | High variance across teams | Medium |\n| AI-assisted engineering | Emerging / pilot-dependent | Low |\n\n---",
+    "contradiction_register": "| Topic | Conflicting Claims | Resolution | Confidence | Requires Verification |\n|---|---|---|---|---|\n| LLD requirement | Some loops include dedicated LLD, others embed OOD in coding | Treat as role/team dependent | Medium | true |\n| System design at mid-level | Some mid-level backend roles report HLD, others do not | Treat as role-dependent | Medium | true |\n| Interview platform | Platform mechanics vary by team/region | Confirm actual invitation | Medium | true |\n| Team matching | Some new grad/intern reports mention matching, but not universal | Insufficient evidence | Low | true |\n\n---",
+    "engineering_philosophy": "## 3.1 Engineering Philosophy Summary\n\nMicrosoft engineering philosophy emphasizes:\n\n1. Growth mindset\n2. Customer obsession\n3. Collaboration across teams\n4. Security, privacy, and reliability\n5. Continuous improvement\n6. End-to-end ownership\n\nThe exact formal internal terminology should not be treated as permanently fixed.\n\n## 3.2 Engineering Progression\n\n```text\nProblem Solving\n      ↓\nStrong Fundamentals\n      ↓\nAlgorithmic Execution\n      ↓\nEngineering Judgment\n      ↓\nScalable Thinking\n      ↓\nTechnical Ownership\n      ↓\nCross-Team Influence\n```\n\n## 3.3 Core Engineering Principle\n\nPrepOS should interpret Microsoft preparation as:\n\n> Solve the right problem, explain the reasoning, implement correctly, consider scale, reliability, and security, and demonstrate increasing engineering scope as seniority increases.\n\n**Confidence:** Medium\n\n**Evidence Type:** Internal company knowledge + candidate pattern synthesis\n\n---",
+    "evaluation_signals": "| Signal | Importance | Description | Typical Interview Stage | Confidence |\n|---|---|---|---|---|\n| Problem Solving | Critical | Structured decomposition, assumptions, algorithms, reasoning | Technical Screen, Coding | Medium |\n| Coding Ability | Critical | Correct, readable, efficient implementation | Coding | Medium |\n| System Design | High for Senior+ | Architecture, scale, reliability, trade-offs | Design | Medium |\n| Low-Level Design | Medium-High | OOP, modularity, extensibility | Coding/LLD | Medium |\n| Technical Depth | High | Systems, technologies, engineering choices | Technical/Design | Medium |\n| Communication | Critical | Clear reasoning and concise technical explanation | All stages | Medium |\n| Collaboration | High | Working effectively across people and teams | Behavioral | Medium |\n| Ownership | High | End-to-end responsibility | Behavioral | Medium |\n| Growth Mindset | High | Learning, adaptation, feedback | Behavioral | Medium |\n| Customer Focus | Medium-High | User/customer orientation | Behavioral/Design | Medium |\n| Leadership | High for Senior+ | Influence, ownership, technical leadership | Behavioral/Design | Medium |\n\n---",
+    "evidence_summary": "| Finding | Classification | Confidence | PrepOS Treatment |\n|---|---|---|---|\n| Coding and algorithmic reasoning are central | Reported | Medium | High planning priority |\n| Structured reasoning matters | Reported | Medium | High |\n| Design importance increases with seniority | Reported Pattern | Medium | Strong level-dependent bias |\n| Behavioral evidence matters | Reported | Medium | Include behavioral preparation |\n| Growth mindset is culturally important | Reported | Medium-High | Behavioral emphasis |\n| Team-specific hiring variance | Reported | Medium | Do not hardcode one process |\n| Universal AI-assisted interview | Not Supported | Low | Do not hardcode |\n| Universal coding platform | Not Supported | Low | Confirm invitation |\n| Universal team matching | Not Supported | Low | Do not hardcode |\n\n---",
+    "hiring_philosophy": "## 4.1 Hiring Philosophy\n\nMicrosoft SWE evaluation is holistic but team-specific. A candidate should not be modeled as interview-ready merely because they can solve algorithmic problems.\n\nPrepOS should evaluate readiness across:\n\n- Problem solving\n- Coding\n- Design\n- Communication\n- Collaboration\n- Ownership\n- Growth mindset\n- Customer focus\n- Learning ability\n\n## 4.2 Hiring Progression\n\n```text\nFoundational Competence\n        ↓\nTechnical Execution\n        ↓\nIndependent Engineering\n        ↓\nArchitectural Ownership\n        ↓\nTechnical Leadership\n        ↓\nOrganizational Influence\n```\n\n## 4.3 Hiring Philosophy Constraints\n\nPrepOS MUST NOT assume:\n\n- A fixed interview count\n- A universal LLD round\n- A universal HLD round\n- A universal coding platform\n- A universal interview format\n- A universal AI-assisted interview\n- A universal team matching process\n\nThese are treated as role-, level-, team-, region-, or cycle-dependent unless stronger evidence becomes available.\n\n**Confidence:** Medium\n\n---",
+    "interview_pipeline": "## 5.1 Pipeline Model\n\n```text\nApplication / Referral\n        ↓\nRecruiter / Initial Alignment\n        ↓\nPotential Online Assessment\n        ↓\nTechnical Screen\n        ↓\nInterview Loop\n        ↓\nInterview Feedback\n        ↓\nHiring Decision\n        ↓\nOffer\n```\n\nActual sequence may vary by team and role.\n\n## 5.2 Pipeline Stages\n\n| Stage | Purpose | Duration | Evaluation Criteria | Difficulty | Confidence | Evidence Source |\n|---|---|---|---|---|---|---|\n| Application / Referral | Establish candidate eligibility | Varies | Resume, experience, role fit | Medium | Medium | Internal knowledge |\n| Recruiter Screen | Validate role, experience, process | 20–30 min | Fit, communication, motivation | Low–Medium | Medium | Internal knowledge |\n| Online Assessment | Pre-screen coding | 60–120 min | Coding, DSA | Medium–High | Medium | Interview Reports |\n| Technical Screen | Validate baseline coding | 45–60 min | Coding, reasoning, communication | High | Medium | Interview Reports |\n| Interview Loop | Holistic evaluation | 3–5 interviews, 45–60 min each | Coding, design, behavioral | Very High | Medium | Interview Reports |\n| Feedback / Decision | Aggregate interview evaluations | Varies | Holistic evidence | Very High | Medium | Reported Process |\n| Offer | Complete hiring process | Varies | Level, role, headcount | Varies | Low | Reported Process |\n\n---",
+    "negative_evidence": "Do NOT treat the following as core Microsoft SWE preparation requirements unless role-specific evidence exists:\n\n- Universal LLD for all roles\n- Universal HLD for all levels\n- Universal OS/DBMS/Networking depth\n- One universal interview template\n- Universal team matching\n- Universal coding platform\n- Universal AI interview\n- Universal GHA-like assessment\n\n---",
+    "preparation_strategy": "## 21.1 Core Preparation Sequence\n\n```text\nPhase 1: Programming Fundamentals\n        ↓\nPhase 2: DSA Foundations\n        ↓\nPhase 3: Advanced DSA\n        ↓\nPhase 4: Timed Coding + Communication\n        ↓\nPhase 5: Low-Level Design\n        ↓\nPhase 6: High-Level System Design\n        ↓\nPhase 7: Behavioral / Growth Mindset\n        ↓\nPhase 8: Mock Interview Loop\n```\n\n## 21.2 Preparation Priorities\n\n### Priority 1 — DSA\n\nFocus on:\n\n- Arrays\n- Strings\n- Hashing\n- Trees\n- Graphs\n- BFS\n- DFS\n- Heaps\n- Queues\n- Recursion\n- Dynamic Programming\n- Greedy\n- Backtracking\n- Complexity analysis\n\n### Priority 2 — Coding Execution\n\nPractice:\n\n- Clarifying requirements\n- Selecting an approach\n- Writing clean code\n- Testing\n- Debugging\n- Complexity analysis\n- Optimization\n\n### Priority 3 — System Design\n\nIncrease preparation according to seniority.\n\n### Priority 4 — Behavioral\n\nDevelop evidence-backed stories around growth mindset, collaboration, ownership, and customer impact.\n\n### Priority 5 — Core CS\n\nUse role-specific evidence to determine whether OS, DBMS, networking or other fundamentals should receive additional weighting.\n\n---",
+    "role_differences": "## 17.1 Role Matrix\n\n| Level | Coding | Design | Leadership | Expected Autonomy | Confidence |\n|---|---|---|---|---|---|\n| New Graduate | Critical | Low | Low-Medium | Scoped tasks | Medium |\n| SDE I | Critical | Low-Medium | Medium | Independent project execution | Medium |\n| SDE II | Very High | High | High | End-to-end technical ownership | Medium |\n| Senior | Very High | Very High | High | Broad technical ownership | Medium |\n| Principal | High | Critical | Critical | Cross-team / organizational influence | Medium |\n\n## 17.2 Microsoft-Specific Role-Domain Variation\n\nMicrosoft's process is team-specific. The following is a **non-universal, evidence-limited** guide to how certain role families may shift emphasis.\n\n| Role Family | Likely Emphasis | Confidence | Evidence Level |\n|---|---|---|---|\n| General SWE | DSA, coding, fundamentals, behavioral | Medium | Reported pattern |\n| Backend / Platform | APIs, concurrency, storage, distributed systems | Medium | Reported pattern |\n| Cloud / Azure | Scalability, availability, multi-region design, infrastructure | Medium-High | Reported pattern |\n| AI/ML | Machine learning fundamentals, data pipelines, modeling where relevant | Medium | Role-dependent |\n| Security | Security principles, threat modeling, secure design | Medium | Role-dependent |\n| Developer Tools / Platform | API design, developer experience, SDK/CLI scenarios | Medium | Role-dependent |\n\nThese are **preparation priorities**, not universal Microsoft requirements.\n\n---",
+    "subject_importance": "| Subject | Importance | Interview Stage | Experience Level | Reason | Confidence |\n|---|---|---|---|---|---|\n| Programming Fundamentals | High | Coding | All | Foundation for implementation and reasoning | Medium |\n| Java | Medium | Coding | Role/candidate dependent | Language fluency may support implementation where permitted | Medium |\n| Data Structures & Algorithms | Critical | Technical Screen / Coding | All | Central technical signal | Medium-High |\n| Database Management Systems | Medium | Design/Technical | Mid+ | Data modeling and system reasoning | Medium |\n| Operating Systems | Medium | Technical/Design | Contextual | Systems and infrastructure relevance | Medium |\n| Computer Networks | Medium | Design/Technical | Contextual | Distributed systems and networking | Medium |\n| Low-Level Design | Medium-High | Coding/Design | Mid+ | OOP, modularity, extensibility | Medium |\n| High-Level Design | High | Design | Senior+ | Increasingly important with seniority | Medium |\n\n---"
+  },
+  "signals": [
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "coding",
+      "importance": "Critical",
+      "level_dependency": false,
+      "name": "Coding",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "problem_solving",
+      "importance": "Critical",
+      "level_dependency": false,
+      "name": "Problem Solving",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "system_design",
+      "importance": "High",
+      "level_dependency": true,
+      "name": "System Design",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "low_level_design",
+      "importance": "Medium-High",
+      "level_dependency": false,
+      "name": "Low Level Design",
+      "role_dependency": true
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "behavioral",
+      "importance": "High",
+      "level_dependency": false,
+      "name": "Behavioral",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "leadership",
+      "importance": "High",
+      "level_dependency": false,
+      "name": "Leadership",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "communication",
+      "importance": "Critical",
+      "level_dependency": false,
+      "name": "Communication",
+      "role_dependency": false
+    }
+  ],
+  "source_checksum": "sha256:89ff726802dd643e713003da6fd8bd5d47d85b07f4c509648c48734deb040f88",
+  "subjects": {
+    "computer_networks": "Medium",
+    "dbms": "Medium",
+    "dsa": "Critical",
+    "high_level_design": "High",
+    "java": "Medium",
+    "low_level_design": "Medium-High",
+    "operating_systems": "Medium",
+    "programming_fundamentals": "High"
+  },
+  "summary": {
+    "company": {
+      "categories": [
+        "Product Company",
+        "Cloud Provider",
+        "Enterprise Software",
+        "AI Company"
+      ],
+      "name": "Microsoft"
+    },
+    "interview": {
+      "behavioral": {
+        "confidence": "Medium",
+        "importance": "High"
+      },
+      "coding": {
+        "confidence": "Medium",
+        "importance": "Critical"
+      },
+      "communication": {
+        "confidence": "Medium",
+        "importance": "Critical"
+      },
+      "leadership": {
+        "confidence": "Medium",
+        "importance": "High"
+      },
+      "low_level_design": {
+        "confidence": "Medium",
+        "importance": "Medium-High",
+        "role_dependency": true
+      },
+      "problem_solving": {
+        "confidence": "Medium",
+        "importance": "Critical"
+      },
+      "system_design": {
+        "confidence": "Medium",
+        "importance": "High",
+        "level_dependency": true
+      }
+    },
+    "levels": {
+      "new_grad": {
+        "primary_focus": [
+          "DSA",
+          "Coding",
+          "Fundamentals"
+        ],
+        "system_design": "Low"
+      },
+      "principal": {
+        "primary_focus": [
+          "Architecture",
+          "Technical Leadership",
+          "Cross-Team Influence"
+        ],
+        "system_design": "Critical"
+      },
+      "sde1": {
+        "primary_focus": [
+          "DSA",
+          "Coding",
+          "Fundamentals",
+          "Ownership"
+        ],
+        "system_design": "Low-Medium"
+      },
+      "sde2": {
+        "primary_focus": [
+          "DSA",
+          "Coding",
+          "LLD",
+          "Ownership"
+        ],
+        "system_design": "Medium-High"
+      },
+      "senior": {
+        "primary_focus": [
+          "System Design",
+          "Engineering Judgment",
+          "Leadership",
+          "DSA"
+        ],
+        "system_design": "Very High"
+      }
+    },
+    "planner": {
+      "adaptive": {
+        "difficulty_requires_prerequisite_mastery": true,
+        "experience_sensitive": true,
+        "learner_readiness_overrides_company_priority": true,
+        "timeline_sensitive": true
+      },
+      "philosophy": [
+        "Problem Solving First",
+        "Strong Fundamentals",
+        "Algorithmic Execution",
+        "Engineering Judgment",
+        "Scalable Thinking",
+        "Technical Leadership"
+      ],
+      "priority": [
+        "DSA",
+        "Programming",
+        "Behavioral/Growth Mindset",
+        "LLD",
+        "HLD",
+        "Core CS",
+        "Role-Specific Knowledge"
+      ]
+    },
+    "profile": {
+      "confidence": "Medium",
+      "last_reviewed": "2026-08-14",
+      "version": "1.0"
+    },
+    "subjects": {
+      "computer_networks": "Medium",
+      "dbms": "Medium",
+      "dsa": "Critical",
+      "high_level_design": "High",
+      "java": "Medium",
+      "low_level_design": "Medium-High",
+      "operating_systems": "Medium",
+      "programming_fundamentals": "High"
+    },
+    "trends": {
+      "ai_assisted_interview": {
+        "confidence": "Low",
+        "status": "Insufficient Evidence"
+      },
+      "regional_variation": {
+        "confidence": "Low",
+        "status": "Insufficient Evidence"
+      }
+    }
+  },
+  "summary_variant": "interview",
+  "trends": {
+    "ai_assisted_interview": {
+      "confidence": "Low",
+      "status": "Insufficient Evidence"
+    },
+    "regional_variation": {
+      "confidence": "Low",
+      "status": "Insufficient Evidence"
+    }
+  },
+  "validation": {
+    "warnings": []
+  }
+}

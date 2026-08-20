@@ -1,0 +1,360 @@
+{
+  "artifact_schema_version": "1.0",
+  "company_id": "paypal",
+  "content_checksum": "sha256:421b81e59ba3755eb7711049a4f973e0f9efc16619b49d66741e542f74ab3664",
+  "levels": {
+    "new_grad": {
+      "primary_focus": [
+        "DSA",
+        "Coding",
+        "Fundamentals",
+        "Values"
+      ],
+      "system_design": "Low"
+    },
+    "senior": {
+      "primary_focus": [
+        "System Design",
+        "Payment Architecture",
+        "Security/Trust",
+        "Leadership",
+        "Values Leadership"
+      ],
+      "system_design": "Very High"
+    },
+    "software_engineer": {
+      "primary_focus": [
+        "DSA",
+        "Coding",
+        "Ownership",
+        "Values"
+      ],
+      "system_design": "Medium"
+    },
+    "staff": {
+      "primary_focus": [
+        "Architecture",
+        "Technical Leadership",
+        "Cross-Team Influence",
+        "Strategic Values"
+      ],
+      "system_design": "Critical"
+    }
+  },
+  "metadata": {
+    "accent": "#003087",
+    "categories": [
+      "Fintech",
+      "Payments",
+      "Digital Wallet",
+      "E-commerce"
+    ],
+    "confidence": "Medium",
+    "display_name": "PayPal",
+    "last_reviewed": "2026-08-14",
+    "name": "PayPal",
+    "primary_category": "FinTech"
+  },
+  "planner": {
+    "adaptive": {
+      "difficulty_requires_prerequisite_mastery": true,
+      "experience_sensitive": true,
+      "learner_readiness_overrides_company_priority": true,
+      "timeline_sensitive": true
+    },
+    "philosophy": [
+      "Problem Solving First",
+      "Strong Fundamentals",
+      "Algorithmic Execution",
+      "Engineering Judgment",
+      "Scalable Thinking",
+      "Technical Leadership",
+      "Values Alignment"
+    ],
+    "priority": [
+      "DSA",
+      "Programming",
+      "Behavioral/Values",
+      "System Design",
+      "Core CS",
+      "Payment-Domain Awareness",
+      "Role-Specific"
+    ]
+  },
+  "profile_version": "1.1",
+  "registry_schema_version": "1.0",
+  "sections": {
+    "behavioral": "## 16.1 Values Alignment\n\n**Importance:** High\n\nCandidates should demonstrate alignment with PayPal values:\n\n- Inclusion\n- Innovation\n- Collaboration\n- Wellness\n- Customer Champion\n- Deliver Results\n\n**Confidence:** Medium-High\n\n## 16.2 Communication\n\n**Importance:** Critical\n\nCandidates should:\n\n- Clarify requirements\n- State assumptions\n- Explain reasoning\n- Communicate trade-offs\n- Ask relevant questions\n- Respond constructively to feedback\n\n## 16.3 Collaboration\n\n**Importance:** High\n\nExamples should demonstrate:\n\n- Working across teams\n- Resolving disagreement\n- Sharing knowledge\n- Supporting peers\n- Handling stakeholder conflict\n\n## 16.4 Ownership\n\n**Importance:** High\n\nCandidates should demonstrate:\n\n- Responsibility for outcomes\n- Proactive problem identification\n- Follow-through\n- Operational awareness\n- Willingness to address problems beyond narrow task boundaries\n\n## 16.5 Customer Champion\n\n**Importance:** Medium-High\n\nCandidates should demonstrate:\n\n- Customer-centric decision-making\n- Understanding customer impact\n- Delivering value\n\n## 16.6 Learning Mindset\n\n**Importance:** High\n\nStrong evidence includes:\n\n- Learning from failures\n- Changing a decision when evidence changes\n- Seeking feedback\n- Improving engineering processes\n- Demonstrating intellectual humility\n\n## 16.7 Behavioral Preparation Format\n\nSTAR is recommended as a preparation framework:\n\n```text\nSituation\n   ↓\nTask\n   ↓\nAction\n   ↓\nResult\n   ↓\nLesson / What Changed\n```\n\nSTAR is a preparation technique, not asserted here as a mandatory PayPal interview format.\n\n---",
+    "company_overview": "## 2.1 Company Profile\n\nPayPal is a global financial technology company that operates a payment processing and digital wallet platform. Engineering organizations span payments, risk management, security, distributed systems, mobile, and AI/ML. PayPal is known for its strong engineering culture with emphasis on security, scalability, reliability, and customer trust.\n\nFor PrepOS, PayPal should be modeled as a **high-bar fintech engineering organization** where coding, DSA, system design, security/trust awareness, and behavioral/values alignment are critical. The interview process is rigorous, with a strong focus on payment systems, fraud/risk, and reconciliation.\n\n## 2.2 Company Categories\n\n```yaml\ncompany_categories:\n  - Fintech\n  - Payments\n  - Digital Wallet\n  - E-commerce\n```\n\n## 2.3 Engineering Characteristics\n\n| Characteristic | PrepOS Interpretation | Confidence |\n|---|---|---|\n| Large-scale distributed systems | Strong relevance | Medium |\n| Payment processing | Core domain | Medium |\n| Digital wallet | Core domain | Medium |\n| Security and risk | Strong relevance | Medium |\n| Reconciliation | Strong relevance for payment roles | Medium |\n| Algorithmic problem solving | Core interview preparation area | Medium |\n| System design | High importance, especially senior roles | Medium |\n| Software engineering fundamentals | Important foundation | Medium |\n| Values alignment | High cultural signal | Medium-High |\n| AI-assisted engineering | Emerging / pilot-dependent | Low |\n\n## 2.4 PayPal Payment Domain vs Interview Evaluation\n\nThis section separates PayPal's business domain from actual interview signals.\n\n| Domain | What PayPal engineers may work on | Reported interview relevance | PrepOS priority |\n|---|---|---|---|\n| Payment Processing | Transaction processing, payment routing, authorization | Role-dependent; may appear in system design | Medium-High for payment roles |\n| Digital Wallet | Wallet balance, account management, P2P transfers | Role-dependent; may appear in system design | Medium |\n| Fraud / Risk | Fraud detection, risk scoring, anomaly detection | Role-dependent; may appear in system design or technical deep-dive | Medium |\n| Security / Trust | Authentication, encryption, compliance | Strong relevance for security roles; otherwise medium | Medium |\n| Reconciliation | Ledger, reconciliation, idempotency | Role-dependent; may appear in system design | Medium-High for payment roles |\n| High-Availability Systems | Multi-region, failover, fault tolerance | Strong relevance for senior backend roles | Medium-High |\n| APIs / Platform | API design, developer integrations | Role-dependent | Medium |\n\nDo not assume every candidate is evaluated on payment-specific topics.\n\n## 2.5 Differentiation from Other Payment Companies\n\nWhere evidence supports differentiation:\n\n| Company | Primary Payment Identity | PayPal Distinction | Confidence |\n|---|---|---|---|\n| Stripe | Developer/API-centric payment infrastructure; practical coding/debugging/integration emphasis | PayPal emphasizes digital wallet, consumer payments, security/trust, and established payment ecosystem | Medium |\n| PhonePe | UPI-focused India-centric payment ecosystem; transaction/ledger/reconciliation systems | PayPal is global, wallet-centric, with strong security/trust and fraud/risk focus | Medium |\n\nThese distinctions are based on reported company identities, not universal interview patterns.\n\n---",
+    "contradiction_register": "| Topic | Conflicting Claims | Resolution | Confidence | Requires Verification |\n|---|---|---|---|---|\n| Values Interview | Some sources report it as formal, others embedded | Treat as high priority but confirm actual invitation | Medium | true |\n| Online Assessment | Platform varies by region/role | Confirm actual invitation | Medium | true |\n| LLD requirement | Some loops embed OOD, others have dedicated design | Treat as role/team dependent | Medium | true |\n| System design at mid-level | Some mid-level backend roles report HLD, others do not | Treat as role-dependent | Medium | true |\n| Payment-domain questions | Some candidates report domain-specific design; others not | Treat as role-dependent | Medium | true |\n\n---",
+    "engineering_philosophy": "## 3.1 Engineering Philosophy Summary\n\nPayPal engineering philosophy emphasizes:\n\n1. Customer focus\n2. Security and trust\n3. Reliability and availability\n4. Scalability\n5. Innovation\n6. Collaboration\n7. End-to-end ownership\n\nThe exact formal internal terminology should not be treated as permanently fixed.\n\n## 3.2 Engineering Progression\n\n```text\nProblem Solving\n      ↓\nStrong Fundamentals\n      ↓\nAlgorithmic Execution\n      ↓\nEngineering Judgment\n      ↓\nScalable Thinking\n      ↓\nTechnical Ownership\n      ↓\nCross-Team Influence\n```\n\n## 3.3 Core Engineering Principle\n\nPrepOS should interpret PayPal preparation as:\n\n> Solve the right problem, explain the reasoning, implement correctly, understand trade-offs, and demonstrate security/trust awareness, payment-domain awareness, and values alignment as seniority increases.\n\n**Confidence:** Medium\n\n**Evidence Type:** Internal company knowledge + candidate pattern synthesis\n\n---",
+    "evaluation_signals": "| Signal | Importance | Description | Typical Interview Stage | Confidence |\n|---|---|---|---|---|\n| Problem Solving | Critical | Structured decomposition, algorithms, reasoning | Technical Screen, Coding | Medium |\n| Coding Ability | Critical | Correct, readable, efficient implementation | Coding | Medium |\n| System Design | High for Senior+ | Architecture, scale, reliability, trade-offs | Design | Medium |\n| Security Awareness | High | Security, trust, payment system risks | Technical/Design | Medium |\n| Low-Level Design | Medium | OOP, modularity, extensibility | Coding/Design | Medium |\n| Technical Depth | High | Systems, technologies, engineering choices | Technical/Design | Medium |\n| Payment-Domain Awareness | Medium | Wallet, transactions, reconciliation, idempotency concepts | Design / Technical | Medium |\n| Communication | Critical | Clear reasoning and concise technical explanation | All stages | Medium |\n| Collaboration | High | Working effectively across teams | Behavioral / Values | High |\n| Ownership | High | End-to-end responsibility | Behavioral / Values | Medium-High |\n| Values Alignment | High | Alignment with PayPal values | Behavioral / Values | Medium-High |\n| Customer Champion | Medium-High | Customer-centric decision-making | Behavioral / Design | Medium |\n| Learning Ability | High | Adaptation, reflection, updating assumptions | Behavioral / Technical | Medium |\n| Leadership | High for Senior+ | Influence, ownership, technical leadership | Behavioral / Design | Medium |\n\n---",
+    "evidence_summary": "| Finding | Classification | Confidence | PrepOS Treatment |\n|---|---|---|---|\n| Coding and algorithmic reasoning are central | Reported | Medium | High planning priority |\n| Structured reasoning matters | Reported | Medium | High |\n| Values alignment is important | Strongly Reported | Medium-High | High behavioral/values priority |\n| Design importance increases with seniority | Reported Pattern | Medium | Strong level-dependent bias |\n| Payment-domain awareness is valued | Reported | Medium | Role-dependent only |\n| Security/trust awareness is valued | Reported | Medium | Include in design/behavioral |\n| Behavioral evidence matters | Reported | Medium | Include behavioral preparation |\n| Team-specific hiring variance | Reported | Medium | Do not hardcode one process |\n| Universal AI-assisted interview | Not Supported | Low | Do not hardcode |\n| Universal coding platform | Not Supported | Low | Confirm invitation |\n| Universal payment-domain knowledge | Not Supported | Low | Do not hardcode |\n\n---",
+    "hiring_philosophy": "## 4.1 Hiring Philosophy\n\nPayPal SWE evaluation is holistic, blending technical and behavioral signals. A candidate should not be modeled as interview-ready merely because they can solve algorithmic problems.\n\nPrepOS should evaluate readiness across:\n\n- Problem solving\n- Coding\n- System design\n- Security awareness\n- Communication\n- Collaboration\n- Ownership\n- Values alignment\n- Learning ability\n- Payment-domain awareness where role-relevant\n\n## 4.2 Hiring Progression\n\n```text\nFoundational Competence\n        ↓\nTechnical Execution\n        ↓\nIndependent Engineering\n        ↓\nArchitectural Ownership\n        ↓\nTechnical Leadership\n        ↓\nOrganizational Influence\n```\n\n## 4.3 Hiring Philosophy Constraints\n\nPrepOS MUST NOT assume:\n\n- A fixed interview count\n- A universal online assessment\n- A universal coding platform\n- A universal interview format\n- A universal system design round for all levels\n- A universal values interview\n- A universal team matching process\n- A universal AI-assisted interview\n- Universal payment-domain knowledge\n\nThese are treated as role-, level-, team-, region-, or cycle-dependent unless stronger evidence becomes available.\n\n**Confidence:** Medium\n\n---",
+    "interview_pipeline": "## 5.1 Pipeline Model\n\n```text\nApplication / Referral\n        ↓\nRecruiter / Initial Alignment\n        ↓\nPotential Online Assessment\n        ↓\nTechnical Screen\n        ↓\nInterview Loop\n        ↓\nBehavioral / Values Interview\n        ↓\nInterview Feedback\n        ↓\nHiring Decision\n        ↓\nOffer\n```\n\nActual sequence may vary by team and role.\n\n## 5.2 Pipeline Stages\n\n| Stage | Purpose | Duration | Evaluation Criteria | Difficulty | Confidence | Evidence Source |\n|---|---|---|---|---|---|---|\n| Application / Referral | Establish candidate eligibility | Varies | Resume, experience, role fit | Medium | Medium | Internal knowledge |\n| Recruiter Screen | Validate role, experience, process | 20–30 min | Fit, communication, motivation | Low–Medium | Medium | Internal knowledge |\n| Potential Online Assessment | Pre-screen coding | Varies | Coding, DSA | Medium–High | Medium | Interview Reports |\n| Technical Screen | Validate baseline coding | 45–60 min | Coding, reasoning, communication | High | Medium | Interview Reports |\n| Interview Loop | Holistic technical evaluation | Varies, often 3–5 interviews | Coding, design, technical depth | Very High | Medium | Interview Reports |\n| Behavioral / Values Interview | Evaluate alignment with PayPal values | Reported as formal behavioral component | Behavioral consistency, values alignment | Medium-High | Medium-High | Interview Reports |\n| Feedback / Decision | Aggregate interview evaluations | Varies | Holistic evidence | Very High | Medium | Reported Process |\n| Offer | Complete hiring process | Varies | Level, role, headcount | Varies | Low | Reported Process |\n\n---\n\n## 5.3 PayPal Values\n\n### Status\n\n**Reported / Strongly Indicated as Cultural Component**\n\nPayPal is known for its corporate values, which often appear in behavioral interviews:\n\n- Inclusion\n- Innovation\n- Collaboration\n- Wellness\n- Customer Champion\n- Deliver Results\n\n### PrepOS Rule\n\nTreat behavioral preparation as high priority. Candidates should prepare examples that demonstrate PayPal values explicitly.\n\n```yaml\nvalues:\n  status: Strongly Reported\n  universal_requirement: Likely for most SWE roles\n  coding_test: No\n  confidence: Medium-High\n  planner_behavior: High priority behavioral prep\n```\n\n---",
+    "negative_evidence": "Do NOT treat the following as core PayPal SWE preparation requirements unless role-specific evidence exists:\n\n- Universal LLD for all roles\n- Universal HLD for all levels\n- Universal OS/DBMS/Networking depth\n- One universal interview template\n- Universal coding platform\n- Universal AI interview\n- Universal team matching\n- Universal payment-domain knowledge as an interview requirement\n\n---",
+    "preparation_strategy": "## 21.1 Core Preparation Sequence\n\n```text\nPhase 1: Programming Fundamentals\n        ↓\nPhase 2: DSA Foundations\n        ↓\nPhase 3: Advanced DSA\n        ↓\nPhase 4: Timed Coding + Communication\n        ↓\nPhase 5: Low-Level Design\n        ↓\nPhase 6: High-Level System Design\n        ↓\nPhase 7: Behavioral / Values Preparation\n        ↓\nPhase 8: Mock Interview Loop\n```\n\n## 21.2 Preparation Priorities\n\n### Priority 1 — DSA\n\nFocus on:\n\n- Arrays\n- Strings\n- Hashing\n- Trees\n- Graphs\n- BFS\n- DFS\n- Heaps\n- Queues\n- Recursion\n- Dynamic Programming\n- Greedy\n- Backtracking\n- Complexity analysis\n\n### Priority 2 — Coding Execution\n\nPractice:\n\n- Clarifying requirements\n- Selecting an approach\n- Writing clean code\n- Testing\n- Debugging\n- Complexity analysis\n- Optimization\n\n### Priority 3 — System Design\n\nIncrease preparation according to seniority.\n\n### Priority 4 — Behavioral / Values\n\nDevelop evidence-backed stories that demonstrate PayPal values explicitly.\n\n### Priority 5 — Core CS\n\nUse role-specific evidence to determine whether OS, DBMS, networking or other fundamentals should receive additional weighting.\n\n### Priority 6 — Payment-Domain Awareness\n\nOnly if target role involves payment processing, wallet, fraud, or reconciliation systems.\n\n---",
+    "role_differences": "| Level | Coding | Design | Leadership | Values | Expected Autonomy | Confidence |\n|---|---|---|---|---|---|---|\n| New Graduate | Critical | Low | Low-Medium | High | Scoped tasks | Medium |\n| Software Engineer | Critical | Medium | Medium | High | Independent execution | Medium |\n| Senior | Very High | Very High | High | High | Broad technical ownership | Medium |\n| Staff | High | Critical | Critical | High | Cross-team influence | Medium |\n\n---",
+    "subject_importance": "| Subject | Importance | Interview Stage | Experience Level | Reason | Confidence |\n|---|---|---|---|---|---|\n| Programming Fundamentals | High | Coding | All | Foundation for implementation | Medium |\n| Java | Medium | Coding | Role/candidate dependent | PayPal uses Java, Python, C++; language fluency supports implementation | Medium |\n| Data Structures & Algorithms | Critical | Technical Screen / Coding | All | Central technical signal | Medium |\n| Database Management Systems | Medium-High | Design/Technical | Mid+ | Data modeling, transactions, reconciliation | Medium |\n| Operating Systems | Medium | Technical/Design | Contextual | Systems relevance | Low-Medium |\n| Computer Networks | Medium | Design/Technical | Contextual | Distributed systems and networking | Medium |\n| Low-Level Design | Medium | Coding/Design | Mid+ | Role-dependent design | Medium |\n| High-Level Design | High | Design | Senior+ | Increasingly important with seniority; payment systems | Medium |\n\n---"
+  },
+  "signals": [
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "coding",
+      "importance": "Critical",
+      "level_dependency": false,
+      "name": "Coding",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "problem_solving",
+      "importance": "Critical",
+      "level_dependency": false,
+      "name": "Problem Solving",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "system_design",
+      "importance": "High",
+      "level_dependency": true,
+      "name": "System Design",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "low_level_design",
+      "importance": "Medium",
+      "level_dependency": false,
+      "name": "Low Level Design",
+      "role_dependency": true
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "behavioral",
+      "importance": "High",
+      "level_dependency": false,
+      "name": "Behavioral",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium-High",
+      "formal_component": true,
+      "id": "values_alignment",
+      "importance": "High",
+      "level_dependency": false,
+      "name": "Values Alignment",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "security_trust_awareness",
+      "importance": "High",
+      "level_dependency": false,
+      "name": "Security Trust Awareness",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Low-Medium",
+      "formal_component": false,
+      "id": "payment_domain_awareness",
+      "importance": "Low-Medium",
+      "level_dependency": false,
+      "name": "Payment Domain Awareness",
+      "role_dependency": true
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "communication",
+      "importance": "Critical",
+      "level_dependency": false,
+      "name": "Communication",
+      "role_dependency": false
+    }
+  ],
+  "source_checksum": "sha256:d3593077834cc65f5df3ad4d41f44ad6b9edd8eb96be0d337ad33d85e3a93ced",
+  "subjects": {
+    "computer_networks": "Medium",
+    "dbms": "Medium-High",
+    "dsa": "Critical",
+    "high_level_design": "High",
+    "java": "Medium",
+    "low_level_design": "Medium",
+    "operating_systems": "Medium",
+    "programming_fundamentals": "High"
+  },
+  "summary": {
+    "company": {
+      "categories": [
+        "Fintech",
+        "Payments",
+        "Digital Wallet",
+        "E-commerce"
+      ],
+      "name": "PayPal"
+    },
+    "interview": {
+      "behavioral": {
+        "confidence": "Medium",
+        "importance": "High"
+      },
+      "coding": {
+        "confidence": "Medium",
+        "importance": "Critical"
+      },
+      "communication": {
+        "confidence": "Medium",
+        "importance": "Critical"
+      },
+      "low_level_design": {
+        "confidence": "Medium",
+        "importance": "Medium",
+        "role_dependency": true
+      },
+      "payment_domain_awareness": {
+        "confidence": "Low-Medium",
+        "importance": "Low-Medium",
+        "role_dependency": true
+      },
+      "problem_solving": {
+        "confidence": "Medium",
+        "importance": "Critical"
+      },
+      "security_trust_awareness": {
+        "confidence": "Medium",
+        "importance": "High",
+        "role_dependency": false
+      },
+      "system_design": {
+        "confidence": "Medium",
+        "importance": "High",
+        "level_dependency": true
+      },
+      "values_alignment": {
+        "confidence": "Medium-High",
+        "formal_component": true,
+        "importance": "High"
+      }
+    },
+    "levels": {
+      "new_grad": {
+        "primary_focus": [
+          "DSA",
+          "Coding",
+          "Fundamentals",
+          "Values"
+        ],
+        "system_design": "Low"
+      },
+      "senior": {
+        "primary_focus": [
+          "System Design",
+          "Payment Architecture",
+          "Security/Trust",
+          "Leadership",
+          "Values Leadership"
+        ],
+        "system_design": "Very High"
+      },
+      "software_engineer": {
+        "primary_focus": [
+          "DSA",
+          "Coding",
+          "Ownership",
+          "Values"
+        ],
+        "system_design": "Medium"
+      },
+      "staff": {
+        "primary_focus": [
+          "Architecture",
+          "Technical Leadership",
+          "Cross-Team Influence",
+          "Strategic Values"
+        ],
+        "system_design": "Critical"
+      }
+    },
+    "planner": {
+      "adaptive": {
+        "difficulty_requires_prerequisite_mastery": true,
+        "experience_sensitive": true,
+        "learner_readiness_overrides_company_priority": true,
+        "timeline_sensitive": true
+      },
+      "philosophy": [
+        "Problem Solving First",
+        "Strong Fundamentals",
+        "Algorithmic Execution",
+        "Engineering Judgment",
+        "Scalable Thinking",
+        "Technical Leadership",
+        "Values Alignment"
+      ],
+      "priority": [
+        "DSA",
+        "Programming",
+        "Behavioral/Values",
+        "System Design",
+        "Core CS",
+        "Payment-Domain Awareness",
+        "Role-Specific"
+      ]
+    },
+    "profile": {
+      "confidence": "Medium",
+      "last_reviewed": "2026-08-14",
+      "version": "1.1"
+    },
+    "subjects": {
+      "computer_networks": "Medium",
+      "dbms": "Medium-High",
+      "dsa": "Critical",
+      "high_level_design": "High",
+      "java": "Medium",
+      "low_level_design": "Medium",
+      "operating_systems": "Medium",
+      "programming_fundamentals": "High"
+    },
+    "trends": {
+      "ai_assisted_interview": {
+        "confidence": "Low",
+        "status": "Insufficient Evidence"
+      },
+      "regional_variation": {
+        "confidence": "Low",
+        "status": "Insufficient Evidence"
+      },
+      "security_trust_emphasis": {
+        "confidence": "Medium",
+        "status": "Reported"
+      }
+    }
+  },
+  "summary_variant": "interview",
+  "trends": {
+    "ai_assisted_interview": {
+      "confidence": "Low",
+      "status": "Insufficient Evidence"
+    },
+    "regional_variation": {
+      "confidence": "Low",
+      "status": "Insufficient Evidence"
+    },
+    "security_trust_emphasis": {
+      "confidence": "Medium",
+      "status": "Reported"
+    }
+  },
+  "validation": {
+    "warnings": []
+  }
+}

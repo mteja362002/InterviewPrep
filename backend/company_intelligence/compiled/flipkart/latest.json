@@ -1,0 +1,322 @@
+{
+  "artifact_schema_version": "1.0",
+  "company_id": "flipkart",
+  "content_checksum": "sha256:b8d81b70ba48d179cab9452736b5a95cafc5852755d3027c42b1a547bbae5e68",
+  "levels": {
+    "sde1": {
+      "machine_coding": "Low-Medium",
+      "primary_focus": [
+        "DSA",
+        "Coding",
+        "Fundamentals"
+      ],
+      "system_design": "Low"
+    },
+    "sde2": {
+      "machine_coding": "High",
+      "primary_focus": [
+        "DSA",
+        "Machine Coding/LLD",
+        "System Design Basics",
+        "Ownership"
+      ],
+      "system_design": "Medium-High"
+    },
+    "senior": {
+      "machine_coding": "High",
+      "primary_focus": [
+        "System Design",
+        "E-commerce Architecture",
+        "Engineering Judgment",
+        "Leadership"
+      ],
+      "system_design": "Very High"
+    },
+    "staff": {
+      "machine_coding": "High",
+      "primary_focus": [
+        "Architecture",
+        "Technical Leadership",
+        "Cross-Team Influence"
+      ],
+      "system_design": "Critical"
+    }
+  },
+  "metadata": {
+    "accent": "#F0B90B",
+    "categories": [
+      "E-commerce",
+      "Consumer Internet",
+      "Retail",
+      "Supply Chain"
+    ],
+    "confidence": "Medium",
+    "display_name": "Flipkart",
+    "last_reviewed": "2026-08-14",
+    "name": "Flipkart",
+    "primary_category": "Product Company"
+  },
+  "planner": {
+    "adaptive": {
+      "difficulty_requires_prerequisite_mastery": true,
+      "experience_sensitive": true,
+      "learner_readiness_overrides_company_priority": true,
+      "timeline_sensitive": true
+    },
+    "philosophy": [
+      "Problem Solving First",
+      "Strong Fundamentals",
+      "Machine Coding / OOD",
+      "Engineering Judgment",
+      "Scalable Thinking",
+      "Technical Leadership"
+    ],
+    "priority": [
+      "DSA",
+      "Machine Coding/LLD",
+      "System Design",
+      "Backend Fundamentals",
+      "Core CS",
+      "Behavioral",
+      "Role-Specific"
+    ]
+  },
+  "profile_version": "1.1",
+  "registry_schema_version": "1.0",
+  "sections": {
+    "behavioral": "## 16.1 Behavioral Values\n\n**Importance:** High\n\nFlipkart's behavioral interviews evaluate customer obsession, ownership, and bias for action. Candidates should demonstrate:\n\n- Customer Obsession\n- Ownership\n- Bias for Action\n- Deliver Results\n- Insist on the Highest Standards\n- Learn and Be Curious\n- Hire and Develop the Best\n\n**Confidence:** Medium\n\n## 16.2 Communication\n\n**Importance:** Critical\n\nCandidates should:\n\n- Clarify requirements\n- State assumptions\n- Explain reasoning\n- Communicate trade-offs\n- Ask relevant questions\n- Respond constructively to feedback\n\n## 16.3 Collaboration\n\n**Importance:** High\n\nExamples should demonstrate:\n\n- Working across teams\n- Resolving disagreement\n- Sharing knowledge\n- Supporting peers\n- Handling stakeholder conflict\n\n## 16.4 Ownership\n\n**Importance:** High\n\nCandidates should demonstrate:\n\n- Responsibility for outcomes\n- Proactive problem identification\n- Follow-through\n- Operational awareness\n- Willingness to address problems beyond narrow task boundaries\n\n## 16.5 Customer Obsession\n\n**Importance:** High\n\nCandidates should demonstrate:\n\n- Customer-first decision-making\n- Understanding customer impact\n- Delivering value\n\n## 16.6 Bias for Action\n\n**Importance:** Medium-High\n\nCandidates should demonstrate:\n\n- Speed and decisiveness\n- Taking calculated risks\n- Acting without complete information when appropriate\n\n## 16.7 Learning Mindset\n\n**Importance:** Medium-High\n\nStrong evidence includes:\n\n- Learning from failures\n- Changing a decision when evidence changes\n- Seeking feedback\n- Improving engineering processes\n- Demonstrating intellectual humility\n\n## 16.8 Behavioral Preparation Format\n\nSTAR is recommended as a preparation framework:\n\n```text\nSituation\n   ↓\nTask\n   ↓\nAction\n   ↓\nResult\n   ↓\nLesson / What Changed\n```\n\nSTAR is a preparation technique, not asserted here as a mandatory Flipkart interview format.\n\n---",
+    "company_overview": "## 2.1 Company Profile\n\nFlipkart is one of India's largest e-commerce platforms. Engineering teams build large-scale systems for marketplace, search, recommendations, supply chain, logistics, payments, and data infrastructure.\n\nFor PrepOS, Flipkart should be modeled as a **high-scale Indian e-commerce engineering organization** where strong DSA, system design, backend engineering, and machine coding capabilities are critical. The interview process emphasizes customer obsession, ownership, and bias for action through dedicated behavioral evaluation.\n\n## 2.2 Company Categories\n\n```yaml\ncompany_categories:\n  - E-commerce\n  - Consumer Internet\n  - Retail\n  - Supply Chain\n```\n\n## 2.3 Engineering Characteristics\n\n| Characteristic | PrepOS Interpretation | Confidence |\n|---|---|---|\n| Large-scale distributed systems | Strong relevance | Medium |\n| Search and recommendation | Strong relevance | Medium |\n| Supply chain and logistics | Strong relevance | Medium |\n| Algorithmic problem solving | Core interview preparation area | Medium |\n| System design | Very High importance | Medium |\n| Backend engineering | Primary focus | Medium-High |\n| Machine coding / LLD | Common | Medium |\n| Values alignment | Formal leadership-principles-based behavioral evaluation | Medium-High |\n| AI-assisted engineering | Emerging / pilot-dependent | Low |\n\n## 2.4 Flipkart Product Domains vs Interview Evaluation\n\nThis section separates what Flipkart engineers may work on from what interviews are reported to evaluate.\n\n| Domain | What Flipkart engineers may work on | Reported interview relevance | PrepOS priority |\n|---|---|---|---|\n| Marketplace | Listings, sellers, catalog, pricing, transactions | Role-dependent; may appear in system design | Medium |\n| Search | Query understanding, ranking, retrieval | Role-dependent; may appear in system design or technical deep-dive | Medium |\n| Recommendations | Personalization, ranking models | Role-dependent; not universal SWE interview topic | Low–Medium |\n| Supply Chain / Logistics | Order fulfillment, delivery optimization, capacity planning | Role-dependent; may appear in system design | Medium |\n| Payments | Payment processing, refunds, reconciliation | Role-dependent; may appear in system design | Medium |\n| Data Platforms | Data pipelines, analytics, reporting | Role-dependent; may appear in system design for data roles | Medium |\n| High-scale Backend | Distributed services, caching, queues, APIs | Central for backend/software roles | High |\n\nDo not assume every candidate is evaluated on logistics, recommendations, payments, etc.\n\n---",
+    "contradiction_register": "| Topic | Conflicting Claims | Resolution | Confidence | Requires Verification |\n|---|---|---|---|---|\n| Machine coding requirement | Some reports say mandatory; others role-specific | Treat as high priority, especially for SDE-2+ | Medium | true |\n| Online Assessment | Platform varies by region/role | Confirm actual invitation | Medium | true |\n| Behavioral / Values Interview | Some describe as separate, others integrated | Treat as behavioral emphasis | Medium | true |\n| System design at SDE-2 | Some reports include; others not | Treat as level-dependent | Medium | true |\n\n---",
+    "engineering_philosophy": "## 3.1 Engineering Philosophy Summary\n\nFlipkart engineering philosophy emphasizes:\n\n1. Customer obsession\n2. Bias for action\n3. Scalable distributed systems\n4. Data-driven decisions\n5. End-to-end ownership\n6. Operational excellence\n\nThe exact formal internal terminology should not be treated as permanently fixed.\n\n## 3.2 Engineering Progression\n\n```text\nProblem Solving\n      ↓\nStrong Fundamentals\n      ↓\nAlgorithmic Execution\n      ↓\nEngineering Judgment\n      ↓\nScalable Thinking\n      ↓\nTechnical Ownership\n      ↓\nCross-Team Influence\n```\n\n## 3.3 Core Engineering Principle\n\nPrepOS should interpret Flipkart preparation as:\n\n> Solve problems correctly, write clean code, design scalable systems, and demonstrate customer focus and ownership as seniority increases.\n\n**Confidence:** Medium\n\n**Evidence Type:** Internal company knowledge + candidate pattern synthesis\n\n---",
+    "evaluation_signals": "| Signal | Importance | Description | Typical Interview Stage | Confidence |\n|---|---|---|---|---|\n| Problem Solving | Critical | Structured decomposition, algorithms, reasoning | Technical Screen, Coding | Medium |\n| Coding Ability | Critical | Correct, readable, efficient implementation | Coding | Medium |\n| Machine Coding / LLD | High | OOP, design patterns, clean code | Machine Coding | Medium-High |\n| System Design | Very High | Architecture for e-commerce scale | Design | Medium |\n| Backend Fundamentals | High | APIs, databases, caching, queues | Technical/Design | Medium |\n| Communication | Critical | Clear reasoning and concise technical explanation | All stages | Medium |\n| Ownership | High | End-to-end responsibility | Behavioral | Medium-High |\n| Customer Obsession | High | Customer-first decision-making | Behavioral | Medium-High |\n| Bias for Action | Medium-High | Speed and decisiveness | Behavioral | Medium |\n| Learning Ability | Medium-High | Adaptation, reflection | Behavioral / Technical | Medium |\n| Leadership | High for Senior+ | Influence, ownership, technical leadership | Behavioral / Design | Medium |\n\n---",
+    "evidence_summary": "| Finding | Classification | Confidence | PrepOS Treatment |\n|---|---|---|---|\n| DSA and coding are central | Reported | Medium | High priority |\n| Machine coding/LLD is core | Strongly Reported | Medium-High | Very high priority |\n| System design is very high importance | Reported | Medium-High | Strong level-dependent bias |\n| Behavioral values (customer obsession, ownership, bias for action) | Reported | Medium | Include behavioral preparation |\n| E-commerce domain focus | Reported | Medium | Include design context |\n| Team-specific hiring variance | Reported | Medium | Do not hardcode |\n| Universal AI-assisted interview | Not Supported | Low | Do not hardcode |\n| Universal coding platform | Not Supported | Low | Confirm invitation |\n\n---",
+    "hiring_philosophy": "## 4.1 Hiring Philosophy\n\nFlipkart SWE evaluation is rigorous and emphasizes customer obsession, ownership, and bias for action through dedicated behavioral evaluation. A candidate should not be modeled as interview-ready merely by solving algorithmic puzzles. Strong backend skills, system design, machine coding, and leadership principles are valued.\n\nPrepOS should evaluate readiness across:\n\n- Problem solving\n- Coding\n- System design\n- Backend fundamentals\n- Machine coding / LLD\n- Communication\n- Ownership\n- Customer obsession\n- Learning ability\n\n## 4.2 Hiring Progression\n\n```text\nFoundational Competence\n        ↓\nTechnical Execution\n        ↓\nIndependent Engineering\n        ↓\nArchitectural Ownership\n        ↓\nTechnical Leadership\n        ↓\nOrganizational Influence\n```\n\n## 4.3 Hiring Philosophy Constraints\n\nPrepOS MUST NOT assume:\n\n- A fixed interview count\n- A universal online assessment\n- A universal coding platform\n- A universal interview format\n- A universal system design round for all levels\n- A universal machine coding round\n- A universal team matching process\n- A universal AI-assisted interview\n\nThese are treated as role-, level-, team-, region-, or cycle-dependent unless stronger evidence becomes available.\n\n**Confidence:** Medium\n\n---",
+    "interview_pipeline": "## 5.1 Pipeline Model\n\n```text\nApplication / Referral\n        ↓\nRecruiter / Initial Alignment\n        ↓\nPotential Online Assessment\n        ↓\nTechnical Screen\n        ↓\nInterview Loop\n        ↓\nCoding / DSA\n        ↓\nMachine Coding / LLD\n        ↓\nSystem Design\n        ↓\nBehavioral / Values Interview\n        ↓\nInterview Feedback\n        ↓\nHiring Decision\n        ↓\nOffer\n```\n\nActual sequence may vary by team and role.\n\n## 5.2 Pipeline Stages\n\n| Stage | Purpose | Duration | Evaluation Criteria | Difficulty | Confidence | Evidence Source |\n|---|---|---|---|---|---|---|\n| Application / Referral | Establish candidate eligibility | Varies | Resume, experience, role fit | Medium | Medium | Internal knowledge |\n| Recruiter Screen | Validate role, experience, process | 20–30 min | Fit, communication, motivation | Low–Medium | Medium | Internal knowledge |\n| Potential Online Assessment | Pre-screen coding | Varies | Coding, DSA | Medium–High | Medium | Interview Reports |\n| Technical Screen | Validate baseline coding | 45–60 min | Coding, reasoning, communication | High | Medium | Interview Reports |\n| Interview Loop | Holistic technical evaluation | Varies, often 4–6 interviews | Coding, DSA, machine coding, system design, behavioral | Very High | Medium | Interview Reports |\n| Machine Coding / LLD | Assess object-oriented design and implementation | 45–90 min | OOP, design patterns, clean code | High | Medium-High | Interview Reports |\n| System Design | Assess architecture for e-commerce scale | 45–60 min | Scalability, reliability, trade-offs | Very High | Medium | Interview Reports |\n| Behavioral / Values Interview | Evaluate values alignment and ownership | 45 min | Customer obsession, ownership, bias for action | Medium-High | Medium | Interview Reports |\n| Feedback / Decision | Aggregate interview evaluations | Varies | Holistic evidence | Very High | Medium | Reported Process |\n| Offer | Complete hiring process | Varies | Level, role, headcount | Varies | Low | Reported Process |\n\n---\n\n## 5.3 Flipkart-Specific Interview Types\n\n### Status\n\n**Reported / Strongly Indicated as Rigorous E-commerce Engineering Process**\n\nCommonly reported components:\n\n- **DSA Coding:** Medium to hard algorithmic problems.\n- **Machine Coding / LLD:** Build a small system (e.g., parking lot, splitwise, snake-ladder) with proper OOP design.\n- **System Design:** Large-scale e-commerce, search, recommendation, or supply chain systems.\n- **Behavioral / Values Interview:** Behavioral interview focused on customer obsession, ownership, and bias for action.\n\n### PrepOS Rule\n\nTreat DSA, machine coding/LLD, system design, and behavioral as core. The machine coding round is a distinctive Flipkart signal.\n\n```yaml\ninterview_types:\n  dsa_coding: Strongly Reported\n  machine_coding_lld: Strongly Reported\n  system_design: Strongly Reported\n  behavioral_values: Reported\n  confidence: Medium\n  planner_behavior: High priority DSA + LLD/Machine Coding + System Design + Behavioral\n```\n\n---",
+    "negative_evidence": "Do NOT treat the following as core Flipkart SWE preparation requirements unless role-specific evidence exists:\n\n- Universal LLD for all roles\n- Universal HLD for all levels\n- Universal OS/DBMS/Networking depth\n- One universal interview template\n- Universal coding platform\n- Universal AI interview\n- Universal team matching\n- Universal e-commerce domain knowledge as an interview requirement\n\n---",
+    "preparation_strategy": "## 21.1 Core Preparation Sequence\n\n```text\nPhase 1: Programming Fundamentals\n        ↓\nPhase 2: DSA Foundations\n        ↓\nPhase 3: Advanced DSA\n        ↓\nPhase 4: Machine Coding / LLD\n        ↓\nPhase 5: High-Level System Design\n        ↓\nPhase 6: Behavioral / Values Preparation\n        ↓\nPhase 7: Mock Interview Loop\n```\n\n## 21.2 Preparation Priorities\n\n### Priority 1 — DSA\n\nFocus on:\n\n- Arrays\n- Strings\n- Hashing\n- Trees\n- Graphs\n- BFS\n- DFS\n- Heaps\n- Queues\n- Recursion\n- Dynamic Programming\n- Greedy\n- Backtracking\n- Complexity analysis\n\n### Priority 2 — Machine Coding / LLD\n\nPractice:\n\n- OOP design\n- SOLID principles\n- Design patterns\n- Clean code\n- Working with code from scratch\n\n### Priority 3 — System Design\n\nIncrease preparation according to seniority.\n\n### Priority 4 — Behavioral\n\nDevelop evidence-backed stories around ownership, customer obsession, bias for action, and learning.\n\n### Priority 5 — Core CS\n\nUse role-specific evidence for OS, networking, etc.\n\n---",
+    "role_differences": "## 17.1 Role Matrix\n\n| Level | Coding | Machine Coding/LLD | System Design | Leadership | Expected Autonomy | Confidence |\n|---|---|---|---|---|---|---|\n| New Graduate / SDE-1 | Critical | Low-Medium | Low | Low-Medium | Scoped tasks | Medium |\n| SDE-2 | Critical | High | Medium-High | Medium | Independent execution | Medium |\n| Senior SDE | Very High | High | Very High | High | Broad technical ownership | Medium |\n| Staff SDE | High | High | Critical | Critical | Cross-team influence | Medium |\n\n## 17.2 Flipkart Role-Domain Variation\n\nThis section is a non-universal, evidence-limited guide to how role families may shift emphasis.\n\n| Role Family | Likely Emphasis | Confidence | Evidence Level |\n|---|---|---|---|\n| General SWE | DSA, coding, fundamentals, e-commerce system design | Medium | Reported pattern |\n| Backend / Platform | APIs, concurrency, storage, distributed systems | Medium | Reported pattern |\n| Search / Recommendations | Search/ranking, data pipelines, relevance | Medium | Role-dependent |\n| Supply Chain / Logistics | Order fulfillment, delivery optimization | Medium | Role-dependent |\n| Payments | Payment processing, reconciliation, idempotency | Medium | Role-dependent |\n| Data Platforms | Data pipelines, analytics, storage | Medium | Role-dependent |\n\nThese are preparation priorities, not universal Flipkart requirements.\n\n---",
+    "subject_importance": "| Subject | Importance | Interview Stage | Experience Level | Reason | Confidence |\n|---|---|---|---|---|---|\n| Programming Fundamentals | High | Coding | All | Foundation for implementation | Medium |\n| Java | Medium-High | Coding | Role/candidate dependent | Backend often Java, Python also accepted | Medium |\n| Data Structures & Algorithms | Critical | Technical Screen / Coding | All | Central technical signal | Medium |\n| Database Management Systems | Medium-High | Design/Technical | Mid+ | Data modeling for e-commerce | Medium |\n| Operating Systems | Medium | Technical/Design | Contextual | Concurrency, memory | Medium |\n| Computer Networks | Medium | Design/Technical | Contextual | APIs, distributed systems | Medium |\n| Low-Level Design | High | Machine Coding / Design | Mid+ | OOP and design patterns | Medium-High |\n| High-Level Design | Very High | Design | Mid+ | System design central | Medium |\n\n---"
+  },
+  "signals": [
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "coding",
+      "importance": "Critical",
+      "level_dependency": false,
+      "name": "Coding",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "dsa",
+      "importance": "Critical",
+      "level_dependency": false,
+      "name": "Dsa",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium-High",
+      "formal_component": false,
+      "id": "machine_coding_lld",
+      "importance": "High",
+      "level_dependency": false,
+      "name": "Machine Coding Lld",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium-High",
+      "formal_component": false,
+      "id": "system_design",
+      "importance": "Very High",
+      "level_dependency": true,
+      "name": "System Design",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "backend_fundamentals",
+      "importance": "High",
+      "level_dependency": false,
+      "name": "Backend Fundamentals",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "behavioral",
+      "importance": "High",
+      "level_dependency": false,
+      "name": "Behavioral",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "communication",
+      "importance": "Critical",
+      "level_dependency": false,
+      "name": "Communication",
+      "role_dependency": false
+    }
+  ],
+  "source_checksum": "sha256:a6d26e4cb163495739527c3ce2c1c496a2ba2f6a978d264829189d274faf6083",
+  "subjects": {
+    "computer_networks": "Medium",
+    "dbms": "Medium-High",
+    "dsa": "Critical",
+    "high_level_design": "Very High",
+    "java": "Medium-High",
+    "low_level_design": "High",
+    "operating_systems": "Medium",
+    "programming_fundamentals": "High"
+  },
+  "summary": {
+    "company": {
+      "categories": [
+        "E-commerce",
+        "Consumer Internet",
+        "Retail",
+        "Supply Chain"
+      ],
+      "name": "Flipkart"
+    },
+    "interview": {
+      "backend_fundamentals": {
+        "confidence": "Medium",
+        "importance": "High"
+      },
+      "behavioral": {
+        "confidence": "Medium",
+        "importance": "High"
+      },
+      "coding": {
+        "confidence": "Medium",
+        "importance": "Critical"
+      },
+      "communication": {
+        "confidence": "Medium",
+        "importance": "Critical"
+      },
+      "dsa": {
+        "confidence": "Medium",
+        "importance": "Critical"
+      },
+      "machine_coding_lld": {
+        "confidence": "Medium-High",
+        "importance": "High"
+      },
+      "system_design": {
+        "confidence": "Medium-High",
+        "importance": "Very High",
+        "level_dependency": true
+      }
+    },
+    "levels": {
+      "sde1": {
+        "machine_coding": "Low-Medium",
+        "primary_focus": [
+          "DSA",
+          "Coding",
+          "Fundamentals"
+        ],
+        "system_design": "Low"
+      },
+      "sde2": {
+        "machine_coding": "High",
+        "primary_focus": [
+          "DSA",
+          "Machine Coding/LLD",
+          "System Design Basics",
+          "Ownership"
+        ],
+        "system_design": "Medium-High"
+      },
+      "senior": {
+        "machine_coding": "High",
+        "primary_focus": [
+          "System Design",
+          "E-commerce Architecture",
+          "Engineering Judgment",
+          "Leadership"
+        ],
+        "system_design": "Very High"
+      },
+      "staff": {
+        "machine_coding": "High",
+        "primary_focus": [
+          "Architecture",
+          "Technical Leadership",
+          "Cross-Team Influence"
+        ],
+        "system_design": "Critical"
+      }
+    },
+    "planner": {
+      "adaptive": {
+        "difficulty_requires_prerequisite_mastery": true,
+        "experience_sensitive": true,
+        "learner_readiness_overrides_company_priority": true,
+        "timeline_sensitive": true
+      },
+      "philosophy": [
+        "Problem Solving First",
+        "Strong Fundamentals",
+        "Machine Coding / OOD",
+        "Engineering Judgment",
+        "Scalable Thinking",
+        "Technical Leadership"
+      ],
+      "priority": [
+        "DSA",
+        "Machine Coding/LLD",
+        "System Design",
+        "Backend Fundamentals",
+        "Core CS",
+        "Behavioral",
+        "Role-Specific"
+      ]
+    },
+    "profile": {
+      "confidence": "Medium",
+      "last_reviewed": "2026-08-14",
+      "version": "1.1"
+    },
+    "subjects": {
+      "computer_networks": "Medium",
+      "dbms": "Medium-High",
+      "dsa": "Critical",
+      "high_level_design": "Very High",
+      "java": "Medium-High",
+      "low_level_design": "High",
+      "operating_systems": "Medium",
+      "programming_fundamentals": "High"
+    },
+    "trends": {
+      "ai_assisted_interview": {
+        "confidence": "Low",
+        "status": "Insufficient Evidence"
+      },
+      "regional_variation": {
+        "confidence": "Low",
+        "status": "Insufficient Evidence"
+      }
+    }
+  },
+  "summary_variant": "interview",
+  "trends": {
+    "ai_assisted_interview": {
+      "confidence": "Low",
+      "status": "Insufficient Evidence"
+    },
+    "regional_variation": {
+      "confidence": "Low",
+      "status": "Insufficient Evidence"
+    }
+  },
+  "validation": {
+    "warnings": []
+  }
+}

@@ -18,6 +18,7 @@ from routes_missions import router as missions_router
 from routes_roadmap import router as roadmap_router
 from routes_leetcode_catalog import router as leetcode_catalog_router
 from ai_mentor.mentor_routes import router as mentor_router
+from routes_companies import router as companies_router
 
 # ------------------------- DB -------------------------
 mongo_url = os.environ["MONGO_URL"]
@@ -71,6 +72,7 @@ app.include_router(missions_router)
 app.include_router(roadmap_router)
 app.include_router(leetcode_catalog_router)
 app.include_router(mentor_router)
+app.include_router(companies_router)
 
 # ------------------------- Startup -------------------------
 logging.basicConfig(

@@ -1,0 +1,325 @@
+{
+  "artifact_schema_version": "1.0",
+  "company_id": "google",
+  "content_checksum": "sha256:aee4427c19174c12d54827589ee4c62b059edf92d478afd714585282b6e9d8a8",
+  "levels": {
+    "L3": {
+      "primary_focus": [
+        "DSA",
+        "Coding",
+        "Problem Solving",
+        "Communication"
+      ],
+      "system_design": "Low"
+    },
+    "L4": {
+      "primary_focus": [
+        "DSA",
+        "Coding",
+        "Problem Solving",
+        "Ownership"
+      ],
+      "system_design": "Variable"
+    },
+    "L5": {
+      "primary_focus": [
+        "DSA",
+        "System Design",
+        "Engineering Judgment",
+        "Leadership"
+      ],
+      "system_design": "Very High"
+    },
+    "L6": {
+      "primary_focus": [
+        "System Design",
+        "Architecture",
+        "Technical Leadership",
+        "Cross-Team Influence"
+      ],
+      "system_design": "Critical"
+    }
+  },
+  "metadata": {
+    "accent": "#4285F4",
+    "categories": [
+      "Product Company",
+      "Cloud Provider",
+      "AI Company"
+    ],
+    "confidence": "Medium",
+    "display_name": "Google",
+    "last_reviewed": "2026-08-14",
+    "name": "Google",
+    "primary_category": "Product Company"
+  },
+  "planner": {
+    "adaptive": {
+      "difficulty_requires_prerequisite_mastery": true,
+      "experience_sensitive": true,
+      "learner_readiness_overrides_company_priority": true,
+      "timeline_sensitive": true
+    },
+    "philosophy": [
+      "Problem Solving First",
+      "Strong Fundamentals",
+      "Algorithmic Execution",
+      "Scalable Thinking",
+      "Engineering Judgment",
+      "Technical Leadership"
+    ],
+    "priority": [
+      "DSA",
+      "Programming",
+      "System Design",
+      "Core CS",
+      "Behavioral"
+    ]
+  },
+  "profile_version": "2.0",
+  "registry_schema_version": "1.0",
+  "sections": {
+    "behavioral": "## 16.1 Leadership\n\n**Importance:** High\n\nCandidates should demonstrate:\n\n- Influence without formal authority\n- Technical decision ownership\n- Conflict resolution\n- Cross-functional collaboration\n- Team success over personal credit\n- Appropriate delegation\n- Ability to lead and follow\n\n**Confidence:** Medium\n\n---\n\n## 16.2 Communication\n\n**Importance:** Critical\n\nCandidates should:\n\n- Clarify requirements\n- State assumptions\n- Explain reasoning\n- Communicate trade-offs\n- Ask relevant questions\n- Respond constructively to feedback\n- Explain technical decisions clearly\n\n**Confidence:** Medium\n\n---\n\n## 16.3 Collaboration\n\n**Importance:** High\n\nExamples should demonstrate:\n\n- Working across teams\n- Resolving disagreement\n- Sharing knowledge\n- Supporting peers\n- Handling stakeholder conflict\n- Maintaining technical objectivity\n\n**Confidence:** Medium\n\n---\n\n## 16.4 Ownership\n\n**Importance:** High\n\nCandidates should demonstrate:\n\n- Responsibility for outcomes\n- Proactive problem identification\n- Follow-through\n- Operational awareness\n- Willingness to address problems beyond narrow task boundaries\n\n**Confidence:** Medium\n\n---\n\n## 16.5 Problem Solving\n\n**Importance:** Critical\n\nBehavioral answers should demonstrate:\n\n- Structured thinking\n- Ambiguity handling\n- Evidence-based decisions\n- Trade-off analysis\n- Adaptability\n\n**Confidence:** Medium\n\n---\n\n## 16.6 Learning Mindset\n\n**Importance:** High\n\nStrong evidence includes:\n\n- Learning from failures\n- Changing a decision when evidence changes\n- Seeking feedback\n- Improving engineering processes\n- Demonstrating intellectual humility\n\n**Confidence:** Medium\n\n---\n\n## 16.7 Behavioral Preparation Format\n\nSTAR is recommended as a preparation framework:\n\n```text\nSituation\n   ↓\nTask\n   ↓\nAction\n   ↓\nResult\n   ↓\nLesson / What Changed\n```\n\nSTAR is a preparation technique, not asserted here as a mandatory Google interview format.\n\n---",
+    "company_overview": "## 2.1 Company Profile\n\nGoogle is a global technology and product company with major engineering organizations spanning search, advertising, cloud infrastructure, artificial intelligence, developer platforms, distributed systems, mobile, security, and consumer products.\n\nFor PrepOS, Google should be modeled primarily as a **high-bar engineering organization** where technical problem solving, coding ability, engineering judgment, scalability awareness, communication, and increasing levels of technical influence become progressively more important with seniority.\n\n## 2.2 Company Categories\n\n```yaml\ncompany_categories:\n  - Product Company\n  - Cloud Provider\n  - AI Company\n```\n\n## 2.3 Engineering Characteristics\n\n| Characteristic | PrepOS Interpretation | Confidence |\n|---|---|---|\n| Large-scale engineering | Strong relevance | Medium |\n| Distributed systems | Strong relevance, especially senior roles | Medium |\n| Algorithmic problem solving | Core interview preparation area | Medium |\n| Software engineering fundamentals | Important foundation | Medium |\n| Scalability | Increasing importance with seniority | Medium |\n| Technical judgment | Strong importance | Medium |\n| Cross-functional influence | Increasing importance with seniority | Medium |\n| AI-assisted engineering | Emerging / pilot-dependent | Low–Medium |\n\n---",
+    "contradiction_register": "| Topic | Conflicting Claims | Resolution | Confidence | Requires Verification |\n|---|---|---|---|---|\n| GHA | Report describes it as mandatory but retained evidence lacks primary-source verification | Treat as conditional / insufficient evidence | Low | true |\n| L4 System Design | Sources described in report disagree | Treat as role-dependent | Medium | true |\n| AI Interview | Community claims suggest broader adoption | Retained report limits it to pilot scope | Low | true |\n| Interview Platform | Platform mechanics vary | Confirm actual invitation | Medium | true |\n| Team Matching | Anecdotal timing claims exist | No fixed expiration encoded | Low | true |\n| India vs US | Community reports suggest differences | No hardcoded regional rule | Low | true |\n\n---",
+    "engineering_philosophy": "## 3.1 Engineering Philosophy Summary\n\nThe supplied research portrays Google SWE evaluation as emphasizing:\n\n1. Strong problem-solving ability\n2. Technical fundamentals\n3. Clean and correct implementation\n4. Structured reasoning\n5. Practical engineering judgment\n6. Scalable thinking\n7. Communication\n8. Collaboration\n9. Ownership\n10. Intellectual humility\n11. Increasing organizational influence at senior levels\n\nThe exact formal internal terminology should not be treated as permanently fixed.\n\n## 3.2 Engineering Progression\n\n```text\nProblem Solving\n      ↓\nStrong Fundamentals\n      ↓\nAlgorithmic Execution\n      ↓\nEngineering Judgment\n      ↓\nScalable Thinking\n      ↓\nTechnical Ownership\n      ↓\nCross-Team Influence\n```\n\n## 3.3 Core Engineering Principle\n\nPrepOS should interpret Google preparation as:\n\n> Solve the right problem, explain the reasoning, implement correctly, understand the trade-offs, and demonstrate increasing engineering scope as seniority increases.\n\n**Confidence:** Medium\n\n**Evidence Type:** Interview Reports / Community Consensus / Research Platform synthesis contained in supplied report\n\n---",
+    "evaluation_signals": "Every signal below is represented as company metadata rather than as a hardcoded decision rule.\n\n| Signal | Importance | Description | Typical Interview Stage | Confidence |\n|---|---|---|---|---|\n| Problem Solving | Critical | Structured decomposition, assumptions, algorithms, reasoning | Technical Screen, Coding | Medium |\n| Coding Ability | Critical | Correct, readable, efficient implementation | Technical Screen, Coding | Medium |\n| System Design | Very High | Architecture, scale, reliability and trade-offs | Senior Interviews | Medium |\n| Low-Level Design | Medium | Interfaces, modularity and extensibility | Role-dependent | Low–Medium |\n| Technical Depth | Very High | Understanding of systems, technologies and engineering choices | Technical / RRK | Medium |\n| Leadership | High | Influence, ownership and technical leadership | Behavioral / Senior Technical | Medium |\n| Communication | Critical | Clear reasoning and concise technical explanation | All stages | Medium |\n| Collaboration | High | Working effectively across people and functions | Behavioral | Medium |\n| Ownership | High | Responsibility beyond narrowly assigned work | Behavioral / Technical | Medium |\n| Learning Ability | High | Adaptation, reflection and updating assumptions | Behavioral / Technical | Medium |\n| Ambiguity Handling | High | Structured progress with incomplete information | Coding / Design / Behavioral | Medium |\n| Engineering Judgment | Very High | Practical trade-off analysis and decision quality | Design / Technical / Behavioral | Medium |\n\n---",
+    "evidence_summary": "| Finding | Classification | Confidence | Source Type Available in Supplied Research | PrepOS Treatment |\n|---|---|---|---|---|\n| Coding and algorithmic reasoning are central | Reported | Medium | Interview Reports / Research Platform | High planning priority |\n| Structured reasoning matters | Reported | Medium | Interview Reports / Research Platform | High |\n| Design importance increases with seniority | Reported Pattern | Medium | Research synthesis | Strong level-dependent bias |\n| Behavioral evidence matters | Reported | Medium | Research synthesis | Include behavioral preparation |\n| GHA exists as described in report | Reported | Low | Research Platform / Interview Reports | Conditional only |\n| GHA is universally mandatory | Insufficient Evidence | Low | Not sufficiently retained | Do not hardcode |\n| AI-assisted interview exists as global standard | Not Supported | Low | Report limits it to pilot | Do not hardcode |\n| AI-assisted pilot exists in selected US roles | Reported Pilot | Low–Medium | Tier 1/2 claim in supplied report | Conditional |\n| L4 design requirement | Varies | Low–Medium | Contradictory research sources | Role-dependent |\n| L5 system design importance | Reported | Medium | Research synthesis | Very high |\n| L6 system design importance | Reported | Medium | Research synthesis | Critical |\n| 8-week team-match expiry | Insufficient Evidence | High | Anecdotal only | Ignore |\n\n---",
+    "hiring_philosophy": "## 4.1 Hiring Philosophy\n\nThe supplied research describes Google's SWE evaluation as holistic rather than purely coding-based.\n\nA candidate should not be modeled as interview-ready merely because they can solve algorithmic problems.\n\nPrepOS should evaluate readiness across:\n\n- Problem solving\n- Coding\n- Technical depth\n- System design\n- Communication\n- Leadership\n- Ownership\n- Learning ability\n- Ambiguity handling\n- Engineering judgment\n\n## 4.2 Hiring Progression\n\n```text\nFoundational Competence\n        ↓\nTechnical Execution\n        ↓\nIndependent Engineering\n        ↓\nArchitectural Ownership\n        ↓\nTechnical Leadership\n        ↓\nOrganizational Influence\n```\n\n## 4.3 Hiring Philosophy Constraints\n\nPrepOS MUST NOT assume:\n\n- A fixed interview count\n- A universal GHA requirement\n- A universal coding platform\n- A universal interview format\n- A universal L4 design round\n- A universal regional process\n- A universal AI-assisted interview\n- A fixed Hiring Committee timeline\n\nThese are treated as role-, level-, team-, region-, or cycle-dependent unless stronger evidence becomes available.\n\n**Confidence:** Medium\n\n---",
+    "interview_pipeline": "## 5.1 Pipeline Model\n\nThe following is the canonical PrepOS planning representation.\n\n```text\nApplication / Referral\n        ↓\nRecruiter / Initial Alignment\n        ↓\nPotential Pre-Interview Assessment\n        ↓\nTechnical Screening\n        ↓\nInterview Loop\n        ↓\nInterview Feedback\n        ↓\nHiring Decision / Committee Process\n        ↓\nPotential Team Matching\n        ↓\nOffer\n```\n\nThe actual sequence may vary.\n\n---\n\n## 5.2 Pipeline Stages\n\n| Stage | Purpose | Duration | Evaluation Criteria | Difficulty | Confidence | Evidence Source |\n|---|---|---|---|---|---|---|\n| Application / Referral | Establish candidate eligibility | Varies | Resume, experience, role fit | Medium | Medium | Official Careers / Report |\n| Recruiter / Initial Alignment | Validate role, experience, location and process | Varies | Role fit, communication, experience | Medium | Medium | Recruiter Guidance / Report |\n| Potential Pre-Interview Assessment | Reported behavioral/value screening mechanism | Reported as approximately 30–60 min in source report | Behavioral consistency, judgment, teamwork | Medium | Low | Interview Reports / Research Platform |\n| Technical Screen | Validate baseline technical ability | Reported approximately 45–60 min | Coding, reasoning, communication | High | Medium | Interview Reports / Research Platform |\n| Interview Loop | Evaluate technical and behavioral signals comprehensively | Reported approximately 4–6 rounds, but varies | Coding, design, technical depth, leadership, communication | Very High | Medium | Interview Reports / Research Platform |\n| Feedback / Decision | Aggregate interviewer evaluations | Varies | Holistic evidence | Very High | Medium | Reported Process |\n| Team Matching | Align candidate with potential team where applicable | Varies | Team fit and organizational need | Varies | Low | Interview Reports |\n| Offer | Complete hiring process | Varies | Level, role and organizational requirements | Varies | Low | Reported Process |\n\n---\n\n## 5.3 Google Hiring Assessment\n\n### Status\n\n**Reported / Insufficient Evidence for Universal Application**\n\nThe supplied report describes a Google Hiring Assessment (GHA) as a behavioral or psychometric pre-interview mechanism.\n\nHowever, the retained research does not contain sufficient primary-source evidence to establish:\n\n- Universal mandatory status\n- Exact duration\n- Exact number of questions\n- Exact scoring mechanism\n- Universal validity period\n- Universal cooldown period\n\n### PrepOS Rule\n\nDo not make GHA preparation a hard prerequisite unless the learner's actual Google application or recruiter communication indicates that the assessment applies.\n\n```yaml\ngha:\n  status: Reported\n  universal_requirement: Unknown\n  coding_test: No evidence that it should be modeled as a coding test\n  confidence: Low\n  planner_behavior: Conditional\n```\n\n---",
+    "negative_evidence": "The following should NOT be treated as core Google SWE preparation requirements unless role-specific evidence exists.\n\n| Area | PrepOS Treatment | Confidence |\n|---|---|---|\n| Framework trivia | Low priority | Medium |\n| Syntax memorization | Low priority | Medium |\n| Random brainteasers | Low priority / historical | Medium |\n| Specific named design questions | Do not hardcode | High |\n| One universal interview template | Reject assumption | High |\n| Universal GHA requirement | Unknown | Low |\n| Universal AI interview | Reject assumption | High |\n| Universal India-specific CS screening | Insufficient evidence | Low |\n| Fixed 8-week team-match expiration | Insufficient evidence | High |\n\n---",
+    "preparation_strategy": "## 21.1 Core Preparation Sequence\n\n```text\nPhase 1\nProgramming Fundamentals\n        ↓\nPhase 2\nDSA Foundations\n        ↓\nPhase 3\nAdvanced DSA\n        ↓\nPhase 4\nTimed Coding + Communication\n        ↓\nPhase 5\nSystem Design\n        ↓\nPhase 6\nBehavioral / Leadership\n        ↓\nPhase 7\nRole-Specific Calibration\n        ↓\nPhase 8\nMock Interview Loop\n```\n\n---\n\n## 21.2 Preparation Priorities\n\n### Priority 1 — DSA\n\nFocus on:\n\n- Arrays\n- Strings\n- Hashing\n- Trees\n- Graphs\n- BFS\n- DFS\n- Heaps\n- Queues\n- Recursion\n- Dynamic Programming\n- Greedy\n- Backtracking\n- Complexity analysis\n\n### Priority 2 — Coding Execution\n\nPractice:\n\n- Clarifying requirements\n- Selecting an approach\n- Writing clean code\n- Testing\n- Debugging\n- Complexity analysis\n- Optimization\n\n### Priority 3 — System Design\n\nIncrease preparation according to seniority.\n\n### Priority 4 — Behavioral\n\nDevelop evidence-backed stories.\n\n### Priority 5 — Core CS\n\nUse role-specific evidence to determine whether OS, DBMS, networking or other fundamentals should receive additional weighting.\n\n---",
+    "role_differences": "## 17.1 Role Matrix\n\n| Role | Google Approx. Level | Coding | Design | Leadership | Expected Autonomy | Confidence |\n|---|---|---|---|---|---|---|\n| New Graduate | L3 | Critical | Low | Low–Medium | Scoped tasks | Medium |\n| SDE-1 | L4 | Critical | Low–Medium / Variable | Medium | Independent project execution | Medium |\n| SDE-2 | L5 | Very High | Very High | High | End-to-end technical ownership | Medium |\n| Senior Engineer | L5+ | Very High | Very High | High | Broad technical ownership | Medium |\n| Staff Engineer | L6 | High | Critical | Critical | Cross-team / organizational influence | Medium |\n\n---\n\n## 17.2 L3 — New Graduate\n\n### Primary Signals\n\n- DSA\n- Coding correctness\n- Problem solving\n- Communication\n- Collaboration\n- Learning ability\n\n### Design\n\nNo dedicated system-design requirement is established as universal in the retained evidence.\n\n### PrepOS Priority\n\n```text\nDSA\n↓\nCoding Fluency\n↓\nProblem Solving\n↓\nCommunication\n↓\nBehavioral Foundations\n```\n\n---\n\n## 17.3 L4 — SDE-1 / Mid-Level\n\n### Primary Signals\n\n- Strong DSA\n- Independent coding\n- Problem solving\n- Communication\n- Ownership\n- Basic design awareness\n\n### Design\n\nDedicated system design is **variable / unclear**.\n\n### PrepOS Priority\n\n```text\nDSA\n↓\nCoding Speed + Correctness\n↓\nProblem Solving\n↓\nProgramming Fundamentals\n↓\nBasic Design\n↓\nBehavioral Ownership\n```\n\n---\n\n## 17.4 L5 — SDE-2 / Senior\n\n### Primary Signals\n\n- Advanced coding\n- System design\n- Technical depth\n- Engineering judgment\n- Ownership\n- Leadership\n\n### Design\n\nSystem design becomes a major preparation area.\n\n### PrepOS Priority\n\n```text\nDSA\n↓\nSystem Design\n↓\nEngineering Judgment\n↓\nTechnical Depth\n↓\nLeadership\n```\n\n---\n\n## 17.5 L6 — Staff\n\n### Primary Signals\n\n- System design\n- Architecture\n- Technical leadership\n- Cross-team influence\n- Ambiguity management\n- Organizational impact\n\n### Design\n\nBroad and complex architecture becomes a critical signal.\n\n### PrepOS Priority\n\n```text\nSystem Design\n↓\nArchitecture\n↓\nTechnical Leadership\n↓\nCross-Team Influence\n↓\nStrategic Engineering Judgment\n↓\nCoding Maintenance\n```\n\n---",
+    "subject_importance": "## 7.1 Canonical Subject Matrix\n\n| Subject | Importance | Interview Stage | Experience Level | Reason | Confidence |\n|---|---|---|---|---|---|\n| Programming Fundamentals | High | Coding / Technical | All | Foundation for implementation and reasoning | Medium |\n| Java | Medium | Coding | Role / Candidate dependent | Language fluency may support implementation where permitted | Low |\n| Data Structures & Algorithms | Critical | Technical Screen / Coding | All | Central technical signal in supplied research | Medium |\n| Database Management Systems | Medium | Design / Technical | L4+ contextual | Useful for data modeling and system reasoning | Low |\n| Operating Systems | Medium | Technical / Design | Contextual | Relevant to systems and infrastructure roles | Low |\n| Computer Networks | Medium | Design / Technical | Contextual | Relevant to distributed systems and networking | Low |\n| Low-Level Design | Medium | Design / Technical | L4+ | Role-dependent design and software modeling | Low–Medium |\n| High-Level Design | Very High | Design | L5+ | Increasingly important with seniority | Medium |\n\n---"
+  },
+  "signals": [
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "coding",
+      "importance": "Critical",
+      "level_dependency": false,
+      "name": "Coding",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "problem_solving",
+      "importance": "Critical",
+      "level_dependency": false,
+      "name": "Problem Solving",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "system_design",
+      "importance": "Very High",
+      "level_dependency": true,
+      "name": "System Design",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Low-Medium",
+      "formal_component": false,
+      "id": "low_level_design",
+      "importance": "Medium",
+      "level_dependency": false,
+      "name": "Low Level Design",
+      "role_dependency": true
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "behavioral",
+      "importance": "High",
+      "level_dependency": false,
+      "name": "Behavioral",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "leadership",
+      "importance": "High",
+      "level_dependency": false,
+      "name": "Leadership",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "communication",
+      "importance": "Critical",
+      "level_dependency": false,
+      "name": "Communication",
+      "role_dependency": false
+    }
+  ],
+  "source_checksum": "sha256:f26139c0a5ba5aff0d0bc681427d970267f069ec0250eac8b3ca97fbda698d27",
+  "subjects": {
+    "computer_networks": "Medium",
+    "dbms": "Medium",
+    "dsa": "Critical",
+    "high_level_design": "Very High",
+    "java": "Medium",
+    "low_level_design": "Medium",
+    "operating_systems": "Medium",
+    "programming_fundamentals": "High"
+  },
+  "summary": {
+    "company": {
+      "categories": [
+        "Product Company",
+        "Cloud Provider",
+        "AI Company"
+      ],
+      "name": "Google"
+    },
+    "interview": {
+      "behavioral": {
+        "confidence": "Medium",
+        "importance": "High"
+      },
+      "coding": {
+        "confidence": "Medium",
+        "importance": "Critical"
+      },
+      "communication": {
+        "confidence": "Medium",
+        "importance": "Critical"
+      },
+      "leadership": {
+        "confidence": "Medium",
+        "importance": "High"
+      },
+      "low_level_design": {
+        "confidence": "Low-Medium",
+        "importance": "Medium",
+        "role_dependency": true
+      },
+      "problem_solving": {
+        "confidence": "Medium",
+        "importance": "Critical"
+      },
+      "system_design": {
+        "confidence": "Medium",
+        "importance": "Very High",
+        "level_dependency": true
+      }
+    },
+    "levels": {
+      "L3": {
+        "primary_focus": [
+          "DSA",
+          "Coding",
+          "Problem Solving",
+          "Communication"
+        ],
+        "system_design": "Low"
+      },
+      "L4": {
+        "primary_focus": [
+          "DSA",
+          "Coding",
+          "Problem Solving",
+          "Ownership"
+        ],
+        "system_design": "Variable"
+      },
+      "L5": {
+        "primary_focus": [
+          "DSA",
+          "System Design",
+          "Engineering Judgment",
+          "Leadership"
+        ],
+        "system_design": "Very High"
+      },
+      "L6": {
+        "primary_focus": [
+          "System Design",
+          "Architecture",
+          "Technical Leadership",
+          "Cross-Team Influence"
+        ],
+        "system_design": "Critical"
+      }
+    },
+    "planner": {
+      "adaptive": {
+        "difficulty_requires_prerequisite_mastery": true,
+        "experience_sensitive": true,
+        "learner_readiness_overrides_company_priority": true,
+        "timeline_sensitive": true
+      },
+      "philosophy": [
+        "Problem Solving First",
+        "Strong Fundamentals",
+        "Algorithmic Execution",
+        "Scalable Thinking",
+        "Engineering Judgment",
+        "Technical Leadership"
+      ],
+      "priority": [
+        "DSA",
+        "Programming",
+        "System Design",
+        "Core CS",
+        "Behavioral"
+      ]
+    },
+    "profile": {
+      "confidence": "Medium",
+      "last_reviewed": "2026-08-14",
+      "version": "2.0"
+    },
+    "subjects": {
+      "computer_networks": "Medium",
+      "dbms": "Medium",
+      "dsa": "Critical",
+      "high_level_design": "Very High",
+      "java": "Medium",
+      "low_level_design": "Medium",
+      "operating_systems": "Medium",
+      "programming_fundamentals": "High"
+    },
+    "trends": {
+      "ai_assisted_interview": {
+        "confidence": "Low-Medium",
+        "global_standard": false,
+        "status": "Pilot"
+      },
+      "gha": {
+        "confidence": "Low",
+        "status": "Reported",
+        "universal_requirement": "Unknown"
+      },
+      "regional_variation": {
+        "confidence": "Low",
+        "status": "Insufficient Evidence"
+      }
+    }
+  },
+  "summary_variant": "interview",
+  "trends": {
+    "ai_assisted_interview": {
+      "confidence": "Low-Medium",
+      "global_standard": false,
+      "status": "Pilot"
+    },
+    "gha": {
+      "confidence": "Low",
+      "status": "Reported",
+      "universal_requirement": "Unknown"
+    },
+    "regional_variation": {
+      "confidence": "Low",
+      "status": "Insufficient Evidence"
+    }
+  },
+  "validation": {
+    "warnings": []
+  }
+}

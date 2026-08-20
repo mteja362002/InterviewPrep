@@ -1,0 +1,318 @@
+{
+  "artifact_schema_version": "1.0",
+  "company_id": "goldman_sachs",
+  "content_checksum": "sha256:7f37c4694c2bb9a2ae00cc22d1930f97cd6c156d352c7009bd26f2ebf4a69b61",
+  "levels": {
+    "analyst": {
+      "primary_focus": [
+        "DSA",
+        "Core CS",
+        "SQL",
+        "Coding"
+      ],
+      "system_design": "Low"
+    },
+    "associate": {
+      "primary_focus": [
+        "DSA",
+        "Core CS",
+        "SQL",
+        "Ownership"
+      ],
+      "system_design": "Medium"
+    },
+    "svp_md": {
+      "primary_focus": [
+        "Architecture",
+        "Technical Leadership",
+        "Cross-Team Influence"
+      ],
+      "system_design": "Critical"
+    },
+    "vice_president": {
+      "primary_focus": [
+        "System Design",
+        "Core CS/Database Depth",
+        "Engineering Judgment",
+        "Leadership"
+      ],
+      "system_design": "Very High"
+    }
+  },
+  "metadata": {
+    "accent": "#6C7A89",
+    "categories": [
+      "Financial Services",
+      "Investment Banking",
+      "Global Markets",
+      "Consumer Banking",
+      "Technology"
+    ],
+    "confidence": "Medium",
+    "display_name": "Goldman Sachs",
+    "last_reviewed": "2026-08-14",
+    "name": "Goldman Sachs",
+    "primary_category": "FinTech"
+  },
+  "planner": {
+    "adaptive": {
+      "difficulty_requires_prerequisite_mastery": true,
+      "experience_sensitive": true,
+      "learner_readiness_overrides_company_priority": true,
+      "timeline_sensitive": true
+    },
+    "philosophy": [
+      "Problem Solving First",
+      "Strong Fundamentals",
+      "Core CS / Database Depth",
+      "Engineering Judgment",
+      "Scalable Thinking",
+      "Technical Leadership"
+    ],
+    "priority": [
+      "DSA",
+      "Core CS",
+      "SQL/Database",
+      "System Design",
+      "Behavioral",
+      "Networking",
+      "Role-Specific"
+    ]
+  },
+  "profile_version": "1.0",
+  "registry_schema_version": "1.0",
+  "sections": {
+    "behavioral": "## 16.1 Communication\n\n**Importance:** Critical\n\nCandidates should:\n\n- Clarify requirements\n- State assumptions\n- Explain reasoning\n- Communicate trade-offs\n- Ask relevant questions\n- Respond constructively to feedback\n\n## 16.2 Collaboration\n\n**Importance:** High\n\nExamples should demonstrate:\n\n- Working across teams\n- Resolving disagreement\n- Sharing knowledge\n- Supporting peers\n- Handling stakeholder conflict\n\n## 16.3 Ownership\n\n**Importance:** High\n\nCandidates should demonstrate:\n\n- Responsibility for outcomes\n- Proactive problem identification\n- Follow-through\n- Operational awareness\n- Willingness to address problems beyond narrow task boundaries\n\n## 16.4 Risk Awareness\n\n**Importance:** High\n\nCandidates should demonstrate:\n\n- Understanding of risk, compliance, and security\n- Attention to detail\n- Sound judgment in financial contexts\n\n## 16.5 Learning Mindset\n\n**Importance:** Medium-High\n\nStrong evidence includes:\n\n- Learning from failures\n- Changing a decision when evidence changes\n- Seeking feedback\n- Improving engineering processes\n- Demonstrating intellectual humility\n\n## 16.6 Behavioral Preparation Format\n\nSTAR is recommended as a preparation framework:\n\n```text\nSituation\n   ↓\nTask\n   ↓\nAction\n   ↓\nResult\n   ↓\nLesson / What Changed\n```\n\nSTAR is a preparation technique, not asserted here as a mandatory Goldman Sachs interview format.\n\n---",
+    "company_overview": "## 2.1 Company Profile\n\nGoldman Sachs is a leading global financial institution with a significant technology division. Engineering teams build systems for trading, risk management, investment banking, consumer banking, data platforms, and cloud infrastructure.\n\nFor PrepOS, Goldman Sachs should be modeled as a **high-bar financial technology engineering organization** where DSA, core computer science fundamentals, system design, and behavioral fit are all critical. The interview process reflects the rigor of both finance and technology, with an emphasis on low-latency, high-reliability systems, and strong communication.\n\n## 2.2 Company Categories\n\n```yaml\ncompany_categories:\n  - Financial Services\n  - Investment Banking\n  - Global Markets\n  - Consumer Banking\n  - Technology\n```\n\n## 2.3 Engineering Characteristics\n\n| Characteristic | PrepOS Interpretation | Confidence |\n|---|---|---|\n| Large-scale financial systems | Strong relevance | Medium |\n| Low-latency / high-throughput | Strong relevance | Medium |\n| Core CS fundamentals | Very high importance | Medium |\n| Algorithmic problem solving | Core interview preparation area | Medium |\n| System design | High importance, especially senior roles | Medium |\n| Database / SQL | High relevance | Medium |\n| Behavioral fit | High cultural signal | Medium-High |\n| Values / risk-awareness | High cultural signal | Medium |\n| AI-assisted engineering | Emerging / pilot-dependent | Low |\n\n---",
+    "contradiction_register": "| Topic | Conflicting Claims | Resolution | Confidence | Requires Verification |\n|---|---|---|---|---|\n| Online Assessment | Platform varies; some include aptitude, some only coding | Confirm actual invitation | Medium | true |\n| Core CS depth | Some teams emphasize OS heavily, others focus more on SQL | Treat as role/team dependent | Medium | true |\n| Superday | New grads often have Superday, experienced hires may have multiple rounds | Treat as level-dependent | Medium | true |\n| System design at mid-level | Some report HLD, others not | Treat as role-dependent | Medium | true |\n\n---",
+    "engineering_philosophy": "## 3.1 Engineering Philosophy Summary\n\nGoldman Sachs engineering philosophy emphasizes:\n\n1. Technical excellence\n2. Risk awareness\n3. Reliability and correctness\n4. Performance\n5. Security and compliance\n6. Collaboration\n7. Ownership\n8. Continuous learning\n\nThe exact formal internal terminology should not be treated as permanently fixed.\n\n## 3.2 Engineering Progression\n\n```text\nProblem Solving\n      ↓\nStrong Fundamentals\n      ↓\nCore Systems Knowledge\n      ↓\nEngineering Judgment\n      ↓\nScalable Thinking\n      ↓\nTechnical Ownership\n      ↓\nCross-Team Influence\n```\n\n## 3.3 Core Engineering Principle\n\nPrepOS should interpret Goldman Sachs preparation as:\n\n> Demonstrate strong computer science fundamentals, especially data structures, algorithms, databases, and concurrency, write correct code, understand system design, and communicate clearly in a high-stakes financial environment.\n\n**Confidence:** Medium\n\n**Evidence Type:** Internal company knowledge + candidate pattern synthesis\n\n---",
+    "evaluation_signals": "| Signal | Importance | Description | Typical Interview Stage | Confidence |\n|---|---|---|---|---|\n| Problem Solving | Critical | Structured decomposition, algorithms, reasoning | Technical Screen, Coding | Medium |\n| Coding Ability | Critical | Correct, readable, efficient implementation | Coding | Medium |\n| Core CS Fundamentals | Very High | OS, concurrency, memory, networking | Technical / Core CS | Medium |\n| Database / SQL | Very High | SQL, data modeling, indexing, transactions | Technical / Database | Medium-High |\n| System Design | High for Senior+ | Architecture for financial systems, scale, reliability | Design | Medium |\n| Low-Level Design | Medium | OOP, modularity, extensibility | Coding/Design | Medium |\n| Communication | Critical | Clear reasoning and concise technical explanation | All stages | Medium |\n| Collaboration | High | Working effectively across teams | Behavioral | Medium |\n| Ownership | High | End-to-end responsibility | Behavioral | Medium-High |\n| Risk Awareness | High | Understanding of risk, security, compliance | Behavioral / Design | Medium |\n| Learning Ability | Medium-High | Adaptation, reflection | Behavioral / Technical | Medium |\n| Leadership | High for Senior+ | Influence, ownership, technical leadership | Behavioral / Design | Medium |\n\n---",
+    "evidence_summary": "| Finding | Classification | Confidence | PrepOS Treatment |\n|---|---|---|---|\n| DSA and coding are central | Reported | Medium | High priority |\n| Core CS fundamentals are core | Strongly Reported | Medium-High | Very high priority |\n| SQL/database is core | Strongly Reported | Medium-High | Very high priority |\n| System design importance increases with seniority | Reported Pattern | Medium | Strong level-dependent bias |\n| Behavioral and risk awareness matter | Reported | Medium | Include behavioral preparation |\n| Team-specific hiring variance | Reported | Medium | Do not hardcode |\n| Universal AI-assisted interview | Not Supported | Low | Do not hardcode |\n| Universal coding platform | Not Supported | Low | Confirm invitation |\n\n---",
+    "hiring_philosophy": "## 4.1 Hiring Philosophy\n\nGoldman Sachs SWE evaluation is comprehensive and rigorous. A candidate should not be modeled as interview-ready merely by solving algorithmic puzzles; deep CS fundamentals, database knowledge, system design, and strong behavioral evidence are all evaluated.\n\nPrepOS should evaluate readiness across:\n\n- Problem solving\n- Coding\n- Core CS fundamentals\n- Database / SQL\n- System design\n- Communication\n- Collaboration\n- Ownership\n- Risk awareness\n- Learning ability\n\n## 4.2 Hiring Progression\n\n```text\nFoundational Competence\n        ↓\nTechnical Execution\n        ↓\nIndependent Engineering\n        ↓\nArchitectural Ownership\n        ↓\nTechnical Leadership\n        ↓\nOrganizational Influence\n```\n\n## 4.3 Hiring Philosophy Constraints\n\nPrepOS MUST NOT assume:\n\n- A fixed interview count\n- A universal online assessment\n- A universal coding platform\n- A universal interview format\n- A universal system design round for all levels\n- A universal Superday process\n- A universal team matching process\n- A universal AI-assisted interview\n\nThese are treated as role-, level-, team-, region-, or cycle-dependent unless stronger evidence becomes available.\n\n**Confidence:** Medium\n\n---",
+    "interview_pipeline": "## 5.1 Pipeline Model\n\n```text\nApplication / Referral\n        ↓\nRecruiter / Initial Alignment\n        ↓\nOnline Assessment\n        ↓\nTechnical Screen / Interview\n        ↓\nInterview Loop / Superday\n        ↓\nCoding / DSA\n        ↓\nSystem Design (Senior+)\n        ↓\nDatabase / Core CS\n        ↓\nBehavioral / Fit\n        ↓\nInterview Feedback\n        ↓\nHiring Decision\n        ↓\nOffer\n```\n\nActual sequence may vary by division (Engineering, Global Markets, Consumer Banking, etc.) and region.\n\n## 5.2 Pipeline Stages\n\n| Stage | Purpose | Duration | Evaluation Criteria | Difficulty | Confidence | Evidence Source |\n|---|---|---|---|---|---|---|\n| Application / Referral | Establish candidate eligibility | Varies | Resume, experience, role fit | Medium | Medium | Internal knowledge |\n| Recruiter Screen | Validate role, experience, process | 20–30 min | Fit, communication, motivation | Low–Medium | Medium | Internal knowledge |\n| Online Assessment | Pre-screen coding / aptitude | Varies, often 60–120 min | Coding, DSA, sometimes math/aptitude | Medium–High | Medium | Interview Reports |\n| Technical Screen | Validate baseline technical ability | 45–60 min | Coding, fundamentals, communication | High | Medium | Interview Reports |\n| Interview Loop / Superday | Holistic evaluation | Varies, often 3–6 interviews | Coding, DSA, system design, database, behavioral | Very High | Medium | Interview Reports |\n| System Design | Assess architecture for financial systems | 45–60 min | Scalability, reliability, trade-offs | Very High | Medium | Interview Reports |\n| Database / Core CS | Assess SQL, concurrency, OS fundamentals | 45–60 min | SQL, ACID, concurrency, memory | High | Medium | Interview Reports |\n| Behavioral / Fit | Evaluate alignment with GS culture | 45 min | Communication, ownership, risk awareness | Medium-High | Medium | Interview Reports |\n| Feedback / Decision | Aggregate interview evaluations | Varies | Holistic evidence | Very High | Medium | Reported Process |\n| Offer | Complete hiring process | Varies | Level, role, headcount | Varies | Low | Reported Process |\n\n---\n\n## 5.3 Goldman Sachs-Specific Interview Types\n\n### Status\n\n**Reported / Strongly Indicated as Financial Technology Focus**\n\nCommonly reported components:\n\n- **Online Assessment:** Often HackerRank-style coding, DSA, and sometimes math/aptitude for new grads.\n- **Coding/DSA:** Medium to hard algorithmic problems.\n- **Core CS:** OS, concurrency, memory, sometimes networking.\n- **Database/SQL:** SQL queries, schema design, indexing, transactions.\n- **System Design:** More common for senior roles; may include financial system design.\n- **Behavioral:** Emphasizes communication, ownership, risk management, and cultural fit.\n\n### PrepOS Rule\n\nTreat DSA, core CS, SQL, system design (for senior), and behavioral as core. The online assessment is often a key early filter.\n\n```yaml\ninterview_types:\n  online_assessment: Strongly Reported\n  dsa_coding: Strongly Reported\n  core_cs: Strongly Reported\n  sql_database: Strongly Reported\n  system_design: Reported / Level-dependent\n  behavioral: Strongly Reported\n  confidence: Medium\n  planner_behavior: High priority DSA + Core CS + SQL + Behavioral\n```\n\n---",
+    "negative_evidence": "Do NOT treat the following as core Goldman Sachs SWE preparation requirements unless role-specific evidence exists:\n\n- Universal LLD for all roles\n- Universal HLD for all levels\n- Universal OS/DBMS/Networking depth for all roles\n- One universal interview template\n- Universal coding platform\n- Universal AI interview\n- Universal team matching\n\n---",
+    "preparation_strategy": "## 21.1 Core Preparation Sequence\n\n```text\nPhase 1: Programming Fundamentals\n        ↓\nPhase 2: DSA Foundations\n        ↓\nPhase 3: Core CS (OS, Concurrency, Memory)\n        ↓\nPhase 4: SQL / Database\n        ↓\nPhase 5: Advanced DSA\n        ↓\nPhase 6: System Design\n        ↓\nPhase 7: Behavioral / Risk Awareness\n        ↓\nPhase 8: Mock Interview Loop\n```\n\n## 21.2 Preparation Priorities\n\n### Priority 1 — DSA + Coding\n\nFocus on:\n\n- Arrays\n- Strings\n- Hashing\n- Trees\n- Graphs\n- BFS\n- DFS\n- Heaps\n- Queues\n- Recursion\n- Dynamic Programming\n- Greedy\n- Backtracking\n- Complexity analysis\n\n### Priority 2 — Core CS\n\nFocus on:\n\n- OS: processes, threads, deadlocks, virtual memory\n- Concurrency: locks, synchronization\n- Memory management\n\n### Priority 3 — SQL / Database\n\nFocus on:\n\n- SQL queries\n- Indexing\n- Transactions\n- ACID\n- Isolation levels\n- Query optimization\n\n### Priority 4 — System Design\n\nIncrease preparation according to seniority.\n\n### Priority 5 — Behavioral\n\nDevelop evidence-backed stories around ownership, collaboration, risk awareness, and learning.\n\n### Priority 6 — Core CS / Networking\n\nUse role-specific evidence for networking, etc.\n\n---",
+    "role_differences": "| Level | Coding | Core CS/DB | Design | Leadership | Expected Autonomy | Confidence |\n|---|---|---|---|---|---|---|\n| New Graduate / Analyst | Critical | High | Low | Low-Medium | Scoped tasks | Medium |\n| Associate | Critical | High | Medium | Medium | Independent execution | Medium |\n| Vice President | Very High | High | Very High | High | Broad technical ownership | Medium |\n| SVP / MD | High | High | Critical | Critical | Cross-team influence | Medium |\n\n---",
+    "subject_importance": "| Subject | Importance | Interview Stage | Experience Level | Reason | Confidence |\n|---|---|---|---|---|---|\n| Programming Fundamentals | High | Coding | All | Foundation for implementation | Medium |\n| Java | Medium-High | Coding | Role/candidate dependent | Java widely used in GS, but Python/C++ also | Medium |\n| Data Structures & Algorithms | Critical | Online Assessment / Coding | All | Central technical signal | Medium |\n| Database Management Systems | Very High | Technical / Database | All | SQL and data modeling are core | Medium-High |\n| Operating Systems | High | Technical / Core CS | All | Concurrency, memory, processes | Medium-High |\n| Computer Networks | Medium | Design/Technical | Contextual | Distributed systems and networking | Medium |\n| Low-Level Design | Medium | Coding/Design | Mid+ | OOP and modularity | Medium |\n| High-Level Design | High | Design | Senior+ | Increasingly important for financial systems | Medium |\n\n---"
+  },
+  "signals": [
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "coding",
+      "importance": "Critical",
+      "level_dependency": false,
+      "name": "Coding",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "dsa",
+      "importance": "Critical",
+      "level_dependency": false,
+      "name": "Dsa",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium-High",
+      "formal_component": false,
+      "id": "core_cs",
+      "importance": "Very High",
+      "level_dependency": false,
+      "name": "Core Cs",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium-High",
+      "formal_component": false,
+      "id": "sql_database",
+      "importance": "Very High",
+      "level_dependency": false,
+      "name": "Sql Database",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "system_design",
+      "importance": "High",
+      "level_dependency": true,
+      "name": "System Design",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "behavioral",
+      "importance": "High",
+      "level_dependency": false,
+      "name": "Behavioral",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "communication",
+      "importance": "Critical",
+      "level_dependency": false,
+      "name": "Communication",
+      "role_dependency": false
+    }
+  ],
+  "source_checksum": "sha256:06551b9aea65df282886562b0c7ed1d304ba0df7217ecbd8d42a67709b3192f9",
+  "subjects": {
+    "computer_networks": "Medium",
+    "dbms": "Very High",
+    "dsa": "Critical",
+    "high_level_design": "High",
+    "java": "Medium-High",
+    "low_level_design": "Medium",
+    "operating_systems": "High",
+    "programming_fundamentals": "High"
+  },
+  "summary": {
+    "company": {
+      "categories": [
+        "Financial Services",
+        "Investment Banking",
+        "Global Markets",
+        "Consumer Banking",
+        "Technology"
+      ],
+      "name": "Goldman Sachs"
+    },
+    "interview": {
+      "behavioral": {
+        "confidence": "Medium",
+        "importance": "High"
+      },
+      "coding": {
+        "confidence": "Medium",
+        "importance": "Critical"
+      },
+      "communication": {
+        "confidence": "Medium",
+        "importance": "Critical"
+      },
+      "core_cs": {
+        "confidence": "Medium-High",
+        "importance": "Very High"
+      },
+      "dsa": {
+        "confidence": "Medium",
+        "importance": "Critical"
+      },
+      "sql_database": {
+        "confidence": "Medium-High",
+        "importance": "Very High"
+      },
+      "system_design": {
+        "confidence": "Medium",
+        "importance": "High",
+        "level_dependency": true
+      }
+    },
+    "levels": {
+      "analyst": {
+        "primary_focus": [
+          "DSA",
+          "Core CS",
+          "SQL",
+          "Coding"
+        ],
+        "system_design": "Low"
+      },
+      "associate": {
+        "primary_focus": [
+          "DSA",
+          "Core CS",
+          "SQL",
+          "Ownership"
+        ],
+        "system_design": "Medium"
+      },
+      "svp_md": {
+        "primary_focus": [
+          "Architecture",
+          "Technical Leadership",
+          "Cross-Team Influence"
+        ],
+        "system_design": "Critical"
+      },
+      "vice_president": {
+        "primary_focus": [
+          "System Design",
+          "Core CS/Database Depth",
+          "Engineering Judgment",
+          "Leadership"
+        ],
+        "system_design": "Very High"
+      }
+    },
+    "planner": {
+      "adaptive": {
+        "difficulty_requires_prerequisite_mastery": true,
+        "experience_sensitive": true,
+        "learner_readiness_overrides_company_priority": true,
+        "timeline_sensitive": true
+      },
+      "philosophy": [
+        "Problem Solving First",
+        "Strong Fundamentals",
+        "Core CS / Database Depth",
+        "Engineering Judgment",
+        "Scalable Thinking",
+        "Technical Leadership"
+      ],
+      "priority": [
+        "DSA",
+        "Core CS",
+        "SQL/Database",
+        "System Design",
+        "Behavioral",
+        "Networking",
+        "Role-Specific"
+      ]
+    },
+    "profile": {
+      "confidence": "Medium",
+      "last_reviewed": "2026-08-14",
+      "version": "1.0"
+    },
+    "subjects": {
+      "computer_networks": "Medium",
+      "dbms": "Very High",
+      "dsa": "Critical",
+      "high_level_design": "High",
+      "java": "Medium-High",
+      "low_level_design": "Medium",
+      "operating_systems": "High",
+      "programming_fundamentals": "High"
+    },
+    "trends": {
+      "ai_assisted_interview": {
+        "confidence": "Low",
+        "status": "Insufficient Evidence"
+      },
+      "regional_variation": {
+        "confidence": "Low",
+        "status": "Insufficient Evidence"
+      }
+    }
+  },
+  "summary_variant": "interview",
+  "trends": {
+    "ai_assisted_interview": {
+      "confidence": "Low",
+      "status": "Insufficient Evidence"
+    },
+    "regional_variation": {
+      "confidence": "Low",
+      "status": "Insufficient Evidence"
+    }
+  },
+  "validation": {
+    "warnings": []
+  }
+}

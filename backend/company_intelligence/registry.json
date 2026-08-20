@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "description": "Single canonical company registry for PrepOS. This is the ONLY authored source of company identity (ids, display names, accents, primary category). Backend loads this file directly; the frontend catalog (frontend/src/config/companies.generated.json) is GENERATED from this file by scripts/compile_companies.py. Do not hand-maintain company ids anywhere else.",
+  "companies": [
+    { "id": "google",        "name": "Google",        "accent": "#4285F4", "category": "Product Company" },
+    { "id": "microsoft",     "name": "Microsoft",     "accent": "#00A4EF", "category": "Product Company" },
+    { "id": "uber",          "name": "Uber",          "accent": "#000000", "category": "Product Company" },
+    { "id": "adobe",         "name": "Adobe",         "accent": "#FF0000", "category": "Product Company" },
+    { "id": "atlassian",     "name": "Atlassian",     "accent": "#0052CC", "category": "SaaS" },
+    { "id": "linkedin",      "name": "LinkedIn",      "accent": "#0A66C2", "category": "Product Company" },
+    { "id": "stripe",        "name": "Stripe",        "accent": "#635BFF", "category": "FinTech" },
+    { "id": "salesforce",    "name": "Salesforce",    "accent": "#00A1E0", "category": "SaaS" },
+    { "id": "phonepe",       "name": "PhonePe",       "accent": "#5F259F", "category": "FinTech" },
+    { "id": "flipkart",      "name": "Flipkart",      "accent": "#F0B90B", "category": "Product Company" },
+    { "id": "oracle",        "name": "Oracle",        "accent": "#F80000", "category": "Enterprise Software" },
+    { "id": "paypal",        "name": "PayPal",        "accent": "#003087", "category": "FinTech" },
+    { "id": "goldman_sachs", "name": "Goldman Sachs", "accent": "#6C7A89", "category": "FinTech" },
+    { "id": "zoho",          "name": "Zoho",          "accent": "#C8202B", "category": "SaaS" }
+  ]
+}

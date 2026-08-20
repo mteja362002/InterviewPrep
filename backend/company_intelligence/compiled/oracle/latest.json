@@ -1,0 +1,334 @@
+{
+  "artifact_schema_version": "1.0",
+  "company_id": "oracle",
+  "content_checksum": "sha256:ab90d22e3087f7b1e07a491a177afe5aafa400fa8575f5389e283b4af82f289f",
+  "levels": {
+    "mts": {
+      "primary_focus": [
+        "DSA",
+        "Coding",
+        "Java/OOP",
+        "SQL/Database",
+        "Ownership"
+      ],
+      "system_design": "Medium"
+    },
+    "new_grad": {
+      "primary_focus": [
+        "DSA",
+        "Coding",
+        "Java",
+        "SQL"
+      ],
+      "system_design": "Low"
+    },
+    "principal_mts": {
+      "primary_focus": [
+        "Architecture",
+        "Technical Leadership",
+        "Cross-Team Influence",
+        "Strategic Engineering Judgment"
+      ],
+      "system_design": "Critical"
+    },
+    "senior_mts": {
+      "primary_focus": [
+        "System Design",
+        "Database/Distributed Systems Depth",
+        "Engineering Judgment",
+        "Leadership"
+      ],
+      "system_design": "Very High"
+    }
+  },
+  "metadata": {
+    "accent": "#F80000",
+    "categories": [
+      "Enterprise Software",
+      "Cloud Infrastructure",
+      "Database",
+      "SaaS"
+    ],
+    "confidence": "Medium",
+    "display_name": "Oracle",
+    "last_reviewed": "2026-08-14",
+    "name": "Oracle",
+    "primary_category": "Enterprise Software"
+  },
+  "planner": {
+    "adaptive": {
+      "difficulty_requires_prerequisite_mastery": true,
+      "experience_sensitive": true,
+      "learner_readiness_overrides_company_priority": true,
+      "timeline_sensitive": true
+    },
+    "philosophy": [
+      "Problem Solving First",
+      "Strong Fundamentals",
+      "Java / Database Depth",
+      "Engineering Judgment",
+      "Scalable Thinking",
+      "Technical Leadership"
+    ],
+    "priority": [
+      "DSA",
+      "Java/OOP",
+      "SQL/Database",
+      "System Design",
+      "Core CS",
+      "Behavioral",
+      "Role-Specific"
+    ]
+  },
+  "profile_version": "1.0",
+  "registry_schema_version": "1.0",
+  "sections": {
+    "behavioral": "## 16.1 Communication\n\n**Importance:** High\n\nCandidates should:\n\n- Clarify requirements\n- State assumptions\n- Explain reasoning\n- Communicate trade-offs\n- Ask relevant questions\n- Respond constructively to feedback\n\n## 16.2 Collaboration\n\n**Importance:** Medium\n\nExamples should demonstrate:\n\n- Working across teams\n- Resolving disagreement\n- Sharing knowledge\n- Supporting peers\n- Handling stakeholder conflict\n\n## 16.3 Ownership\n\n**Importance:** Medium-High\n\nCandidates should demonstrate:\n\n- Responsibility for outcomes\n- Proactive problem identification\n- Follow-through\n- Operational awareness\n- Willingness to address problems beyond narrow task boundaries\n\n## 16.4 Engineering Judgment\n\n**Importance:** High\n\nBehavioral answers should demonstrate:\n\n- Practical trade-off analysis\n- Decision quality\n- Scalability awareness\n- Reliability mindset\n\n## 16.5 Learning Mindset\n\n**Importance:** Medium\n\nStrong evidence includes:\n\n- Learning from failures\n- Changing a decision when evidence changes\n- Seeking feedback\n- Improving engineering processes\n- Demonstrating intellectual humility\n\n## 16.6 Behavioral Preparation Format\n\nSTAR is recommended as a preparation framework:\n\n```text\nSituation\n   ↓\nTask\n   ↓\nAction\n   ↓\nResult\n   ↓\nLesson / What Changed\n```\n\nSTAR is a preparation technique, not asserted here as a mandatory Oracle interview format.\n\n---",
+    "company_overview": "## 2.1 Company Profile\n\nOracle is one of the world's largest enterprise software and cloud companies. Its engineering footprint spans database systems, cloud infrastructure, enterprise resource planning, Java platform development, middleware, and AI/ML services.\n\nFor PrepOS, Oracle should be modeled as a **large, team-driven engineering organization** where deep technical knowledge, particularly in database, Java, and distributed systems, often carries more weight than generic algorithmic puzzle speed. The interview process is notably **team-specific**, with significant variation across Oracle Cloud Infrastructure (OCI), Database, Fusion Apps, NetSuite, and other divisions.\n\n## 2.2 Company Categories\n\n```yaml\ncompany_categories:\n  - Enterprise Software\n  - Cloud Infrastructure\n  - Database\n  - SaaS\n```\n\n## 2.3 Engineering Characteristics\n\n| Characteristic | PrepOS Interpretation | Confidence |\n|---|---|---|\n| Large-scale enterprise systems | Strong relevance | Medium |\n| Database internals | High relevance for database/cloud teams | Medium |\n| Distributed cloud infrastructure | Strong relevance for OCI | Medium |\n| Algorithmic problem solving | Important, but not the sole focus | Medium |\n| Java platform expertise | High relevance across many teams | Medium-High |\n| SQL and data modeling | High relevance | Medium-High |\n| System design | Increasing importance with seniority | Medium |\n| Team-specific hiring variance | Very High | Medium-High |\n| Values alignment | Less formalized than peers | Low |\n\n---",
+    "contradiction_register": "| Topic | Conflicting Claims | Resolution | Confidence | Requires Verification |\n|---|---|---|---|---|\n| Interview format | Some teams use algorithm puzzles, others practical database/Java | Treat as team-dependent | Medium | true |\n| Online Assessment | Platform varies by region/role | Confirm actual invitation | Medium | true |\n| Database depth | Some teams expect deep internals, others only SQL | Treat as role-dependent | Medium | true |\n| System design at mid-level | Some cloud/backend roles report HLD, others do not | Treat as role-dependent | Medium | true |\n\n---",
+    "engineering_philosophy": "## 3.1 Engineering Philosophy Summary\n\nOracle engineering culture differs by division, but common themes include:\n\n1. Deep technical specialization\n2. Enterprise reliability\n3. Performance and scalability at large scale\n4. Practical, production-grade engineering\n5. Database and systems fundamentals\n6. Customer-driven requirements\n\nThe exact formal internal terminology should not be treated as permanently fixed.\n\n## 3.2 Engineering Progression\n\n```text\nProblem Solving\n      ↓\nStrong Fundamentals\n      ↓\nCore Systems Knowledge\n      ↓\nEngineering Judgment\n      ↓\nScalable Thinking\n      ↓\nTechnical Ownership\n      ↓\nCross-Team Influence\n```\n\n## 3.3 Core Engineering Principle\n\nPrepOS should interpret Oracle preparation as:\n\n> Demonstrate strong foundational computer science, practical coding, database and systems knowledge, and increasing architecture ownership for cloud and enterprise systems as seniority increases.\n\n**Confidence:** Medium\n\n**Evidence Type:** Internal company knowledge + candidate pattern synthesis\n\n---",
+    "evaluation_signals": "| Signal | Importance | Description | Typical Interview Stage | Confidence |\n|---|---|---|---|---|\n| Problem Solving | High | Structured decomposition, algorithms, reasoning | Technical Screen, Coding | Medium |\n| Coding Ability | High | Correct, readable, efficient implementation | Coding | Medium |\n| Database Fundamentals | Very High | SQL, data modeling, indexing, transactions | Technical Screen / Database | Medium-High |\n| Java / OOP | High | Object-oriented design, collections, concurrency | Technical / Coding | Medium-High |\n| System Design | High for Senior+ | Architecture, scale, reliability, trade-offs | Design | Medium |\n| Low-Level Design | Medium | OOP, modularity, extensibility | Coding/Design | Medium |\n| Technical Depth | Very High | Deep knowledge in database, distributed systems, or platform | Technical Deep-Dive | Medium |\n| Communication | High | Clear reasoning and concise technical explanation | All stages | Medium |\n| Collaboration | Medium | Working effectively across teams | Behavioral | Medium |\n| Ownership | Medium-High | End-to-end responsibility | Behavioral | Medium |\n| Learning Ability | Medium | Adaptation, reflection, updating assumptions | Behavioral / Technical | Medium |\n| Leadership | High for Senior+ | Influence, ownership, technical leadership | Behavioral / Design | Medium |\n\n---",
+    "evidence_summary": "| Finding | Classification | Confidence | PrepOS Treatment |\n|---|---|---|---|\n| Coding and algorithmic reasoning are important | Reported | Medium | High planning priority |\n| Database/SQL is core | Strongly Reported | Medium-High | Very high priority |\n| Java/OOP is core | Strongly Reported | Medium-High | Very high priority |\n| System design importance increases with seniority | Reported Pattern | Medium | Strong level-dependent bias |\n| Team-specific hiring variance is very high | Reported | Medium-High | Do not hardcode one process |\n| Engineering judgment matters | Reported | Medium | High |\n| Behavioral evidence matters | Reported | Medium | Include behavioral preparation |\n| Universal AI-assisted interview | Not Supported | Low | Do not hardcode |\n| Universal coding platform | Not Supported | Low | Confirm invitation |\n\n---",
+    "hiring_philosophy": "## 4.1 Hiring Philosophy\n\nOracle SWE evaluation is competency-driven and often team-specific. A candidate should not be modeled as interview-ready merely because they can solve abstract algorithmic puzzles. Practical technical depth, especially in database, Java, distributed systems, and system design, is highly valued.\n\nPrepOS should evaluate readiness across:\n\n- Problem solving\n- Coding\n- Database fundamentals\n- Java/platform knowledge\n- System design\n- Communication\n- Collaboration\n- Ownership\n- Learning ability\n\n## 4.2 Hiring Progression\n\n```text\nFoundational Competence\n        ↓\nTechnical Execution\n        ↓\nIndependent Engineering\n        ↓\nArchitectural Ownership\n        ↓\nTechnical Leadership\n        ↓\nOrganizational Influence\n```\n\n## 4.3 Hiring Philosophy Constraints\n\nPrepOS MUST NOT assume:\n\n- A fixed interview count\n- A universal online assessment\n- A universal coding platform\n- A universal interview format\n- A universal system design round for all levels\n- A universal database round\n- A universal Java round\n- A universal team matching process\n- A universal AI-assisted interview\n\nThese are treated as role-, level-, team-, region-, or cycle-dependent unless stronger evidence becomes available.\n\n**Confidence:** Medium\n\n---",
+    "interview_pipeline": "## 5.1 Pipeline Model\n\n```text\nApplication / Referral\n        ↓\nRecruiter / Initial Alignment\n        ↓\nPotential Online Assessment\n        ↓\nTechnical Screen\n        ↓\nInterview Loop\n        ↓\nPotential Technical Deep-Dive\n        ↓\nInterview Feedback\n        ↓\nHiring Decision\n        ↓\nOffer\n```\n\nActual sequence may vary significantly by team and division.\n\n## 5.2 Pipeline Stages\n\n| Stage | Purpose | Duration | Evaluation Criteria | Difficulty | Confidence | Evidence Source |\n|---|---|---|---|---|---|---|\n| Application / Referral | Establish candidate eligibility | Varies | Resume, experience, role fit | Medium | Medium | Internal knowledge |\n| Recruiter Screen | Validate role, experience, process | 20–30 min | Fit, communication, motivation | Low–Medium | Medium | Internal knowledge |\n| Potential Online Assessment | Pre-screen coding | Varies | Coding, DSA, sometimes SQL | Medium–High | Medium | Interview Reports |\n| Technical Screen | Validate baseline technical ability | 45–60 min | Coding, fundamentals, communication | High | Medium | Interview Reports |\n| Interview Loop | Holistic technical evaluation | Varies, often 3–5 interviews | Coding, database, system design, technical depth | Very High | Medium | Interview Reports |\n| Potential Technical Deep-Dive | Assess specialized depth | 45–60 min | Database internals, Java, distributed systems, etc. | Very High | Medium | Interview Reports |\n| Feedback / Decision | Aggregate interview evaluations | Varies | Holistic evidence | Very High | Medium | Reported Process |\n| Offer | Complete hiring process | Varies | Level, role, headcount | Varies | Low | Reported Process |\n\n---\n\n## 5.3 Oracle Interview Characteristics\n\n### Status\n\n**Reported / Strongly Indicated as Team-Specific**\n\nOracle interviews are known for being highly dependent on the hiring team and division.\n\nCommon reported components include:\n\n- **Coding:** Often medium-difficulty DSA, but may include practical programming.\n- **Database:** SQL queries, schema design, indexing, transactions; especially for database and enterprise teams.\n- **Java:** Object-oriented design, collections, concurrency; especially for Java platform and applications teams.\n- **System Design:** More common for senior and OCI/cloud roles.\n- **Technical Deep-Dive:** Specific questions on database internals, distributed systems, or Java internals.\n\n### PrepOS Rule\n\nTreat Oracle preparation as **team-dependent but database- and Java-heavy by default**. If the candidate's target team is unknown, prioritize core CS, DSA, SQL, and Java/OOP.\n\n```yaml\ninterview_types:\n  coding: Strongly Reported\n  database: Strongly Reported\n  java: Strongly Reported\n  system_design: Reported / Level-dependent\n  technical_deep_dive: Reported / Role-dependent\n  confidence: Medium\n  planner_behavior: High priority database and Java fundamentals\n```\n\n---",
+    "negative_evidence": "Do NOT treat the following as core Oracle SWE preparation requirements unless role-specific evidence exists:\n\n- Universal heavy DSA/algorithmic focus like Google\n- Universal LLD for all roles\n- Universal HLD for all levels\n- Universal OS/DBMS/Networking depth\n- One universal interview template\n- Universal coding platform\n- Universal AI interview\n- Universal team matching\n\n---",
+    "preparation_strategy": "## 21.1 Core Preparation Sequence\n\n```text\nPhase 1: Programming Fundamentals\n        ↓\nPhase 2: DSA Foundations\n        ↓\nPhase 3: Java / OOP\n        ↓\nPhase 4: SQL / Database Fundamentals\n        ↓\nPhase 5: Advanced DSA\n        ↓\nPhase 6: System Design\n        ↓\nPhase 7: Behavioral / Engineering Judgment\n        ↓\nPhase 8: Mock Interview Loop\n```\n\n## 21.2 Preparation Priorities\n\n### Priority 1 — DSA + Coding\n\nFocus on:\n\n- Arrays\n- Strings\n- Hashing\n- Trees\n- Graphs\n- BFS\n- DFS\n- Heaps\n- Queues\n- Recursion\n- Dynamic Programming\n- Greedy\n- Backtracking\n- Complexity analysis\n\n### Priority 2 — Java / OOP\n\nFocus on:\n\n- Collections\n- Concurrency\n- Multithreading\n- Generics\n- OOP design\n\n### Priority 3 — SQL / Database\n\nFocus on:\n\n- SQL queries\n- Indexing\n- Transactions\n- ACID\n- Isolation levels\n- Query optimization\n\n### Priority 4 — System Design\n\nIncrease preparation according to seniority.\n\n### Priority 5 — Behavioral\n\nDevelop evidence-backed stories around ownership, collaboration, engineering judgment, and learning.\n\n### Priority 6 — Core CS\n\nUse role-specific evidence to determine whether OS, networking, or other fundamentals should receive additional weighting.\n\n---",
+    "role_differences": "| Level | Coding | Database/Java | Design | Leadership | Expected Autonomy | Confidence |\n|---|---|---|---|---|---|---|\n| New Graduate | Critical | High | Low | Low-Medium | Scoped tasks | Medium |\n| MTS | Critical | High | Medium | Medium | Independent execution | Medium |\n| Senior MTS | Very High | High | Very High | High | Broad technical ownership | Medium |\n| Principal MTS | High | High | Critical | Critical | Cross-team influence | Medium |\n\n---",
+    "subject_importance": "| Subject | Importance | Interview Stage | Experience Level | Reason | Confidence |\n|---|---|---|---|---|---|\n| Programming Fundamentals | High | Coding | All | Foundation for implementation | Medium |\n| Java | Very High | Coding / Technical | All, especially Java teams | Oracle is historically Java-centric | Medium-High |\n| Data Structures & Algorithms | High | Technical Screen / Coding | All | Important but not always the sole focus | Medium |\n| Database Management Systems | Very High | Technical / Database | All, especially Database/Enterprise teams | SQL, indexing, transactions are core Oracle domains | Medium-High |\n| Operating Systems | Medium | Technical/Design | Contextual | Relevant for infrastructure/systems teams | Medium |\n| Computer Networks | Medium | Design/Technical | Contextual | Relevant for OCI/cloud teams | Medium |\n| Low-Level Design | Medium | Coding/Design | Mid+ | OOP and modularity | Medium |\n| High-Level Design | High | Design | Senior+ | Increasingly important for cloud/enterprise | Medium |\n\n---"
+  },
+  "signals": [
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "coding",
+      "importance": "High",
+      "level_dependency": false,
+      "name": "Coding",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium-High",
+      "formal_component": false,
+      "id": "database",
+      "importance": "Very High",
+      "level_dependency": false,
+      "name": "Database",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium-High",
+      "formal_component": false,
+      "id": "java",
+      "importance": "Very High",
+      "level_dependency": false,
+      "name": "Java",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "problem_solving",
+      "importance": "High",
+      "level_dependency": false,
+      "name": "Problem Solving",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "system_design",
+      "importance": "High",
+      "level_dependency": true,
+      "name": "System Design",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "low_level_design",
+      "importance": "Medium",
+      "level_dependency": false,
+      "name": "Low Level Design",
+      "role_dependency": true
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "behavioral",
+      "importance": "Medium-High",
+      "level_dependency": false,
+      "name": "Behavioral",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "communication",
+      "importance": "High",
+      "level_dependency": false,
+      "name": "Communication",
+      "role_dependency": false
+    }
+  ],
+  "source_checksum": "sha256:db7202091ff72f5e90faed7c8c5c5d7d79752e35369f694a2afe5c9515470922",
+  "subjects": {
+    "computer_networks": "Medium",
+    "dbms": "Very High",
+    "dsa": "High",
+    "high_level_design": "High",
+    "java": "Very High",
+    "low_level_design": "Medium",
+    "operating_systems": "Medium",
+    "programming_fundamentals": "High"
+  },
+  "summary": {
+    "company": {
+      "categories": [
+        "Enterprise Software",
+        "Cloud Infrastructure",
+        "Database",
+        "SaaS"
+      ],
+      "name": "Oracle"
+    },
+    "interview": {
+      "behavioral": {
+        "confidence": "Medium",
+        "importance": "Medium-High"
+      },
+      "coding": {
+        "confidence": "Medium",
+        "importance": "High"
+      },
+      "communication": {
+        "confidence": "Medium",
+        "importance": "High"
+      },
+      "database": {
+        "confidence": "Medium-High",
+        "importance": "Very High"
+      },
+      "java": {
+        "confidence": "Medium-High",
+        "importance": "Very High"
+      },
+      "low_level_design": {
+        "confidence": "Medium",
+        "importance": "Medium",
+        "role_dependency": true
+      },
+      "problem_solving": {
+        "confidence": "Medium",
+        "importance": "High"
+      },
+      "system_design": {
+        "confidence": "Medium",
+        "importance": "High",
+        "level_dependency": true
+      }
+    },
+    "levels": {
+      "mts": {
+        "primary_focus": [
+          "DSA",
+          "Coding",
+          "Java/OOP",
+          "SQL/Database",
+          "Ownership"
+        ],
+        "system_design": "Medium"
+      },
+      "new_grad": {
+        "primary_focus": [
+          "DSA",
+          "Coding",
+          "Java",
+          "SQL"
+        ],
+        "system_design": "Low"
+      },
+      "principal_mts": {
+        "primary_focus": [
+          "Architecture",
+          "Technical Leadership",
+          "Cross-Team Influence",
+          "Strategic Engineering Judgment"
+        ],
+        "system_design": "Critical"
+      },
+      "senior_mts": {
+        "primary_focus": [
+          "System Design",
+          "Database/Distributed Systems Depth",
+          "Engineering Judgment",
+          "Leadership"
+        ],
+        "system_design": "Very High"
+      }
+    },
+    "planner": {
+      "adaptive": {
+        "difficulty_requires_prerequisite_mastery": true,
+        "experience_sensitive": true,
+        "learner_readiness_overrides_company_priority": true,
+        "timeline_sensitive": true
+      },
+      "philosophy": [
+        "Problem Solving First",
+        "Strong Fundamentals",
+        "Java / Database Depth",
+        "Engineering Judgment",
+        "Scalable Thinking",
+        "Technical Leadership"
+      ],
+      "priority": [
+        "DSA",
+        "Java/OOP",
+        "SQL/Database",
+        "System Design",
+        "Core CS",
+        "Behavioral",
+        "Role-Specific"
+      ]
+    },
+    "profile": {
+      "confidence": "Medium",
+      "last_reviewed": "2026-08-14",
+      "version": "1.0"
+    },
+    "subjects": {
+      "computer_networks": "Medium",
+      "dbms": "Very High",
+      "dsa": "High",
+      "high_level_design": "High",
+      "java": "Very High",
+      "low_level_design": "Medium",
+      "operating_systems": "Medium",
+      "programming_fundamentals": "High"
+    },
+    "trends": {
+      "ai_assisted_interview": {
+        "confidence": "Low",
+        "status": "Insufficient Evidence"
+      },
+      "regional_variation": {
+        "confidence": "Low",
+        "status": "Insufficient Evidence"
+      }
+    }
+  },
+  "summary_variant": "interview",
+  "trends": {
+    "ai_assisted_interview": {
+      "confidence": "Low",
+      "status": "Insufficient Evidence"
+    },
+    "regional_variation": {
+      "confidence": "Low",
+      "status": "Insufficient Evidence"
+    }
+  },
+  "validation": {
+    "warnings": []
+  }
+}

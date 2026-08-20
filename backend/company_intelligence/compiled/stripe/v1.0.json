@@ -1,0 +1,360 @@
+{
+  "artifact_schema_version": "1.0",
+  "company_id": "stripe",
+  "content_checksum": "sha256:5a6c693a8138a1d620e886029d575cfaf5ddc6e3cfb8641e93691c8fb8293f3b",
+  "levels": {
+    "new_grad": {
+      "primary_focus": [
+        "DSA",
+        "Coding",
+        "Fundamentals",
+        "Basic Practical Coding"
+      ],
+      "system_design": "Low"
+    },
+    "senior": {
+      "primary_focus": [
+        "System Design",
+        "Engineering Judgment",
+        "Practical Coding/Debugging Maintenance",
+        "Leadership"
+      ],
+      "system_design": "Very High"
+    },
+    "software_engineer": {
+      "primary_focus": [
+        "DSA",
+        "Practical Coding",
+        "Debugging",
+        "Integration",
+        "Ownership"
+      ],
+      "system_design": "Medium"
+    },
+    "staff": {
+      "primary_focus": [
+        "Architecture",
+        "Technical Leadership",
+        "Cross-Team Influence",
+        "Strategic Engineering Judgment"
+      ],
+      "system_design": "Critical"
+    }
+  },
+  "metadata": {
+    "accent": "#635BFF",
+    "categories": [
+      "Fintech",
+      "Payments",
+      "Developer Infrastructure",
+      "SaaS"
+    ],
+    "confidence": "Medium",
+    "display_name": "Stripe",
+    "last_reviewed": "2026-08-14",
+    "name": "Stripe",
+    "primary_category": "FinTech"
+  },
+  "planner": {
+    "adaptive": {
+      "difficulty_requires_prerequisite_mastery": true,
+      "experience_sensitive": true,
+      "learner_readiness_overrides_company_priority": true,
+      "timeline_sensitive": true
+    },
+    "philosophy": [
+      "Problem Solving First",
+      "Strong Fundamentals",
+      "Practical Execution",
+      "Debugging / Integration",
+      "Engineering Judgment",
+      "Scalable Thinking",
+      "Technical Leadership"
+    ],
+    "priority": [
+      "DSA",
+      "Practical Coding / Debugging / Integration",
+      "System Design",
+      "Behavioral/Engineering Judgment",
+      "Core CS",
+      "Role-Specific"
+    ]
+  },
+  "profile_version": "1.0",
+  "registry_schema_version": "1.0",
+  "sections": {
+    "behavioral": "## 16.1 Communication\n\n**Importance:** Critical\n\nCandidates should:\n\n- Clarify requirements\n- State assumptions\n- Explain reasoning\n- Communicate trade-offs\n- Ask relevant questions\n- Respond constructively to feedback\n\n## 16.2 Collaboration\n\n**Importance:** High\n\nExamples should demonstrate:\n\n- Working across teams\n- Resolving disagreement\n- Sharing knowledge\n- Supporting peers\n- Handling stakeholder conflict\n\n## 16.3 Ownership\n\n**Importance:** High\n\nCandidates should demonstrate:\n\n- Responsibility for outcomes\n- Proactive problem identification\n- Follow-through\n- Operational awareness\n- Willingness to address problems beyond narrow task boundaries\n\n## 16.4 Engineering Judgment\n\n**Importance:** Very High\n\nBehavioral answers should demonstrate:\n\n- Practical trade-off analysis\n- Decision quality\n- Scalability awareness\n- Reliability mindset\n- Security awareness\n\n## 16.5 Learning Mindset\n\n**Importance:** High\n\nStrong evidence includes:\n\n- Learning from failures\n- Changing a decision when evidence changes\n- Seeking feedback\n- Improving engineering processes\n- Demonstrating intellectual humility\n\n## 16.6 Behavioral Preparation Format\n\nSTAR is recommended as a preparation framework:\n\n```text\nSituation\n   ↓\nTask\n   ↓\nAction\n   ↓\nResult\n   ↓\nLesson / What Changed\n```\n\nSTAR is a preparation technique, not asserted here as a mandatory Stripe interview format.\n\n---",
+    "company_overview": "## 2.1 Company Profile\n\nStripe is a global technology company that builds financial infrastructure and payments APIs for developers and businesses. Engineering organizations span payments processing, distributed systems, API design, developer tooling, security, and financial data.\n\nFor PrepOS, Stripe should be modeled as a **high-bar engineering organization with a strong practical-engineering orientation**. Unlike some companies that focus heavily on algorithmic puzzles, Stripe emphasizes practical coding, debugging, integration, and design quality. System design and craft interviews are central.\n\n## 2.2 Company Categories\n\n```yaml\ncompany_categories:\n  - Fintech\n  - Payments\n  - Developer Infrastructure\n  - SaaS\n```\n\n## 2.3 Engineering Characteristics\n\n| Characteristic | PrepOS Interpretation | Confidence |\n|---|---|---|\n| Distributed systems | Strong relevance | Medium |\n| API design | Very strong relevance | Medium-High |\n| Practical coding | Core interview signal | Medium-High |\n| Debugging | Core interview signal | Medium-High |\n| Integration | Core interview signal | Medium |\n| Algorithmic problem solving | Important, but not the sole focus | Medium |\n| System design | High importance, especially senior roles | Medium |\n| Code quality | Very High | Medium-High |\n| AI-assisted engineering | Emerging / pilot-dependent | Low |\n\n---",
+    "contradiction_register": "| Topic | Conflicting Claims | Resolution | Confidence | Requires Verification |\n|---|---|---|---|---|\n| Interview format | Some sources report pure algorithmic, others emphasize practical/debugging | Treat as role/team dependent; emphasize practical skills broadly | Medium | true |\n| Online Assessment | Platform varies by region/role | Confirm actual invitation | Medium | true |\n| LLD requirement | Some loops embed OOD, others have dedicated design | Treat as role/team dependent | Medium | true |\n| System design at mid-level | Some mid-level backend roles report HLD, others do not | Treat as role-dependent | Medium | true |\n\n---",
+    "engineering_philosophy": "## 3.1 Engineering Philosophy Summary\n\nStripe engineering philosophy emphasizes:\n\n1. Developer-first thinking\n2. Practical, production-quality code\n3. Deep understanding of systems\n4. Excellent API design\n5. Reliability and correctness\n6. Security and financial integrity\n7. Intellectual rigor\n8. End-to-end ownership\n\nThe exact formal internal terminology should not be treated as permanently fixed.\n\n## 3.2 Engineering Progression\n\n```text\nProblem Solving\n      ↓\nStrong Fundamentals\n      ↓\nPractical Execution\n      ↓\nEngineering Judgment\n      ↓\nScalable Thinking\n      ↓\nTechnical Ownership\n      ↓\nCross-Team Influence\n```\n\n## 3.3 Core Engineering Principle\n\nPrepOS should interpret Stripe preparation as:\n\n> Solve the right problem, write practical and correct code, debug effectively, design clean APIs and systems, and demonstrate deep engineering judgment as seniority increases.\n\n**Confidence:** Medium\n\n**Evidence Type:** Internal company knowledge + candidate pattern synthesis\n\n---",
+    "evaluation_signals": "| Signal | Importance | Description | Typical Interview Stage | Confidence |\n|---|---|---|---|---|\n| Practical Coding | Critical | Write clean, correct, production-quality code | Practical Coding / Technical Screen | Medium-High |\n| Debugging | Critical | Identify and fix defects, understand code | Debugging | Medium-High |\n| Integration | High | Work with APIs, libraries, documentation | Integration | Medium |\n| System Design | Very High | Architecture, scale, reliability, trade-offs | Design | Medium |\n| Code Quality | Critical | Readability, maintainability, correctness | All coding stages | Medium-High |\n| Problem Solving | Critical | Structured decomposition, reasoning | Technical Screen, Coding | Medium |\n| API Design | High | Clean interfaces, contracts | Coding / Design | Medium |\n| Communication | Critical | Clear reasoning and concise technical explanation | All stages | Medium |\n| Collaboration | High | Working effectively across teams | Behavioral | Medium |\n| Ownership | High | End-to-end responsibility | Behavioral | Medium |\n| Engineering Judgment | Very High | Practical trade-off analysis and decision quality | Design / Technical / Behavioral | Medium |\n| Learning Ability | High | Adaptation, reflection, updating assumptions | Behavioral / Technical | Medium |\n\n---",
+    "evidence_summary": "| Finding | Classification | Confidence | PrepOS Treatment |\n|---|---|---|---|\n| Coding and algorithmic reasoning are important | Reported | Medium | High planning priority |\n| Practical coding is core | Reported | Medium-High | Very high priority |\n| Debugging is core | Reported | Medium-High | Very high priority |\n| Integration is important | Reported | Medium | High priority |\n| System design is very high importance | Reported | Medium | Strong level-dependent bias |\n| Engineering judgment matters | Reported | Medium-High | High |\n| Design importance increases with seniority | Reported Pattern | Medium | Strong level-dependent bias |\n| Behavioral evidence matters | Reported | Medium | Include behavioral preparation |\n| Team-specific hiring variance | Reported | Medium | Do not hardcode one process |\n| Universal AI-assisted interview | Not Supported | Low | Do not hardcode |\n| Universal coding platform | Not Supported | Low | Confirm invitation |\n\n---",
+    "hiring_philosophy": "## 4.1 Hiring Philosophy\n\nStripe SWE evaluation is holistic and strongly practical. A candidate should not be modeled as interview-ready merely because they can solve algorithmic puzzles.\n\nPrepOS should evaluate readiness across:\n\n- Practical coding\n- Debugging\n- Integration\n- System design\n- Communication\n- Collaboration\n- Ownership\n- Engineering judgment\n- Code quality\n- API design\n\n## 4.2 Hiring Progression\n\n```text\nFoundational Competence\n        ↓\nTechnical Execution\n        ↓\nIndependent Engineering\n        ↓\nArchitectural Ownership\n        ↓\nTechnical Leadership\n        ↓\nOrganizational Influence\n```\n\n## 4.3 Hiring Philosophy Constraints\n\nPrepOS MUST NOT assume:\n\n- A fixed interview count\n- A universal online assessment\n- A universal coding platform\n- A universal interview format\n- A universal system design round for all levels\n- A universal debugging round\n- A universal integration round\n- A universal AI-assisted interview\n\nThese are treated as role-, level-, team-, region-, or cycle-dependent unless stronger evidence becomes available.\n\n**Confidence:** Medium\n\n---",
+    "interview_pipeline": "## 5.1 Pipeline Model\n\n```text\nApplication / Referral\n        ↓\nRecruiter / Initial Alignment\n        ↓\nPotential Online Assessment\n        ↓\nTechnical Screen\n        ↓\nInterview Loop\n        ↓\nPractical Coding / Debugging / Integration\n        ↓\nSystem Design\n        ↓\nBehavioral / Values\n        ↓\nInterview Feedback\n        ↓\nHiring Decision\n        ↓\nOffer\n```\n\nActual sequence may vary by team and role.\n\n## 5.2 Pipeline Stages\n\n| Stage | Purpose | Duration | Evaluation Criteria | Difficulty | Confidence | Evidence Source |\n|---|---|---|---|---|---|---|\n| Application / Referral | Establish candidate eligibility | Varies | Resume, experience, role fit | Medium | Medium | Internal knowledge |\n| Recruiter Screen | Validate role, experience, process | 20–30 min | Fit, communication, motivation | Low–Medium | Medium | Internal knowledge |\n| Potential Online Assessment | Pre-screen coding | Varies | Coding, DSA | Medium–High | Medium | Interview Reports |\n| Technical Screen | Validate baseline coding | 45–60 min | Coding, reasoning, communication | High | Medium | Interview Reports |\n| Interview Loop | Holistic technical evaluation | Varies, often 4–6 interviews | Practical coding, debugging, integration, design, behavioral | Very High | Medium | Interview Reports |\n| Practical Coding / Debugging / Integration | Assess real-world engineering skills | 45–60 min each | Practical code, debugging, integration, API usage | High | Medium-High | Interview Reports |\n| System Design | Assess architecture and scalability | 45–60 min | System design, trade-offs | Very High | Medium | Interview Reports |\n| Behavioral / Values | Evaluate collaboration, ownership, alignment | 45–60 min | Behavioral consistency, values alignment | Medium-High | Medium | Interview Reports |\n| Feedback / Decision | Aggregate interview evaluations | Varies | Holistic evidence | Very High | Medium | Reported Process |\n| Offer | Complete hiring process | Varies | Level, role, headcount | Varies | Low | Reported Process |\n\n---\n\n## 5.3 Stripe-Specific Interview Types\n\n### Status\n\n**Reported / Strongly Indicated as Distinct Components**\n\nStripe is known for interview formats that differ from pure algorithm-only loops. Commonly reported components include:\n\n- **Practical Coding:** Write a small program or script to solve a real-world problem, often using standard libraries or APIs.\n- **Debugging:** Debug an existing codebase or snippet to fix issues and improve correctness.\n- **Integration:** Work with an API, read documentation, and produce a functional integration.\n- **System Design:** Standard large-scale system design discussion.\n- **Craft:** A discussion focused on engineering practices, code quality, and design decisions.\n\n### PrepOS Rule\n\nTreat these as high-priority preparation areas. Do not assume every candidate receives all of them; the exact mix depends on role and level.\n\n```yaml\ninterview_types:\n  practical_coding: Strongly Reported\n  debugging: Strongly Reported\n  integration: Reported\n  system_design: Strongly Reported\n  craft: Reported\n  confidence: Medium\n  planner_behavior: High priority practical engineering prep\n```\n\n---",
+    "negative_evidence": "Do NOT treat the following as core Stripe SWE preparation requirements unless role-specific evidence exists:\n\n- Universal heavy DSA/algorithmic focus\n- Universal LLD for all roles\n- Universal HLD for all levels\n- Universal OS/DBMS/Networking depth\n- One universal interview template\n- Universal coding platform\n- Universal AI interview\n- Universal team matching\n\n---",
+    "preparation_strategy": "## 21.1 Core Preparation Sequence\n\n```text\nPhase 1: Programming Fundamentals\n        ↓\nPhase 2: DSA Foundations\n        ↓\nPhase 3: Advanced DSA\n        ↓\nPhase 4: Practical Coding + API Usage\n        ↓\nPhase 5: Debugging Practice\n        ↓\nPhase 6: Integration Practice\n        ↓\nPhase 7: System Design\n        ↓\nPhase 8: Behavioral / Engineering Judgment\n        ↓\nPhase 9: Mock Interview Loop\n```\n\n## 21.2 Preparation Priorities\n\n### Priority 1 — DSA + Practical Coding\n\nFocus on:\n\n- Arrays\n- Strings\n- Hashing\n- Trees\n- Graphs\n- BFS\n- DFS\n- Heaps\n- Queues\n- Recursion\n- Dynamic Programming\n- Greedy\n- Backtracking\n- File I/O\n- API usage\n- Standard library functions\n\n### Priority 2 — Coding Execution\n\nPractice:\n\n- Clarifying requirements\n- Selecting an approach\n- Writing clean code\n- Testing\n- Debugging\n- Complexity analysis\n- Optimization\n- Using libraries/APIs\n\n### Priority 3 — Debugging & Integration\n\nPractice:\n\n- Reading unfamiliar codebases\n- Identifying defects\n- Fixing bugs\n- Working with documentation\n- Interacting with APIs\n- Error handling\n\n### Priority 4 — System Design\n\nIncrease preparation according to seniority.\n\n### Priority 5 — Behavioral\n\nDevelop evidence-backed stories around ownership, collaboration, engineering judgment, and learning.\n\n### Priority 6 — Core CS\n\nUse role-specific evidence to determine whether OS, DBMS, networking or other fundamentals should receive additional weighting.\n\n---",
+    "role_differences": "| Level | Coding | Practical Coding/Debugging | Design | Leadership | Expected Autonomy | Confidence |\n|---|---|---|---|---|---|---|\n| New Graduate | Critical | Medium | Low | Low-Medium | Scoped tasks | Medium |\n| Software Engineer | Critical | High | Medium | Medium | Independent project execution | Medium |\n| Senior | Very High | High | Very High | High | Broad technical ownership | Medium |\n| Staff | High | Medium | Critical | Critical | Cross-team influence | Medium |\n\n---",
+    "subject_importance": "| Subject | Importance | Interview Stage | Experience Level | Reason | Confidence |\n|---|---|---|---|---|---|\n| Programming Fundamentals | Critical | Practical Coding / Coding | All | Foundation for practical implementation | Medium-High |\n| Java | Medium | Coding | Role/candidate dependent | Stripe uses Ruby, Python, Java, Go; language fluency supports implementation | Medium |\n| Data Structures & Algorithms | High | Technical Screen / Coding | All | Important but less dominant than practical skills | Medium |\n| Database Management Systems | Medium | Design/Technical | Mid+ | Data modeling and system reasoning | Medium |\n| Operating Systems | Medium | Technical/Design | Contextual | Systems relevance | Low-Medium |\n| Computer Networks | Medium | Design/Technical | Contextual | Distributed systems and networking | Medium |\n| Low-Level Design | Medium-High | Coding/Design | Mid+ | API and component design | Medium |\n| High-Level Design | Very High | Design | Senior+ | Increasingly important with seniority | Medium |\n\n---"
+  },
+  "signals": [
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "coding",
+      "importance": "Critical",
+      "level_dependency": false,
+      "name": "Coding",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium-High",
+      "formal_component": false,
+      "id": "practical_coding",
+      "importance": "Critical",
+      "level_dependency": false,
+      "name": "Practical Coding",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium-High",
+      "formal_component": false,
+      "id": "debugging",
+      "importance": "Critical",
+      "level_dependency": false,
+      "name": "Debugging",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "integration",
+      "importance": "High",
+      "level_dependency": false,
+      "name": "Integration",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "problem_solving",
+      "importance": "Critical",
+      "level_dependency": false,
+      "name": "Problem Solving",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "system_design",
+      "importance": "Very High",
+      "level_dependency": true,
+      "name": "System Design",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "low_level_design",
+      "importance": "Medium-High",
+      "level_dependency": false,
+      "name": "Low Level Design",
+      "role_dependency": true
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "behavioral",
+      "importance": "High",
+      "level_dependency": false,
+      "name": "Behavioral",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "engineering_judgment",
+      "importance": "Very High",
+      "level_dependency": false,
+      "name": "Engineering Judgment",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "communication",
+      "importance": "Critical",
+      "level_dependency": false,
+      "name": "Communication",
+      "role_dependency": false
+    }
+  ],
+  "source_checksum": "sha256:d4d97349dcdb4ce99709009becf77ff42e98f8fb6632a335224985025fb395e3",
+  "subjects": {
+    "computer_networks": "Medium",
+    "dbms": "Medium",
+    "dsa": "High",
+    "high_level_design": "Very High",
+    "java": "Medium",
+    "low_level_design": "Medium-High",
+    "operating_systems": "Medium",
+    "programming_fundamentals": "Critical"
+  },
+  "summary": {
+    "company": {
+      "categories": [
+        "Fintech",
+        "Payments",
+        "Developer Infrastructure",
+        "SaaS"
+      ],
+      "name": "Stripe"
+    },
+    "interview": {
+      "behavioral": {
+        "confidence": "Medium",
+        "importance": "High"
+      },
+      "coding": {
+        "confidence": "Medium",
+        "importance": "Critical"
+      },
+      "communication": {
+        "confidence": "Medium",
+        "importance": "Critical"
+      },
+      "debugging": {
+        "confidence": "Medium-High",
+        "importance": "Critical"
+      },
+      "engineering_judgment": {
+        "confidence": "Medium",
+        "importance": "Very High"
+      },
+      "integration": {
+        "confidence": "Medium",
+        "importance": "High"
+      },
+      "low_level_design": {
+        "confidence": "Medium",
+        "importance": "Medium-High",
+        "role_dependency": true
+      },
+      "practical_coding": {
+        "confidence": "Medium-High",
+        "importance": "Critical"
+      },
+      "problem_solving": {
+        "confidence": "Medium",
+        "importance": "Critical"
+      },
+      "system_design": {
+        "confidence": "Medium",
+        "importance": "Very High",
+        "level_dependency": true
+      }
+    },
+    "levels": {
+      "new_grad": {
+        "primary_focus": [
+          "DSA",
+          "Coding",
+          "Fundamentals",
+          "Basic Practical Coding"
+        ],
+        "system_design": "Low"
+      },
+      "senior": {
+        "primary_focus": [
+          "System Design",
+          "Engineering Judgment",
+          "Practical Coding/Debugging Maintenance",
+          "Leadership"
+        ],
+        "system_design": "Very High"
+      },
+      "software_engineer": {
+        "primary_focus": [
+          "DSA",
+          "Practical Coding",
+          "Debugging",
+          "Integration",
+          "Ownership"
+        ],
+        "system_design": "Medium"
+      },
+      "staff": {
+        "primary_focus": [
+          "Architecture",
+          "Technical Leadership",
+          "Cross-Team Influence",
+          "Strategic Engineering Judgment"
+        ],
+        "system_design": "Critical"
+      }
+    },
+    "planner": {
+      "adaptive": {
+        "difficulty_requires_prerequisite_mastery": true,
+        "experience_sensitive": true,
+        "learner_readiness_overrides_company_priority": true,
+        "timeline_sensitive": true
+      },
+      "philosophy": [
+        "Problem Solving First",
+        "Strong Fundamentals",
+        "Practical Execution",
+        "Debugging / Integration",
+        "Engineering Judgment",
+        "Scalable Thinking",
+        "Technical Leadership"
+      ],
+      "priority": [
+        "DSA",
+        "Practical Coding / Debugging / Integration",
+        "System Design",
+        "Behavioral/Engineering Judgment",
+        "Core CS",
+        "Role-Specific"
+      ]
+    },
+    "profile": {
+      "confidence": "Medium",
+      "last_reviewed": "2026-08-14",
+      "version": "1.0"
+    },
+    "subjects": {
+      "computer_networks": "Medium",
+      "dbms": "Medium",
+      "dsa": "High",
+      "high_level_design": "Very High",
+      "java": "Medium",
+      "low_level_design": "Medium-High",
+      "operating_systems": "Medium",
+      "programming_fundamentals": "Critical"
+    },
+    "trends": {
+      "ai_assisted_interview": {
+        "confidence": "Low",
+        "status": "Insufficient Evidence"
+      },
+      "regional_variation": {
+        "confidence": "Low",
+        "status": "Insufficient Evidence"
+      }
+    }
+  },
+  "summary_variant": "interview",
+  "trends": {
+    "ai_assisted_interview": {
+      "confidence": "Low",
+      "status": "Insufficient Evidence"
+    },
+    "regional_variation": {
+      "confidence": "Low",
+      "status": "Insufficient Evidence"
+    }
+  },
+  "validation": {
+    "warnings": []
+  }
+}

@@ -1,0 +1,301 @@
+{
+  "artifact_schema_version": "1.0",
+  "company_id": "zoho",
+  "content_checksum": "sha256:e82ee7da7eec51bd1592492d4f4b275c492f09126ec69670b4ab0f7baf196b9d",
+  "levels": {
+    "new_grad": {
+      "primary_focus": [
+        "DSA",
+        "SQL",
+        "Coding",
+        "Fundamentals"
+      ],
+      "system_design": "Low"
+    },
+    "principal": {
+      "primary_focus": [
+        "Architecture",
+        "Technical Leadership",
+        "Cross-Team Influence"
+      ],
+      "system_design": "Critical"
+    },
+    "senior": {
+      "primary_focus": [
+        "System Design",
+        "Database Depth",
+        "Engineering Judgment",
+        "Leadership"
+      ],
+      "system_design": "Very High"
+    },
+    "software_engineer": {
+      "primary_focus": [
+        "DSA",
+        "SQL",
+        "Coding",
+        "Ownership"
+      ],
+      "system_design": "Medium"
+    }
+  },
+  "metadata": {
+    "accent": "#C8202B",
+    "categories": [
+      "SaaS",
+      "Enterprise Software",
+      "Cloud Applications",
+      "Developer Tools"
+    ],
+    "confidence": "Medium",
+    "display_name": "Zoho",
+    "last_reviewed": "2026-08-14",
+    "name": "Zoho",
+    "primary_category": "SaaS"
+  },
+  "planner": {
+    "adaptive": {
+      "difficulty_requires_prerequisite_mastery": true,
+      "experience_sensitive": true,
+      "learner_readiness_overrides_company_priority": true,
+      "timeline_sensitive": true
+    },
+    "philosophy": [
+      "Problem Solving First",
+      "Strong Fundamentals",
+      "SQL / Database Depth",
+      "Engineering Judgment",
+      "Scalable Thinking",
+      "Technical Leadership"
+    ],
+    "priority": [
+      "DSA",
+      "SQL/Database",
+      "System Design",
+      "Core CS",
+      "Behavioral",
+      "Role-Specific"
+    ]
+  },
+  "profile_version": "1.0",
+  "registry_schema_version": "1.0",
+  "sections": {
+    "behavioral": "## 16.1 Communication\n\n**Importance:** Critical\n\nCandidates should:\n\n- Clarify requirements\n- State assumptions\n- Explain reasoning\n- Communicate trade-offs\n- Ask relevant questions\n- Respond constructively to feedback\n\n## 16.2 Collaboration\n\n**Importance:** Medium-High\n\nExamples should demonstrate:\n\n- Working across teams\n- Resolving disagreement\n- Sharing knowledge\n- Supporting peers\n- Handling stakeholder conflict\n\n## 16.3 Ownership\n\n**Importance:** Medium-High\n\nCandidates should demonstrate:\n\n- Responsibility for outcomes\n- Proactive problem identification\n- Follow-through\n- Operational awareness\n- Willingness to address problems beyond narrow task boundaries\n\n## 16.4 Product Thinking\n\n**Importance:** Medium-High\n\nCandidates should demonstrate:\n\n- Understanding customer needs\n- Business context\n- Product impact\n- Delivering value\n\n## 16.5 Learning Mindset\n\n**Importance:** Medium-High\n\nStrong evidence includes:\n\n- Learning from failures\n- Changing a decision when evidence changes\n- Seeking feedback\n- Improving engineering processes\n- Demonstrating intellectual humility\n\n## 16.6 Behavioral Preparation Format\n\nSTAR is recommended as a preparation framework:\n\n```text\nSituation\n   ↓\nTask\n   ↓\nAction\n   ↓\nResult\n   ↓\nLesson / What Changed\n```\n\nSTAR is a preparation technique, not asserted here as a mandatory Zoho interview format.\n\n---",
+    "company_overview": "## 2.1 Company Profile\n\nZoho is a global software-as-a-service company headquartered in India, offering a wide suite of business applications including CRM, office productivity, collaboration, finance, and developer tools. Engineering teams cover frontend, backend, cloud platform, mobile, and AI/ML.\n\nFor PrepOS, Zoho should be modeled as a **practical product engineering organization** where coding, DSA, database fundamentals, and system design are important, with a strong emphasis on clean code and practical problem solving rather than ultra-competitive algorithmic puzzles. The interview process is often more focused on real-world engineering and product sense than on abstract algorithm contests.\n\n## 2.2 Company Categories\n\n```yaml\ncompany_categories:\n  - SaaS\n  - Enterprise Software\n  - Cloud Applications\n  - Developer Tools\n```\n\n## 2.3 Engineering Characteristics\n\n| Characteristic | PrepOS Interpretation | Confidence |\n|---|---|---|\n| SaaS product engineering | Strong relevance | Medium |\n| Cloud platform | Moderate relevance | Medium |\n| Practical coding | Core interview signal | Medium-High |\n| DSA | Important but not extreme | Medium |\n| System design | High for senior roles | Medium |\n| Database / SQL | Medium-High | Medium |\n| Values alignment | Less formal than global peers | Low-Medium |\n| Product thinking | Medium-High | Medium |\n| AI-assisted engineering | Emerging / pilot-dependent | Low |\n\n---",
+    "contradiction_register": "| Topic | Conflicting Claims | Resolution | Confidence | Requires Verification |\n|---|---|---|---|---|\n| SQL/database emphasis | Some reports say core, others less | Treat as high priority but confirm actual invitation | Medium | true |\n| Online Assessment | Platform varies by region/role | Confirm actual invitation | Medium | true |\n| LLD requirement | Some loops embed OOD, others skip | Treat as role/team dependent | Medium | true |\n| System design at mid-level | Some mid-level backend roles report HLD, others not | Treat as role-dependent | Medium | true |\n\n---",
+    "engineering_philosophy": "## 3.1 Engineering Philosophy Summary\n\nZoho engineering philosophy emphasizes:\n\n1. Customer-centric product development\n2. Practical, production-quality code\n3. End-to-end ownership\n4. Simplicity and maintainability\n5. Continuous learning\n6. Collaboration across teams\n\nThe exact formal internal terminology should not be treated as permanently fixed.\n\n## 3.2 Engineering Progression\n\n```text\nProblem Solving\n      ↓\nStrong Fundamentals\n      ↓\nPractical Execution\n      ↓\nEngineering Judgment\n      ↓\nScalable Thinking\n      ↓\nTechnical Ownership\n      ↓\nCross-Team Influence\n```\n\n## 3.3 Core Engineering Principle\n\nPrepOS should interpret Zoho preparation as:\n\n> Solve problems with clean, practical code, demonstrate strong database and backend fundamentals, and show product awareness and ownership as seniority increases.\n\n**Confidence:** Medium\n\n**Evidence Type:** Internal company knowledge + candidate pattern synthesis\n\n---",
+    "evaluation_signals": "| Signal | Importance | Description | Typical Interview Stage | Confidence |\n|---|---|---|---|---|\n| Problem Solving | High | Structured decomposition, algorithms, reasoning | Technical Screen, Coding | Medium |\n| Coding Ability | Critical | Correct, readable, efficient implementation | Coding | Medium |\n| Database / SQL | Very High | SQL, data modeling, indexing | Technical / Database | Medium-High |\n| System Design | High for Senior+ | Architecture, scale, trade-offs | Design | Medium |\n| Low-Level Design | Medium | OOP, modularity, extensibility | Coding/Design | Medium |\n| Communication | Critical | Clear reasoning and concise technical explanation | All stages | Medium |\n| Collaboration | Medium-High | Working effectively across teams | Behavioral | Medium |\n| Ownership | Medium-High | End-to-end responsibility | Behavioral | Medium |\n| Product Thinking | Medium-High | Customer and product awareness | Behavioral / Design | Medium |\n| Learning Ability | Medium-High | Adaptation, reflection | Behavioral / Technical | Medium |\n| Leadership | High for Senior+ | Influence, ownership, technical leadership | Behavioral / Design | Medium |\n\n---",
+    "evidence_summary": "| Finding | Classification | Confidence | PrepOS Treatment |\n|---|---|---|---|\n| DSA and coding are central | Reported | Medium | High priority |\n| SQL/database is core | Strongly Reported | Medium-High | Very high priority |\n| System design importance increases with seniority | Reported Pattern | Medium | Strong level-dependent bias |\n| Product thinking is valued | Reported | Medium | Include behavioral/design |\n| Team-specific hiring variance | Reported | Medium | Do not hardcode |\n| Universal AI-assisted interview | Not Supported | Low | Do not hardcode |\n| Universal coding platform | Not Supported | Low | Confirm invitation |\n\n---",
+    "hiring_philosophy": "## 4.1 Hiring Philosophy\n\nZoho SWE evaluation focuses on practical engineering ability and product sense. A candidate should not be modeled as interview-ready merely by solving competitive programming problems. Emphasis is on real-world coding, database knowledge, system design, and communication.\n\nPrepOS should evaluate readiness across:\n\n- Problem solving\n- Coding\n- Database / SQL\n- System design\n- Communication\n- Collaboration\n- Ownership\n- Product thinking\n- Learning ability\n\n## 4.2 Hiring Progression\n\n```text\nFoundational Competence\n        ↓\nTechnical Execution\n        ↓\nIndependent Engineering\n        ↓\nArchitectural Ownership\n        ↓\nTechnical Leadership\n        ↓\nOrganizational Influence\n```\n\n## 4.3 Hiring Philosophy Constraints\n\nPrepOS MUST NOT assume:\n\n- A fixed interview count\n- A universal online assessment\n- A universal coding platform\n- A universal interview format\n- A universal system design round for all levels\n- A universal values interview\n- A universal team matching process\n- A universal AI-assisted interview\n\nThese are treated as role-, level-, team-, region-, or cycle-dependent unless stronger evidence becomes available.\n\n**Confidence:** Medium\n\n---",
+    "interview_pipeline": "## 5.1 Pipeline Model\n\n```text\nApplication / Referral\n        ↓\nRecruiter / Initial Alignment\n        ↓\nPotential Online Assessment\n        ↓\nTechnical Screen\n        ↓\nInterview Loop\n        ↓\nCoding / DSA\n        ↓\nDatabase / SQL\n        ↓\nSystem Design (Senior+)\n        ↓\nBehavioral / Hiring Manager\n        ↓\nInterview Feedback\n        ↓\nHiring Decision\n        ↓\nOffer\n```\n\nActual sequence may vary by team and role.\n\n## 5.2 Pipeline Stages\n\n| Stage | Purpose | Duration | Evaluation Criteria | Difficulty | Confidence | Evidence Source |\n|---|---|---|---|---|---|---|\n| Application / Referral | Establish candidate eligibility | Varies | Resume, experience, role fit | Medium | Medium | Internal knowledge |\n| Recruiter Screen | Validate role, experience, process | 20–30 min | Fit, communication, motivation | Low–Medium | Medium | Internal knowledge |\n| Potential Online Assessment | Pre-screen coding | Varies | Coding, DSA | Medium | Medium | Interview Reports |\n| Technical Screen | Validate baseline coding | 45–60 min | Coding, reasoning, communication | High | Medium | Interview Reports |\n| Interview Loop | Holistic technical evaluation | Varies, often 3–5 interviews | Coding, DSA, database, system design, behavioral | High | Medium | Interview Reports |\n| Database / SQL | Assess SQL and data modeling | 45–60 min | SQL queries, schema design, indexing | Medium-High | Medium | Interview Reports |\n| System Design | Assess architecture and scalability | 45–60 min | System design, trade-offs | High | Medium | Interview Reports |\n| Behavioral / Hiring Manager | Evaluate ownership, collaboration, role fit | 45 min | Behavioral, leadership | Medium-High | Medium | Interview Reports |\n| Feedback / Decision | Aggregate interview evaluations | Varies | Holistic evidence | Very High | Medium | Reported Process |\n| Offer | Complete hiring process | Varies | Level, role, headcount | Varies | Low | Reported Process |\n\n---\n\n## 5.3 Zoho-Specific Interview Types\n\n### Status\n\n**Reported / Practical Engineering Focus**\n\nCommonly reported components:\n\n- **Coding/DSA:** Medium-difficulty problems; focus on clean code and problem solving.\n- **Database/SQL:** SQL queries, schema design, indexing, transactions.\n- **System Design:** More common for senior roles; often product-oriented systems.\n- **Behavioral:** Communication, ownership, product thinking.\n\n### PrepOS Rule\n\nTreat DSA, SQL/database, system design (for senior), and behavioral as core. Practical coding and SQL are emphasized.\n\n```yaml\ninterview_types:\n  dsa_coding: Strongly Reported\n  sql_database: Strongly Reported\n  system_design: Reported / Level-dependent\n  behavioral: Strongly Reported\n  confidence: Medium\n  planner_behavior: High priority DSA + SQL/Database + System Design\n```\n\n---",
+    "negative_evidence": "Do NOT treat the following as core Zoho SWE preparation requirements unless role-specific evidence exists:\n\n- Universal LLD for all roles\n- Universal HLD for all levels\n- Universal OS/DBMS/Networking depth\n- One universal interview template\n- Universal coding platform\n- Universal AI interview\n- Universal team matching\n\n---",
+    "preparation_strategy": "## 21.1 Core Preparation Sequence\n\n```text\nPhase 1: Programming Fundamentals\n        ↓\nPhase 2: DSA Foundations\n        ↓\nPhase 3: SQL / Database Fundamentals\n        ↓\nPhase 4: Advanced DSA\n        ↓\nPhase 5: System Design\n        ↓\nPhase 6: Behavioral / Product Thinking\n        ↓\nPhase 7: Mock Interview Loop\n```\n\n## 21.2 Preparation Priorities\n\n### Priority 1 — DSA + Coding\n\nFocus on:\n\n- Arrays\n- Strings\n- Hashing\n- Trees\n- Graphs\n- BFS\n- DFS\n- Heaps\n- Queues\n- Recursion\n- Dynamic Programming\n- Greedy\n- Backtracking\n- Complexity analysis\n\n### Priority 2 — SQL / Database\n\nFocus on:\n\n- SQL queries\n- Indexing\n- Transactions\n- ACID\n- Isolation levels\n- Query optimization\n\n### Priority 3 — System Design\n\nIncrease preparation according to seniority.\n\n### Priority 4 — Behavioral\n\nDevelop evidence-backed stories around ownership, collaboration, product thinking, and learning.\n\n### Priority 5 — Core CS\n\nUse role-specific evidence for OS, networking, etc.\n\n---",
+    "role_differences": "| Level | Coding | Database | Design | Leadership | Expected Autonomy | Confidence |\n|---|---|---|---|---|---|---|\n| New Graduate | Critical | High | Low | Low-Medium | Scoped tasks | Medium |\n| Software Engineer | Critical | High | Medium | Medium | Independent execution | Medium |\n| Senior | Very High | High | Very High | High | Broad technical ownership | Medium |\n| Principal | High | High | Critical | Critical | Cross-team influence | Medium |\n\n---",
+    "subject_importance": "| Subject | Importance | Interview Stage | Experience Level | Reason | Confidence |\n|---|---|---|---|---|---|\n| Programming Fundamentals | High | Coding | All | Foundation for implementation | Medium |\n| Java | Medium-High | Coding | Role/candidate dependent | Java is widely used in Zoho, but Python/C++ also | Medium |\n| Data Structures & Algorithms | Critical | Technical Screen / Coding | All | Central technical signal | Medium |\n| Database Management Systems | Very High | Technical / Database | All | SQL and data modeling are core | Medium-High |\n| Operating Systems | Medium | Technical/Design | Contextual | Systems relevance | Medium |\n| Computer Networks | Medium | Design/Technical | Contextual | Distributed systems and networking | Medium |\n| Low-Level Design | Medium | Coding/Design | Mid+ | OOP and modularity | Medium |\n| High-Level Design | High | Design | Senior+ | Increasingly important with seniority | Medium |\n\n---"
+  },
+  "signals": [
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "coding",
+      "importance": "Critical",
+      "level_dependency": false,
+      "name": "Coding",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "dsa",
+      "importance": "Critical",
+      "level_dependency": false,
+      "name": "Dsa",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium-High",
+      "formal_component": false,
+      "id": "sql_database",
+      "importance": "Very High",
+      "level_dependency": false,
+      "name": "Sql Database",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "system_design",
+      "importance": "High",
+      "level_dependency": true,
+      "name": "System Design",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "behavioral",
+      "importance": "Medium-High",
+      "level_dependency": false,
+      "name": "Behavioral",
+      "role_dependency": false
+    },
+    {
+      "confidence": "Medium",
+      "formal_component": false,
+      "id": "communication",
+      "importance": "Critical",
+      "level_dependency": false,
+      "name": "Communication",
+      "role_dependency": false
+    }
+  ],
+  "source_checksum": "sha256:ee137952617a205483b539f045fc4c3bcf833c2a74cb58be46650192dccabf63",
+  "subjects": {
+    "computer_networks": "Medium",
+    "dbms": "Very High",
+    "dsa": "Critical",
+    "high_level_design": "High",
+    "java": "Medium-High",
+    "low_level_design": "Medium",
+    "operating_systems": "Medium",
+    "programming_fundamentals": "High"
+  },
+  "summary": {
+    "company": {
+      "categories": [
+        "SaaS",
+        "Enterprise Software",
+        "Cloud Applications",
+        "Developer Tools"
+      ],
+      "name": "Zoho"
+    },
+    "interview": {
+      "behavioral": {
+        "confidence": "Medium",
+        "importance": "Medium-High"
+      },
+      "coding": {
+        "confidence": "Medium",
+        "importance": "Critical"
+      },
+      "communication": {
+        "confidence": "Medium",
+        "importance": "Critical"
+      },
+      "dsa": {
+        "confidence": "Medium",
+        "importance": "Critical"
+      },
+      "sql_database": {
+        "confidence": "Medium-High",
+        "importance": "Very High"
+      },
+      "system_design": {
+        "confidence": "Medium",
+        "importance": "High",
+        "level_dependency": true
+      }
+    },
+    "levels": {
+      "new_grad": {
+        "primary_focus": [
+          "DSA",
+          "SQL",
+          "Coding",
+          "Fundamentals"
+        ],
+        "system_design": "Low"
+      },
+      "principal": {
+        "primary_focus": [
+          "Architecture",
+          "Technical Leadership",
+          "Cross-Team Influence"
+        ],
+        "system_design": "Critical"
+      },
+      "senior": {
+        "primary_focus": [
+          "System Design",
+          "Database Depth",
+          "Engineering Judgment",
+          "Leadership"
+        ],
+        "system_design": "Very High"
+      },
+      "software_engineer": {
+        "primary_focus": [
+          "DSA",
+          "SQL",
+          "Coding",
+          "Ownership"
+        ],
+        "system_design": "Medium"
+      }
+    },
+    "planner": {
+      "adaptive": {
+        "difficulty_requires_prerequisite_mastery": true,
+        "experience_sensitive": true,
+        "learner_readiness_overrides_company_priority": true,
+        "timeline_sensitive": true
+      },
+      "philosophy": [
+        "Problem Solving First",
+        "Strong Fundamentals",
+        "SQL / Database Depth",
+        "Engineering Judgment",
+        "Scalable Thinking",
+        "Technical Leadership"
+      ],
+      "priority": [
+        "DSA",
+        "SQL/Database",
+        "System Design",
+        "Core CS",
+        "Behavioral",
+        "Role-Specific"
+      ]
+    },
+    "profile": {
+      "confidence": "Medium",
+      "last_reviewed": "2026-08-14",
+      "version": "1.0"
+    },
+    "subjects": {
+      "computer_networks": "Medium",
+      "dbms": "Very High",
+      "dsa": "Critical",
+      "high_level_design": "High",
+      "java": "Medium-High",
+      "low_level_design": "Medium",
+      "operating_systems": "Medium",
+      "programming_fundamentals": "High"
+    },
+    "trends": {
+      "ai_assisted_interview": {
+        "confidence": "Low",
+        "status": "Insufficient Evidence"
+      },
+      "regional_variation": {
+        "confidence": "Low",
+        "status": "Insufficient Evidence"
+      }
+    }
+  },
+  "summary_variant": "interview",
+  "trends": {
+    "ai_assisted_interview": {
+      "confidence": "Low",
+      "status": "Insufficient Evidence"
+    },
+    "regional_variation": {
+      "confidence": "Low",
+      "status": "Insufficient Evidence"
+    }
+  },
+  "validation": {
+    "warnings": []
+  }
+}

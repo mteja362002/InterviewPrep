@@ -1,0 +1,556 @@
+{
+  "artifact_schema_version": "1.0",
+  "company_id": "adobe",
+  "content_checksum": "sha256:b782b17aadb5867fc0c300e74618f58a8ec2b31e59930ab5a02c36de29ad170a",
+  "levels": {},
+  "metadata": {
+    "accent": "#FF0000",
+    "categories": [
+      "Product Company",
+      "SaaS",
+      "Enterprise Software",
+      "Creative Software"
+    ],
+    "confidence": "Medium",
+    "display_name": "Adobe",
+    "last_reviewed": "2026-08-14",
+    "name": "Adobe",
+    "primary_category": "Product Company"
+  },
+  "planner": {
+    "adaptive": {
+      "difficulty_requires_prerequisite_mastery": true,
+      "experience_sensitive": true,
+      "learner_readiness_overrides_company_priority": true,
+      "timeline_sensitive": true
+    },
+    "company_context_weights": {
+      "adobe_domain": {
+        "default": "low",
+        "role_match_adjustment": "strong"
+      },
+      "behavioral_values": "high",
+      "coding": "high",
+      "dsa": "high",
+      "system_design": {
+        "default": "medium",
+        "seniority_adjustment": "strong"
+      }
+    },
+    "philosophy": [
+      "Problem Solving First",
+      "Strong Fundamentals",
+      "Algorithmic Execution",
+      "Engineering Judgment",
+      "Scalable Thinking",
+      "Technical Leadership",
+      "Values Alignment"
+    ],
+    "priority": [
+      "DSA",
+      "Programming",
+      "Behavioral/Values",
+      "System Design",
+      "Core CS",
+      "Role-Specific",
+      "Adobe Domain Awareness"
+    ]
+  },
+  "profile_version": "1.4",
+  "registry_schema_version": "1.0",
+  "sections": {
+    "behavioral": "## 16.1 Values Alignment\n\n**Importance:** High\n\nCandidates should demonstrate alignment with Adobe values:\n\n- Genuine\n- Exceptional\n- Innovative\n- Involved\n\n**Confidence:** Medium-High\n\n## 16.2 Communication\n\n**Importance:** Critical\n\nCandidates should:\n\n- Clarify requirements\n- State assumptions\n- Explain reasoning\n- Communicate trade-offs\n- Ask relevant questions\n- Respond constructively to feedback\n\n## 16.3 Collaboration\n\n**Importance:** High\n\nExamples should demonstrate:\n\n- Working across teams\n- Resolving disagreement\n- Sharing knowledge\n- Supporting peers\n- Handling stakeholder conflict\n\n## 16.4 Ownership\n\n**Importance:** High\n\nCandidates should demonstrate:\n\n- Responsibility for outcomes\n- Proactive problem identification\n- Follow-through\n- Operational awareness\n- Willingness to address problems beyond narrow task boundaries\n\n## 16.5 Product Thinking\n\n**Importance:** Medium-High\n\nCandidates should demonstrate:\n\n- Understanding customer needs\n- Business context\n- Product impact\n- Delivering value\n\n## 16.6 Learning Mindset\n\n**Importance:** High\n\nStrong evidence includes:\n\n- Learning from failures\n- Changing a decision when evidence changes\n- Seeking feedback\n- Improving engineering processes\n- Demonstrating intellectual humility\n\n## 16.7 Behavioral Preparation Format\n\nSTAR is recommended as a preparation framework:\n\n```text\nSituation\n   ↓\nTask\n   ↓\nAction\n   ↓\nResult\n   ↓\nLesson / What Changed\n```\n\nSTAR is a preparation technique, not asserted here as a mandatory Adobe interview format.\n\n---",
+    "company_overview": "## 2.1 Company Profile\n\nAdobe is a global technology company known for software products spanning creativity, document management, digital marketing, and experience platforms. Engineering organizations cover cloud services, desktop applications, AI/ML, mobile, document intelligence, content platforms, and enterprise SaaS.\n\nFor PrepOS, Adobe should be modeled as a **product-led engineering organization** where technical problem solving, coding ability, system design, product thinking, and behavioral/cultural alignment all matter. Adobe tends to emphasize practical engineering judgment, customer-facing product thinking, and a balanced approach to algorithmic and design evaluation.\n\n## 2.2 Company Categories\n\n```yaml\ncompany_categories:\n  - Product Company\n  - SaaS\n  - Enterprise Software\n  - Creative Software\n```\n\n## 2.3 Engineering Characteristics\n\n| Characteristic | PrepOS Interpretation | Confidence |\n|---|---|---|\n| Large-scale software | Strong relevance | Medium |\n| Cloud services | Strong relevance, especially Document/Experience Cloud | Medium |\n| Digital media and content systems | Domain-relevant for many Adobe products | Medium |\n| Document technologies and file formats | Role-specific relevance | Medium |\n| Search, retrieval, and content intelligence | Emerging relevance across product areas | Medium |\n| Algorithmic problem solving | Core interview preparation area | Medium |\n| Software engineering fundamentals | Important foundation | Medium |\n| System design | Increasing importance with seniority | Medium |\n| Product thinking | Medium-High | Medium |\n| Values alignment | High | Medium |\n| AI-assisted engineering | Emerging / pilot-dependent | Low |\n\n## 2.4 Adobe Product Domains vs Interview Evaluation\n\nThis section separates what Adobe engineers may work on from what interviews are reported to evaluate.\n\n| Domain | What Adobe engineers may work on | Reported interview relevance | PrepOS priority |\n|---|---|---|---|\n| Creative Cloud | Media editing, asset management, creative workflows, real-time collaboration | Role-dependent; rarely a universal interview topic | Low |\n| Document Cloud | PDF/document processing, annotations, signing, document intelligence | Role-dependent; may appear in design or behavioral context | Low–Medium |\n| Experience Cloud | Customer analytics, content management, marketing automation | Role-dependent; may inform system design context | Medium |\n| Cloud Platform / Infrastructure | Shared services, storage, identity, developer APIs | Relevant for platform/backend roles | Medium-High |\n| AI/ML / Document Intelligence | Models, data pipelines, intelligent document features | Role-dependent; not a universal SWE interview topic | Medium for AI/ML roles |\n| Search / Retrieval | Content indexing, retrieval, relevance | Role-dependent; system design may use search patterns | Medium |\n\nDo not convert these domains into mandatory interview topics.\n\n## 2.5 Generic SWE Baseline vs Adobe-Specific Signals\n\nThis section separates generic high-bar software-engineering expectations from signals that are reasonably Adobe-specific.\n\n| Signal | Evidence Status | Signal Type | Confidence |\n|---|---|---|---|\n| Strong DSA problem solving | Reported | Generic SWE baseline | Medium |\n| Clean correct coding | Reported | Generic SWE baseline | Medium |\n| Senior system design | Reported | Generic SWE baseline | Medium |\n| Behavioral/values alignment | Reported | Adobe-specific signal | Medium-High |\n| Product thinking / customer context | Reported | Adobe-specific signal | Medium |\n| Adobe domain/product knowledge | Reported | Role-specific Adobe signal | Low–Medium |\n\n---",
+    "contradiction_register": "| Topic | Contradiction | Resolution |\n|---|---|---|\n| Values Interview | Some sources report it as formal, others embedded | Treat as high priority but confirm actual invitation |\n| Online Assessment | Platform varies by region/role | Confirm actual invitation |\n| LLD requirement | Some loops embed OOD, others have dedicated design | Treat as role/team dependent |\n| System design at mid-level | Some mid-level backend roles report HLD, others do not | Treat as role-dependent |\n| Adobe domain knowledge | Some candidates report product-specific questions, others none | Treat as role-dependent; not universal |\n\n```yaml\ncontradictions:\n  - topic: values_interview\n    conflicting_claims:\n      - formal behavioral component\n      - embedded behavioral evaluation\n    resolution:\n      status: Varies\n      interpretation: High behavioral preparation priority; exact format invitation-dependent\n    confidence: Medium\n    requires_verification: true\n\n  - topic: lld_requirement\n    conflicting_claims:\n      - dedicated design round\n      - embedded OOD in coding\n    resolution:\n      status: Varies\n      interpretation: Role/team dependent\n    confidence: Medium\n    requires_verification: true\n\n  - topic: adobe_domain_knowledge\n    conflicting_claims:\n      - product-specific questions reported\n      - no product-specific questions reported\n    resolution:\n      status: Varies\n      interpretation: Role-dependent; not universal\n    confidence: Low-Medium\n    requires_verification: true\n```\n\n---",
+    "engineering_philosophy": "## 3.1 Engineering Philosophy Summary\n\nAdobe engineering philosophy emphasizes:\n\n1. Customer obsession\n2. Innovation in creative and document experiences\n3. Technical excellence\n4. Collaboration\n5. Ownership\n6. Continuous learning\n7. Product quality\n\nThe exact formal internal terminology should not be treated as permanently fixed.\n\n## 3.2 Engineering Progression\n\n```text\nProblem Solving\n      ↓\nStrong Fundamentals\n      ↓\nAlgorithmic Execution\n      ↓\nEngineering Judgment\n      ↓\nScalable Thinking\n      ↓\nTechnical Ownership\n      ↓\nCross-Team Influence\n```\n\n## 3.3 Core Engineering Principle\n\nPrepOS should interpret Adobe preparation as:\n\n> Solve the right problem, explain the reasoning, implement correctly, understand trade-offs, and demonstrate product awareness, customer focus, and values alignment as seniority increases.\n\n**Confidence:** Medium\n\n**Evidence Type:** Internal knowledge + candidate pattern synthesis\n\n---",
+    "evaluation_signals": "| Signal | Importance | Signal Type | Description | Typical Interview Stage | Confidence |\n|---|---|---|---|---|---|\n| Problem Solving | Critical | Generic SWE baseline | Structured decomposition, algorithms, reasoning | Technical Screen, Coding | Medium |\n| Coding Ability | Critical | Generic SWE baseline | Correct, readable, efficient implementation | Coding | Medium |\n| System Design | High for Senior+ | Generic SWE baseline | Architecture, scale, reliability, trade-offs | Design | Medium |\n| Low-Level Design | Medium | Generic SWE baseline | OOP, modularity, extensibility | Coding/Design | Medium |\n| Technical Depth | High | Generic SWE baseline | Systems, technologies, engineering choices | Technical/Design | Medium |\n| Communication | Critical | Generic SWE baseline | Clear reasoning and concise technical explanation | All stages | Medium |\n| Collaboration | High | Generic SWE baseline | Working effectively across teams | Behavioral | Medium |\n| Ownership | High | Generic SWE baseline | End-to-end responsibility | Behavioral | Medium |\n| Values Alignment | High | Adobe-specific | Alignment with Adobe values | Behavioral | Medium-High |\n| Product Thinking | Medium-High | Adobe-specific | Customer and product awareness | Behavioral / Design | Medium |\n| Learning Ability | High | Generic SWE baseline | Adaptation, reflection, updating assumptions | Behavioral / Technical | Medium |\n| Leadership | High for Senior+ | Generic SWE baseline | Influence, ownership, technical leadership | Behavioral / Design | Medium |\n| Domain Aptitude for Adobe Systems | Low–Medium | Role-specific Adobe | Familiarity with creative/document/content platforms where role-relevant | Role-dependent | Low–Medium |\n\n---",
+    "evidence_summary": "| Finding | Evidence Status | Confidence | Scope | Source Type | PrepOS Treatment |\n|---|---|---|---|---|---|\n| Coding and algorithmic reasoning are central | Reported | Medium | All levels; generic baseline | Internal knowledge + candidate pattern synthesis | High planning priority |\n| Structured reasoning matters | Reported | Medium | All levels; generic baseline | Internal knowledge + candidate pattern synthesis | High |\n| Values alignment is important | Reported | Medium-High | Most SWE roles; Adobe-specific | Internal knowledge + candidate pattern synthesis | High behavioral/values priority |\n| Design importance increases with seniority | Pattern | Medium | Senior/Principal; generic baseline | Internal knowledge + candidate pattern synthesis | Strong level-dependent bias |\n| Product thinking is valued | Reported | Medium | Adobe-specific, especially product-led teams | Internal knowledge + candidate pattern synthesis | Include behavioral/design preparation |\n| Adobe-domain knowledge is not universally required | Pattern | Medium | Role-specific only | Internal knowledge + candidate pattern synthesis | Role-dependent only |\n| Behavioral evidence matters | Reported | Medium | All levels; generic baseline | Internal knowledge + candidate pattern synthesis | Include behavioral preparation |\n| Team-specific hiring variance | Reported | Medium | All levels | Internal knowledge + candidate pattern synthesis | Do not hardcode one process |\n| Universal AI-assisted interview | Not Supported | Low | All levels | Internal knowledge + candidate pattern synthesis | Do not hardcode |\n| Universal coding platform | Not Supported | Low | All levels | Internal knowledge + candidate pattern synthesis | Confirm invitation |\n\n---",
+    "hiring_philosophy": "## 4.1 Hiring Philosophy\n\nAdobe SWE evaluation is holistic, blending technical and behavioral signals. A candidate should not be modeled as interview-ready merely because they can solve algorithmic problems.\n\nPrepOS should evaluate readiness across:\n\n- Problem solving\n- Coding\n- System design\n- Communication\n- Collaboration\n- Ownership\n- Values alignment\n- Learning ability\n- Product thinking\n\n## 4.2 Hiring Progression\n\n```text\nFoundational Competence\n        ↓\nTechnical Execution\n        ↓\nIndependent Engineering\n        ↓\nArchitectural Ownership\n        ↓\nTechnical Leadership\n        ↓\nOrganizational Influence\n```\n\n## 4.3 Hiring Philosophy Constraints\n\nPrepOS MUST NOT assume:\n\n- A fixed interview count\n- A universal online assessment\n- A universal coding platform\n- A universal interview format\n- A universal system design round for all levels\n- A universal values interview\n- A universal team matching process\n- A universal AI-assisted interview\n- Universal Adobe-domain knowledge as a hiring requirement\n\nThese are treated as role-, level-, team-, region-, or cycle-dependent unless stronger evidence becomes available.\n\n**Confidence:** Medium\n\n---",
+    "interview_pipeline": "## 5.1 Pipeline Model\n\n```text\nApplication / Referral\n        ↓\nRecruiter / Initial Alignment\n        ↓\nPotential Online Assessment\n        ↓\nTechnical Screen\n        ↓\nInterview Loop\n        ↓\nBehavioral / Values Interview\n        ↓\nInterview Feedback\n        ↓\nHiring Decision\n        ↓\nOffer\n```\n\nActual sequence may vary by team and role.\n\n## 5.2 Pipeline Stages\n\n| Stage | Purpose | Duration | Evaluation Criteria | Difficulty | Confidence | Evidence Source |\n|---|---|---|---|---|---|---|\n| Application / Referral | Establish candidate eligibility | Varies | Resume, experience, role fit | Medium | Medium | Internal knowledge |\n| Recruiter Screen | Validate role, experience, process | 20–30 min | Fit, communication, motivation | Low–Medium | Medium | Internal knowledge |\n| Potential Online Assessment | Pre-screen coding | Varies | Coding, DSA | Medium–High | Medium | Interview Reports |\n| Technical Screen | Validate baseline coding | 45–60 min | Coding, reasoning, communication | High | Medium | Interview Reports |\n| Interview Loop | Holistic technical evaluation | Varies, often 3–5 interviews | Coding, design, technical depth | Very High | Medium | Interview Reports |\n| Behavioral / Values Interview | Evaluate alignment with Adobe values | Reported as formal behavioral component | Behavioral consistency, values alignment | Medium-High | Medium | Interview Reports |\n| Feedback / Decision | Aggregate interview evaluations | Varies | Holistic evidence | Very High | Medium | Reported Process |\n| Offer | Complete hiring process | Varies | Level, role, headcount | Varies | Low | Reported Process |\n\n---\n\n## 5.3 Adobe Values\n\n### Status\n\n**Reported / Pattern as Cultural Component**\n\nAdobe is known for its corporate values, which often appear in behavioral interviews:\n\n- Genuine\n- Exceptional\n- Innovative\n- Involved\n\n### PrepOS Rule\n\nTreat behavioral preparation as high priority. Candidates should prepare examples that demonstrate Adobe values explicitly.\n\n```yaml\nvalues:\n  evidence_status: Reported\n  universal_requirement: false\n  likely_for_most_swe_roles: true\n  formal_component:\n    status: Varies\n    confidence: Medium\n  coding_test: No\n  confidence: Medium-High\n  planner_hint: high\n```\n\n---",
+    "negative_evidence": "Do NOT treat the following as core Adobe SWE preparation requirements unless role-specific evidence exists:\n\n- Universal LLD for all roles\n- Universal HLD for all levels\n- Universal OS/DBMS/Networking depth\n- One universal interview template\n- Universal coding platform\n- Universal AI interview\n- Universal team matching\n- Universal Adobe product/domain knowledge as an interview requirement\n\n```yaml\nnegative_evidence:\n  universal_lld:\n    status: Not Supported\n    confidence: Low\n\n  universal_hld_all_levels:\n    status: Not Supported\n    confidence: Low\n\n  universal_adobe_domain_knowledge:\n    status: Not Supported\n    confidence: Medium\n\n  universal_coding_platform:\n    status: Not Supported\n    confidence: Low\n```\n\n---",
+    "role_differences": "## 17.1 Role Matrix\n\n| Level | Coding | Design | Leadership | Values | Expected Autonomy | Confidence |\n|---|---|---|---|---|---|---|\n| New Graduate | Critical | Low | Low-Medium | High | Scoped tasks | Medium |\n| Software Engineer | Critical | Medium | Medium | High | Independent execution | Medium |\n| Senior | Very High | Very High | High | High | Broad technical ownership | Medium |\n| Principal | High | Critical | Critical | High | Cross-team influence | Medium |\n\n## 17.2 Adobe Role-Domain Variation\n\nThis section is a non-universal, evidence-limited guide to how role families may shift emphasis.\n\n| Role Family | Likely Emphasis | Confidence | Evidence Level |\n|---|---|---|---|\n| General SWE | DSA, coding, fundamentals, product thinking | Medium | Reported pattern |\n| Backend / Platform | APIs, concurrency, storage, cloud services | Medium | Reported pattern |\n| Creative Cloud | Media-related services, asset management, collaboration | Medium | Role-dependent |\n| Document Cloud | Document processing, document intelligence, file formats | Medium | Role-dependent |\n| Experience Cloud | Customer analytics, content management, data pipelines | Medium | Role-dependent |\n| AI/ML | Machine learning fundamentals, data pipelines, model deployment | Medium | Role-dependent |\n\nThese are preparation priorities, not universal Adobe requirements.\n\n---",
+    "subject_importance": "| Subject | Importance | Interview Stage | Experience Level | Signal Type | Confidence |\n|---|---|---|---|---|---|\n| Programming Fundamentals | High | Coding | All | Generic SWE baseline | Medium |\n| Java | Medium | Coding | Role/candidate dependent | Generic SWE baseline | Medium |\n| Data Structures & Algorithms | Critical | Technical Screen / Coding | All | Generic SWE baseline | Medium |\n| Database Management Systems | Medium | Design/Technical | Mid+ | Generic SWE baseline | Medium |\n| Operating Systems | Medium | Technical/Design | Contextual | Generic SWE baseline | Low-Medium |\n| Computer Networks | Medium | Design/Technical | Contextual | Generic SWE baseline | Medium |\n| Low-Level Design | Medium | Coding/Design | Mid+ | Generic SWE baseline | Medium |\n| High-Level Design | High | Design | Senior+ | Generic SWE baseline, seniority-dependent | Medium |\n\n---"
+  },
+  "signals": [
+    {
+      "confidence": "Medium",
+      "evidence_status": "Reported",
+      "id": "problem_solving",
+      "importance": "Critical",
+      "level_dependency": true,
+      "name": "Problem Solving",
+      "planner_hint": "high",
+      "role_dependency": true,
+      "scope": "All levels",
+      "signal_type": "generic_baseline"
+    },
+    {
+      "confidence": "Medium",
+      "evidence_status": "Reported",
+      "id": "coding_ability",
+      "importance": "Critical",
+      "level_dependency": true,
+      "name": "Coding Ability",
+      "planner_hint": "high",
+      "role_dependency": true,
+      "scope": "All levels",
+      "signal_type": "generic_baseline"
+    },
+    {
+      "confidence": "Medium",
+      "evidence_status": "Reported",
+      "id": "system_design",
+      "importance": "High",
+      "level_dependency": true,
+      "name": "System Design",
+      "planner_hint": "high",
+      "role_dependency": true,
+      "scope": "All levels; seniority-dependent",
+      "signal_type": "generic_baseline"
+    },
+    {
+      "confidence": "Medium",
+      "evidence_status": "Reported",
+      "id": "low_level_design",
+      "importance": "Medium",
+      "level_dependency": true,
+      "name": "Low-Level Design",
+      "planner_hint": "medium",
+      "role_dependency": true,
+      "scope": "Mid+ levels",
+      "signal_type": "generic_baseline"
+    },
+    {
+      "confidence": "Medium-High",
+      "evidence_status": "Reported",
+      "id": "values_alignment",
+      "importance": "High",
+      "level_dependency": false,
+      "name": "Adobe Values Alignment",
+      "planner_hint": "high",
+      "role_dependency": true,
+      "scope": "Most SWE roles",
+      "signal_type": "adobe_specific"
+    },
+    {
+      "confidence": "Medium",
+      "evidence_status": "Reported",
+      "id": "product_thinking",
+      "importance": "Medium-High",
+      "level_dependency": true,
+      "name": "Product Thinking",
+      "planner_hint": "medium-high",
+      "role_dependency": true,
+      "scope": "Most SWE roles; product-led emphasis",
+      "signal_type": "adobe_specific"
+    },
+    {
+      "confidence": "Low-Medium",
+      "evidence_status": "Reported",
+      "id": "adobe_domain_aptitude",
+      "importance": "Low-Medium",
+      "level_dependency": true,
+      "name": "Adobe Domain Aptitude",
+      "planner_hint": "low unless role match",
+      "role_dependency": true,
+      "scope": "Role-dependent",
+      "signal_type": "role_specific_adobe"
+    },
+    {
+      "confidence": "Medium",
+      "evidence_status": "Reported",
+      "id": "communication",
+      "importance": "Critical",
+      "level_dependency": false,
+      "name": "Communication",
+      "planner_hint": "high",
+      "role_dependency": true,
+      "scope": "All levels",
+      "signal_type": "generic_baseline"
+    }
+  ],
+  "source_checksum": "sha256:1c1c4e857ada485eae9f135e0b7757953489b852469e736631ec15849692d6cb",
+  "subjects": {
+    "computer_networks": "Medium",
+    "dbms": "Medium",
+    "dsa": "Critical",
+    "high_level_design": "High",
+    "java": "Medium",
+    "low_level_design": "Medium",
+    "operating_systems": "Medium",
+    "programming_fundamentals": "High"
+  },
+  "summary": {
+    "company": {
+      "categories": [
+        "Product Company",
+        "SaaS",
+        "Enterprise Software",
+        "Creative Software"
+      ],
+      "name": "Adobe"
+    },
+    "contradictions": [
+      {
+        "confidence": "Medium",
+        "conflicting_claims": [
+          "formal behavioral component",
+          "embedded behavioral evaluation"
+        ],
+        "requires_verification": true,
+        "resolution": {
+          "interpretation": "High behavioral preparation priority; exact format invitation-dependent",
+          "status": "Varies"
+        },
+        "topic": "values_interview"
+      },
+      {
+        "confidence": "Medium",
+        "conflicting_claims": [
+          "dedicated design round",
+          "embedded OOD in coding"
+        ],
+        "requires_verification": true,
+        "resolution": {
+          "interpretation": "Role/team dependent",
+          "status": "Varies"
+        },
+        "topic": "lld_requirement"
+      },
+      {
+        "confidence": "Low-Medium",
+        "conflicting_claims": [
+          "product-specific questions reported",
+          "no product-specific questions reported"
+        ],
+        "requires_verification": true,
+        "resolution": {
+          "interpretation": "Role-dependent; not universal",
+          "status": "Varies"
+        },
+        "topic": "adobe_domain_knowledge"
+      }
+    ],
+    "evidence_limitation": {
+      "retrieved_at": null,
+      "source_detail": "not_retained",
+      "source_url": null
+    },
+    "negative_evidence": {
+      "universal_adobe_domain_knowledge": {
+        "confidence": "Medium",
+        "status": "Not Supported"
+      },
+      "universal_coding_platform": {
+        "confidence": "Low",
+        "status": "Not Supported"
+      },
+      "universal_hld_all_levels": {
+        "confidence": "Low",
+        "status": "Not Supported"
+      },
+      "universal_lld": {
+        "confidence": "Low",
+        "status": "Not Supported"
+      }
+    },
+    "planner": {
+      "adaptive": {
+        "difficulty_requires_prerequisite_mastery": true,
+        "experience_sensitive": true,
+        "learner_readiness_overrides_company_priority": true,
+        "timeline_sensitive": true
+      },
+      "company_context_weights": {
+        "adobe_domain": {
+          "default": "low",
+          "role_match_adjustment": "strong"
+        },
+        "behavioral_values": "high",
+        "coding": "high",
+        "dsa": "high",
+        "system_design": {
+          "default": "medium",
+          "seniority_adjustment": "strong"
+        }
+      },
+      "philosophy": [
+        "Problem Solving First",
+        "Strong Fundamentals",
+        "Algorithmic Execution",
+        "Engineering Judgment",
+        "Scalable Thinking",
+        "Technical Leadership",
+        "Values Alignment"
+      ],
+      "priority": [
+        "DSA",
+        "Programming",
+        "Behavioral/Values",
+        "System Design",
+        "Core CS",
+        "Role-Specific",
+        "Adobe Domain Awareness"
+      ]
+    },
+    "priority_by_level": {
+      "new_grad": [
+        "DSA",
+        "Coding",
+        "Fundamentals",
+        "Behavioral / Values"
+      ],
+      "principal": [
+        "Architecture",
+        "Technical Leadership",
+        "Cross-Team Influence",
+        "Organizational Impact",
+        "System Design"
+      ],
+      "senior": [
+        "System Design",
+        "Engineering Judgment",
+        "Technical Leadership",
+        "Values / Leadership",
+        "Advanced Coding"
+      ],
+      "software_engineer": [
+        "DSA",
+        "Coding",
+        "Ownership",
+        "Behavioral / Values",
+        "Design Awareness"
+      ]
+    },
+    "profile": {
+      "confidence": "Medium",
+      "last_reviewed": "2026-08-14",
+      "version": "1.4"
+    },
+    "signal_classification": {
+      "adobe_specific": [
+        "Values Alignment",
+        "Product Thinking"
+      ],
+      "generic_baseline": [
+        "DSA",
+        "Coding",
+        "Complexity Analysis",
+        "General System Design",
+        "Communication",
+        "Collaboration",
+        "Ownership",
+        "Learning Ability"
+      ],
+      "role_specific_adobe": [
+        "Adobe Domain Knowledge",
+        "Document Cloud",
+        "Creative Cloud",
+        "Experience Cloud",
+        "AI/ML"
+      ],
+      "role_specific_generic": [
+        "Backend Infrastructure",
+        "Distributed Systems",
+        "Storage",
+        "Concurrency",
+        "Data Engineering"
+      ]
+    },
+    "signals": [
+      {
+        "confidence": "Medium",
+        "evidence_status": "Reported",
+        "id": "problem_solving",
+        "importance": "Critical",
+        "level_dependency": true,
+        "name": "Problem Solving",
+        "planner_hint": "high",
+        "role_dependency": true,
+        "scope": "All levels",
+        "signal_type": "generic_baseline",
+        "source": {
+          "retrieved_at": null,
+          "source_detail": "Candidate Pattern Synthesis",
+          "source_type": "Internal Knowledge",
+          "source_url": null
+        }
+      },
+      {
+        "confidence": "Medium",
+        "evidence_status": "Reported",
+        "id": "coding_ability",
+        "importance": "Critical",
+        "level_dependency": true,
+        "name": "Coding Ability",
+        "planner_hint": "high",
+        "role_dependency": true,
+        "scope": "All levels",
+        "signal_type": "generic_baseline",
+        "source": {
+          "retrieved_at": null,
+          "source_detail": "Candidate Pattern Synthesis",
+          "source_type": "Internal Knowledge",
+          "source_url": null
+        }
+      },
+      {
+        "confidence": "Medium",
+        "evidence_status": "Reported",
+        "id": "system_design",
+        "importance": "High",
+        "level_dependency": true,
+        "name": "System Design",
+        "planner_hint": "high",
+        "role_dependency": true,
+        "scope": "All levels; seniority-dependent",
+        "signal_type": "generic_baseline",
+        "source": {
+          "retrieved_at": null,
+          "source_detail": "Candidate Pattern Synthesis",
+          "source_type": "Internal Knowledge",
+          "source_url": null
+        }
+      },
+      {
+        "confidence": "Medium",
+        "evidence_status": "Reported",
+        "id": "low_level_design",
+        "importance": "Medium",
+        "level_dependency": true,
+        "name": "Low-Level Design",
+        "planner_hint": "medium",
+        "role_dependency": true,
+        "scope": "Mid+ levels",
+        "signal_type": "generic_baseline",
+        "source": {
+          "retrieved_at": null,
+          "source_detail": "Candidate Pattern Synthesis",
+          "source_type": "Internal Knowledge",
+          "source_url": null
+        }
+      },
+      {
+        "confidence": "Medium-High",
+        "evidence_status": "Reported",
+        "formal_component": {
+          "confidence": "Medium",
+          "status": "Varies"
+        },
+        "id": "values_alignment",
+        "importance": "High",
+        "level_dependency": false,
+        "name": "Adobe Values Alignment",
+        "planner_hint": "high",
+        "role_dependency": true,
+        "scope": "Most SWE roles",
+        "signal_type": "adobe_specific",
+        "source": {
+          "retrieved_at": null,
+          "source_detail": "Candidate Pattern Synthesis",
+          "source_type": "Internal Knowledge",
+          "source_url": null
+        },
+        "universal_requirement": false
+      },
+      {
+        "confidence": "Medium",
+        "evidence_status": "Reported",
+        "id": "product_thinking",
+        "importance": "Medium-High",
+        "level_dependency": true,
+        "name": "Product Thinking",
+        "planner_hint": "medium-high",
+        "role_dependency": true,
+        "scope": "Most SWE roles; product-led emphasis",
+        "signal_type": "adobe_specific",
+        "source": {
+          "retrieved_at": null,
+          "source_detail": "Candidate Pattern Synthesis",
+          "source_type": "Internal Knowledge",
+          "source_url": null
+        }
+      },
+      {
+        "confidence": "Low-Medium",
+        "evidence_status": "Reported",
+        "id": "adobe_domain_aptitude",
+        "importance": "Low-Medium",
+        "level_dependency": true,
+        "name": "Adobe Domain Aptitude",
+        "planner_hint": "low unless role match",
+        "role_dependency": true,
+        "scope": "Role-dependent",
+        "signal_type": "role_specific_adobe",
+        "source": {
+          "retrieved_at": null,
+          "source_detail": "Candidate Pattern Synthesis",
+          "source_type": "Internal Knowledge",
+          "source_url": null
+        }
+      },
+      {
+        "confidence": "Medium",
+        "evidence_status": "Reported",
+        "id": "communication",
+        "importance": "Critical",
+        "level_dependency": false,
+        "name": "Communication",
+        "planner_hint": "high",
+        "role_dependency": true,
+        "scope": "All levels",
+        "signal_type": "generic_baseline",
+        "source": {
+          "retrieved_at": null,
+          "source_detail": "Candidate Pattern Synthesis",
+          "source_type": "Internal Knowledge",
+          "source_url": null
+        }
+      }
+    ],
+    "subjects": {
+      "computer_networks": "Medium",
+      "dbms": "Medium",
+      "dsa": "Critical",
+      "high_level_design": "High",
+      "java": "Medium",
+      "low_level_design": "Medium",
+      "operating_systems": "Medium",
+      "programming_fundamentals": "High"
+    },
+    "trends": {
+      "ai_assisted_interview": {
+        "confidence": "Low",
+        "status": "Insufficient Evidence"
+      },
+      "document_intelligence_trend": {
+        "confidence": "Low-Medium",
+        "status": "Reported"
+      },
+      "regional_variation": {
+        "confidence": "Low",
+        "exists": true,
+        "specific_verified_pattern": false
+      }
+    }
+  },
+  "summary_variant": "signals",
+  "trends": {
+    "ai_assisted_interview": {
+      "confidence": "Low",
+      "status": "Insufficient Evidence"
+    },
+    "document_intelligence_trend": {
+      "confidence": "Low-Medium",
+      "status": "Reported"
+    },
+    "regional_variation": {
+      "confidence": "Low",
+      "exists": true,
+      "specific_verified_pattern": false
+    }
+  },
+  "validation": {
+    "warnings": []
+  }
+}

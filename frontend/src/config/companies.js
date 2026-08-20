@@ -1,17 +1,15 @@
 // Target companies for onboarding + settings.
+//
+// The canonical company list (ids, display names, accents) is GENERATED from
+// the single backend registry (backend/company_intelligence/registry.json) via
+// `python backend/scripts/compile_companies.py`. Do NOT hand-edit company ids
+// here — edit the registry and recompile. `others` is a UI-only pseudo-company
+// and is intentionally appended after the canonical list.
+import GENERATED from './companies.generated.json';
+
 export const TARGET_COMPANIES = [
-  { id: 'google',     name: 'Google',      accent: '#4285F4' },
-  { id: 'microsoft',  name: 'Microsoft',   accent: '#00A4EF' },
-  { id: 'uber',       name: 'Uber',        accent: '#000000' },
-  { id: 'adobe',      name: 'Adobe',       accent: '#FF0000' },
-  { id: 'atlassian',  name: 'Atlassian',   accent: '#0052CC' },
-  { id: 'linkedin',   name: 'LinkedIn',    accent: '#0A66C2' },
-  { id: 'stripe',     name: 'Stripe',      accent: '#635BFF' },
-  { id: 'salesforce', name: 'Salesforce',  accent: '#00A1E0' },
-  { id: 'phonepe',    name: 'PhonePe',     accent: '#5F259F' },
-  { id: 'flipkart',   name: 'Flipkart',    accent: '#F0B90B' },
-  { id: 'oracle',     name: 'Oracle',      accent: '#F80000' },
-  { id: 'others',     name: 'Others',      accent: '#94A3B8' },
+  ...GENERATED.companies.map((c) => ({ id: c.id, name: c.name, accent: c.accent })),
+  { id: 'others', name: 'Others', accent: '#94A3B8' },
 ];
 
 export const POSITIONS = [

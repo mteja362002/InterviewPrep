@@ -1,0 +1,76 @@
+{
+  "_generated": "DO NOT EDIT. Generated from backend/company_intelligence/registry.json by backend/scripts/compile_companies.py.",
+  "companies": [
+    {
+      "accent": "#4285F4",
+      "id": "google",
+      "name": "Google"
+    },
+    {
+      "accent": "#00A4EF",
+      "id": "microsoft",
+      "name": "Microsoft"
+    },
+    {
+      "accent": "#000000",
+      "id": "uber",
+      "name": "Uber"
+    },
+    {
+      "accent": "#FF0000",
+      "id": "adobe",
+      "name": "Adobe"
+    },
+    {
+      "accent": "#0052CC",
+      "id": "atlassian",
+      "name": "Atlassian"
+    },
+    {
+      "accent": "#0A66C2",
+      "id": "linkedin",
+      "name": "LinkedIn"
+    },
+    {
+      "accent": "#635BFF",
+      "id": "stripe",
+      "name": "Stripe"
+    },
+    {
+      "accent": "#00A1E0",
+      "id": "salesforce",
+      "name": "Salesforce"
+    },
+    {
+      "accent": "#5F259F",
+      "id": "phonepe",
+      "name": "PhonePe"
+    },
+    {
+      "accent": "#F0B90B",
+      "id": "flipkart",
+      "name": "Flipkart"
+    },
+    {
+      "accent": "#F80000",
+      "id": "oracle",
+      "name": "Oracle"
+    },
+    {
+      "accent": "#003087",
+      "id": "paypal",
+      "name": "PayPal"
+    },
+    {
+      "accent": "#6C7A89",
+      "id": "goldman_sachs",
+      "name": "Goldman Sachs"
+    },
+    {
+      "accent": "#C8202B",
+      "id": "zoho",
+      "name": "Zoho"
+    }
+  ],
+  "schema_version": "1.0"
+}
