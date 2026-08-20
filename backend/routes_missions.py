@@ -33,6 +33,8 @@ from problem_bank import (
 from leetcode_catalog import get_by_id as catalog_get_by_id
 from services.learning_engine.planner import get_today_learning_node
 from services.learning_engine.pacing import compute_pacing_state
+from services.problem_selection import select_representative, select_one, arena_problem_count
+from services.mission_context import build_mission_context
 
 router = APIRouter(prefix="/api", tags=["missions"])
 
@@ -266,23 +268,47 @@ async def _assignment_progress_node_id(db, assignment: dict) -> Optional[str]:
 
 
 async def _attach_problems_to_mission(db, mission: DailyMission) -> None:
-    """For any practice task with `pattern`, create ProblemAssignment records."""
+    """For any practice task with `pattern`, create ProblemAssignment records.
+
+    Problem selection is delegated to the canonical ProblemSelector (Phase
+    3C.1 freeze, constraint #8) so the Coding Arena, Assessment Engine and
+    Mission Planner share ONE deterministic, stage-aware selector. The Arena
+    draws exclusively from ``problem_bank`` (representative problems) \u2014 never
+    from the Practice Library (dev_seed) \u2014 and never substitutes an unrelated
+    topic: all fallbacks stay within the task's own ``pattern``.
+    """
     for task in mission.tasks:
         if task.kind != "practice" or not task.pattern:
             continue
-        count = task.problem_count or 2
-        # Pick unseen problems for user in this pattern
+        count = task.problem_count or arena_problem_count(getattr(task, "estimated_minutes", None))
+        # Problems already assigned to this user for this pattern (unseen-first).
         seen_ids = set()
         cur = db.problem_assignments.find(
             {"user_id": mission.user_id, "pattern": task.pattern}, {"problem_id": 1, "_id": 0}
         )
         async for row in cur:
             seen_ids.add(row["problem_id"])
-        pool = [p for p in problems_by_pattern(task.pattern) if p["id"] not in seen_ids]
-        if not pool:
-            # fall back to entire pool
-            pool = problems_by_pattern(task.pattern)
-        chosen = pool[:count]
+
+        # Learning stage / difficulty come from the LearningNode via MissionContext.
+        stage = difficulty = None
+        if task.node_id:
+            ctx = build_mission_context(task.node_id)
+            if ctx:
+                stage, difficulty = ctx.learning_stage, ctx.difficulty
+
+        # Prefer unseen problems matched to this node's stage+difficulty.
+        chosen = select_representative(
+            pattern=task.pattern, learning_stage=stage, difficulty=difficulty,
+            exclude_ids=seen_ids, count=count,
+        )
+        # Topic exhausted at that stage/difficulty -> broaden within the SAME
+        # pattern (still the same topic, never another topic).
+        if not chosen:
+            chosen = select_representative(pattern=task.pattern, exclude_ids=seen_ids, count=count)
+        # Everything seen -> allow deterministic repeats within the same pattern.
+        if not chosen:
+            chosen = select_representative(pattern=task.pattern, count=count)
+
         for p in chosen:
             assignment = ProblemAssignment(
                 user_id=mission.user_id, problem_id=p["id"],
@@ -755,10 +781,10 @@ async def practice_more(payload: dict, user=Depends(get_current_user)):
     )
     async for row in cur:
         seen_ids.add(row["problem_id"])
-    pool = [p for p in problems_by_pattern(pattern) if p["id"] not in seen_ids]
-    if not pool:
+    # Canonical selector (problem_bank only, deterministic, same-pattern).
+    chosen = select_one(pattern=pattern, exclude_ids=seen_ids)
+    if not chosen:
         raise HTTPException(status_code=404, detail="You've seen every problem in this pattern.")
-    chosen = pool[0]
 
     assignment = ProblemAssignment(
         user_id=user["id"], problem_id=chosen["id"],

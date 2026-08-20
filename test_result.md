@@ -109,6 +109,64 @@ original_prd_step1: "PrepOS Phase 4 · Step 1 — Adaptive Planning Foundation.
 original_prd: "PrepOS RC1.3.4 – Knowledge Experience & Learning Workspace. Extend the existing Knowledge Base into a full learning workspace with seven lenses (All Topics, Continue Learning, Bookmarks, Favorites, Weak Topics, Revision Due, Recently Viewed). All lenses derive from data already exposed by `/api/roadmap`, `/api/roadmap/summary` and `/api/revisions/queue` — no new endpoint, no new Mongo collection, no schema change. Bookmark/Favorite toggles reuse the existing RC1.3.2B mutation hooks (`useToggleBookmark`, `useToggleFavorite`) so a single toggle updates deep node, tree, workspace list, and Mission Control together. Recently-viewed tracking is a user-scoped localStorage list (`prepos:recently-viewed:v1:<userId>`) recorded when DeepTopicPage loads a node — cross-user isolation matches RC1.3.3 React Query key scheme. `useProgressTree` is now a thin backwards-compat shim over `useRoadmapTree`, removing a hidden global-cache leak. Stat strip reuses `useRoadmapSummary` — no extra API call. Search + filters remain client-side and stack on top of the active view. Weak-topic filter reuses the same signals the adaptive planner already uses (confidence, weakness_score, revision_due) — no new algorithm."
 
 backend:
+  - task: "Phase 3C.1 — Foundation Stabilization Freeze (MissionContext + canonical ProblemSelector + activity_type migration + Arena/Assessment dedup + no random fallbacks + provider-agnostic prompt scaffold)"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/services/mission_context.py, /app/backend/services/problem_selection/selector.py, /app/backend/services/curriculum/activity_metadata.py, /app/backend/scripts/migrate_activity_types.py, /app/backend/scripts/generate_roadmap.py, /app/backend/assessment/assessment_generator.py, /app/backend/assessment/prompts/base.py, /app/backend/assessment/prompts/templates.py, /app/backend/routes_missions.py, /app/backend/mission_engine.py, /app/backend/tests/test_activity_metadata_migration.py, /app/backend/tests/test_mission_context.py, /app/backend/tests/test_problem_selector.py, /app/backend/tests/test_assessment_prompts.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: |
+          PHASE 3C.1 Slice 1 (backend architecture freeze). PURE pytest only —
+          NO server / DB / .env (server cannot boot here; .env absent by design;
+          MongoDB is running but unused by these unit tests). Do NOT provision
+          env, do NOT curl live endpoints, do NOT run frontend tests.
+
+          WHAT CHANGED
+            1. Roadmap migration: scripts/migrate_activity_types.py stamped
+               activity_type + assessment_type onto ALL 1223 roadmap nodes
+               (idempotent; backup at data/roadmap_v1.backup.pre_activity_types.json).
+               Rules live ONCE in services/curriculum/activity_metadata.py and
+               are also applied by scripts/generate_roadmap.py for future gen.
+            2. services/mission_context.py — canonical MissionContext object +
+               build_mission_context() factory (single source of truth). Reads
+               activity_type/assessment_type off the node (never re-infers).
+            3. services/problem_selection/selector.py — ONE canonical selector
+               reused by Arena/Assessment/Mission. Deterministic, stage-bounded,
+               explicit empty state (no unrelated-topic / Two-Sum / random
+               fallback), adaptive volume, Arena⟂Assessment dedup, dev_seed
+               overflow (assessment only, never duplicates arena, never arena).
+            4. assessment/assessment_generator.py — select_problem now delegates
+               to the canonical selector; removed the fall-back-to-all-PROBLEMS
+               unrelated-topic behavior.
+            5. routes_missions.py — Coding Arena _attach_problems_to_mission and
+               practice_more now consume the canonical selector (problem_bank
+               only; same-pattern fallbacks only).
+            6. mission_engine.py — removed 3 rng.choice random fallbacks in the
+               DEPRECATED legacy compatibility path (tie-break, advance-pattern,
+               unrelated support-topic substitution) → now deterministic. The
+               live adaptive planner (services/learning_engine) was NOT touched.
+            7. assessment/prompts/ — provider-agnostic prompt scaffold for
+               non-coding assessments (quiz/behavioral/design/system_design).
+               No LLM call, no provider hardcoded.
+            8. docs/adr/ADR-001-foundation-freeze.md — ADR of the frozen arch.
+
+          VERIFY (from /app/backend), report pass/fail per file:
+            NEW SUITES (expected 22 passed):
+              python -m pytest tests/test_activity_metadata_migration.py tests/test_mission_context.py tests/test_problem_selector.py tests/test_assessment_prompts.py -n 0 -q
+            REGRESSION (backward compat — expected 140 passed, unchanged):
+              python -m pytest tests/test_learning_engine.py tests/test_adaptive_planning_phase4_step2.py tests/test_company_aware_ranking.py tests/test_candidate_generation.py tests/test_eligibility_engine.py tests/test_learning_stage_engine.py tests/test_recommendation_insight.py tests/test_company_context_phase2a.py tests/test_company_intelligence.py tests/test_assessment_phase3a.py tests/test_universal_node_actions.py -n 0 -q
+          CONFIRM: Arena⟂Assessment never share a representative problem;
+          unknown pattern → [] (no fallback); stages never mixed; adaptive
+          volume 45→1/90→2/135→3/180→4/≥225→5; every roadmap node has valid
+          activity_type+assessment_type. NOTE: tests requiring frontend/.env
+          (backend_test.py, test_iteration3.py, test_missions.py,
+          test_roadmap_expansion.py, test_roadmap_lld_hld_expansion.py) fail at
+          COLLECTION due to absent .env — pre-existing, unrelated to this work.
+
   - task: "Phase 2B — Company-Aware Adaptive Planner (Company Intelligence as an active, bounded, deterministic planner signal; opt-in; automatic fallback)"
     implemented: true
     working: "NA"
@@ -1015,12 +1073,40 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Phase 2B — Company-Aware Adaptive Planner (Company Intelligence as an active, bounded, deterministic planner signal; opt-in; automatic fallback)"
+    - "Phase 3C.1 — Foundation Stabilization Freeze (MissionContext + canonical ProblemSelector + activity_type migration + Arena/Assessment dedup + no random fallbacks + provider-agnostic prompt scaffold)"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
 agent_communication:
+  - agent: "main"
+    message: |
+      Please VERIFY Phase 3C.1 Slice 1 (backend architecture freeze). PURE
+      pytest ONLY — NO server, DB, env, curl, or frontend tests (server cannot
+      boot: backend/.env is absent by design; do NOT provision it).
+
+      RUN (from /app/backend), report pass/fail per file:
+        1) NEW suites (expected 22 passed):
+           python -m pytest tests/test_activity_metadata_migration.py tests/test_mission_context.py tests/test_problem_selector.py tests/test_assessment_prompts.py -n 0 -q
+        2) REGRESSION / backward-compat (expected 140 passed, unchanged):
+           python -m pytest tests/test_learning_engine.py tests/test_adaptive_planning_phase4_step2.py tests/test_company_aware_ranking.py tests/test_candidate_generation.py tests/test_eligibility_engine.py tests/test_learning_stage_engine.py tests/test_recommendation_insight.py tests/test_company_context_phase2a.py tests/test_company_intelligence.py tests/test_assessment_phase3a.py tests/test_universal_node_actions.py -n 0 -q
+
+      CONFIRM EXPLICITLY:
+        - Arena and Assessment never share a representative problem id.
+        - Unknown / unresolved pattern → explicit empty list (NO unrelated-topic,
+          Two-Sum, or random fallback anywhere).
+        - Learning stages are never mixed in a selection pool.
+        - Adaptive coding volume: 45→1, 90→2, 135→3, 180→4, ≥225→5.
+        - Every roadmap node carries a valid activity_type + assessment_type.
+        - dev_seed overflow only supplements ASSESSMENT and never duplicates
+          arena problems; Arena/Mission never touch dev_seed.
+
+      KNOWN (do NOT flag as regressions): 5 test files fail at COLLECTION
+      because they read /app/frontend/.env at import time (backend_test.py,
+      test_iteration3.py, test_missions.py, test_roadmap_expansion.py,
+      test_roadmap_lld_hld_expansion.py). These are server/.env-dependent and
+      pre-existed this work. Do NOT modify source files; verification run only.
+
   - agent: "main"
     message: |
       Please VERIFY Phase 2B (Company-Aware Adaptive Planner). PURE unit/pytest

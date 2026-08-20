@@ -16,6 +16,7 @@ from __future__ import annotations
 from typing import List, Optional
 
 import problem_bank
+from services.problem_selection import select_one as _select_one
 from .difficulty import clamp_difficulty
 from .schemas import AssessmentType, Question
 from .assessment_types import register_generator
@@ -43,11 +44,12 @@ def _resolve_pattern(roadmap_node_id: Optional[str]) -> Optional[str]:
 
 
 def _candidate_pool(pattern: Optional[str]) -> List[dict]:
+    # Scoped to the topic's own pattern only. NO unrelated-topic fallback
+    # (Phase 3C.1 freeze, constraint #14): an unresolved pattern yields an
+    # empty pool, not the entire problem bank.
     if pattern:
-        pool = problem_bank.problems_by_pattern(pattern)
-        if pool:
-            return pool
-    return list(problem_bank.PROBLEMS)
+        return problem_bank.problems_by_pattern(pattern)
+    return []
 
 
 def _rank_key(p: dict):
@@ -64,33 +66,27 @@ def select_problem(
     roadmap_node_id: Optional[str] = None,
     difficulty: Optional[str] = None,
     target_company: Optional[str] = None,
+    learning_stage: Optional[str] = None,
+    exclude_ids: Optional[List[str]] = None,
 ) -> Optional[dict]:
-    """Deterministically select ONE problem_bank problem for an assessment."""
+    """Deterministically select ONE problem_bank problem for an assessment.
+
+    Delegates to the canonical problem selector (the SAME selector used by the
+    Mission Planner, Coding Arena and AI Mentor) so no duplicate filtering
+    logic exists. Returns ``None`` (explicit empty state) when the node's
+    pattern cannot be resolved or the topic has no matching problem \u2014 it never
+    substitutes an unrelated topic.
+    """
     pattern = _resolve_pattern(roadmap_node_id)
     diff = clamp_difficulty(difficulty)
-    pool = _candidate_pool(pattern)
-
-    def _filter(items, *, by_company: bool):
-        out = []
-        for p in items:
-            if p.get("difficulty") != diff:
-                continue
-            if by_company and target_company:
-                if target_company.lower() not in [c.lower() for c in p.get("companies", [])]:
-                    continue
-            out.append(p)
-        return out
-
-    # Prefer company-matched at the target difficulty; then any at difficulty;
-    # then any in the pool (difficulty unavailable for this pattern).
-    for candidates in (
-        _filter(pool, by_company=True),
-        _filter(pool, by_company=False),
-        pool,
-    ):
-        if candidates:
-            return sorted(candidates, key=_rank_key)[0]
-    return None
+    companies = [target_company] if target_company else []
+    return _select_one(
+        pattern=pattern,
+        learning_stage=learning_stage,
+        difficulty=diff,
+        target_companies=companies,
+        exclude_ids=exclude_ids or (),
+    )
 
 
 def generate_coding_assessment(

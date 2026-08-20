@@ -15,8 +15,14 @@ Run: `python -m backend.scripts.generate_roadmap`
 """
 from __future__ import annotations
 import json
+import sys
 from pathlib import Path
 from typing import Any
+
+# Ensure ``backend/`` is importable so the canonical curriculum metadata
+# derivation is shared with the runtime migration (single source of truth).
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from services.curriculum.activity_metadata import stamp_node  # noqa: E402
 
 VERSION = "v1"
 GENERATED_AT = "2026-02-01"
@@ -3308,6 +3314,9 @@ def _stamp_defaults(n: dict, *, track_id: str, module_id: str, category_id: str,
         n.setdefault("interview_importance", _default_interview_importance(n))
         n.setdefault("learning_objectives", _default_learning_objectives(n, n.get("label", n["id"])))
         n.setdefault("curriculum_level", _curriculum_level_label(n["learning_stage"]))
+    # Phase 3C.1 freeze: activity_type + assessment_type are curriculum metadata
+    # stamped onto EVERY node here (build-time), so no runtime module infers them.
+    stamp_node(n, track_id)
 
 
 

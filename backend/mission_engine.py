@@ -287,7 +287,8 @@ def rank_candidate_topics(
     tied_candidates = [
         candidate for candidate in candidates if ranking_key(candidate) == best_key
     ]
-    return rng.choice(tied_candidates)
+    # Phase 3C.1 freeze: deterministic tie-break (no randomness in selection).
+    return sorted(tied_candidates, key=lambda c: str(c.get("id")))[0]
 
 
 def select_primary_topic(
@@ -312,8 +313,9 @@ def select_primary_topic(
         return domain, subtopic, "easy"
 
     if mode == "advance" and analysis["strong_patterns"]:
-        # Move to next challenging area of DSA (rotate through hard patterns)
-        pattern_choice = rng.choice(["dp", "graphs", "backtracking", "heap"])
+        # Move to next challenging DSA area. Phase 3C.1 freeze: deterministic
+        # (no random topic selection); first by a fixed priority order.
+        pattern_choice = "dp"
         domain, subtopic = PATTERN_TO_DOMAIN.get(pattern_choice, ("dsa", "Dynamic Programming"))
         return domain, subtopic, "hard"
 
@@ -501,11 +503,13 @@ def build_mission_for_user(
         tasks.append(_roadmap_study_task(support_node, action="Study"))
     elif support_topic is None or support_meta is None:
         # Compatibility safeguard: only use legacy topic meta when the support
-        # recommendation payload is invalid or the track is unknown.
-        support_pool = [t for t in TOPIC_META if t != focus_topic]
-        support_topic = rng.choice(support_pool)
+        # recommendation payload is invalid or the track is unknown. Phase 3C.1
+        # freeze: this substitution is now DETERMINISTIC (no random unrelated
+        # topic) — first eligible track + first subtopic by stable ordering.
+        support_pool = sorted(t for t in TOPIC_META if t != focus_topic)
+        support_topic = support_pool[0]
         support_meta = TOPIC_META[support_topic]
-        support_sub, _ = rng.choice(support_meta["subtopics"])
+        support_sub = sorted(support_meta["subtopics"], key=lambda s: s[0])[0][0]
         tasks.append(MissionTask(
             title=f"Study {support_meta['label']} · {support_sub}",
             kind="study",
