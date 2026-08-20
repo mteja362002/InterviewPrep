@@ -20,6 +20,9 @@ from routes_leetcode_catalog import router as leetcode_catalog_router
 from ai_mentor.mentor_routes import router as mentor_router
 from routes_companies import router as companies_router
 from assessment import router as assessment_router, ensure_indexes as ensure_assessment_indexes
+from services.learner_intelligence.evidence_api import router as learner_intelligence_router
+from services.learner_intelligence.update_repository import ensure_indexes as ensure_li_update_indexes
+from routes_mission_assessment import router as mission_assessment_router
 
 # ------------------------- DB -------------------------
 mongo_url = os.environ["MONGO_URL"]
@@ -75,6 +78,8 @@ app.include_router(leetcode_catalog_router)
 app.include_router(mentor_router)
 app.include_router(companies_router)
 app.include_router(assessment_router)
+app.include_router(learner_intelligence_router)
+app.include_router(mission_assessment_router)
 
 # ------------------------- Startup -------------------------
 logging.basicConfig(
@@ -119,6 +124,7 @@ async def on_startup():
     await db.mentor_messages.create_index([("conversation_id", 1), ("created_at", 1)])
     await db.mentor_messages.create_index([("user_id", 1), ("created_at", -1)])
     await ensure_assessment_indexes()
+    await ensure_li_update_indexes()
     logger.info("MongoDB indexes ensured.")
 
     # ---- Roadmap migration: backfill knowledge_nodes from legacy tables ----

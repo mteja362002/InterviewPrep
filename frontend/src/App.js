@@ -17,6 +17,7 @@ import ForgotPassword from '@/pages/auth/ForgotPassword';
 import ResetPassword from '@/pages/auth/ResetPassword';
 import MissionInit from '@/pages/onboarding/MissionInit';
 import MissionControl from '@/pages/dashboard/MissionControl';
+import Assessment from '@/pages/assessment/Assessment';
 import CodingArena from '@/pages/coding/CodingArena';
 import SystemDesign from '@/pages/system-design/SystemDesign';
 import KnowledgeBase from '@/pages/knowledge/KnowledgeBase';
@@ -69,6 +70,7 @@ function App() {
                       }
                     >
                       <Route path="mission-control" element={<MissionControl />} />
+                      <Route path="assessment/:missionId" element={<Assessment />} />
                       <Route path="coding-arena" element={<CodingArena />} />
                       <Route path="system-design" element={<SystemDesign />} />
                       <Route path="knowledge-base" element={<KnowledgeBase />} />

@@ -167,6 +167,14 @@ class DailyMission(BaseModel):
     created_at: str = Field(default_factory=_now_iso)
     completed_at: Optional[str] = None
     skipped_at: Optional[str] = None
+    # Phase 3C · Mission → Assessment workflow (all OPTIONAL → old missions
+    # and existing APIs stay byte-identical; populated only when the
+    # assessment checkpoint is used). The mission ORCHESTRATES only; it never
+    # evaluates assessments or computes learner updates.
+    assessment_id: Optional[str] = None          # linked Assessment (Engine-owned)
+    assessment_status: Optional[str] = None       # mirror of the assessment status
+    assessment_available: bool = False            # study+coding done → checkpoint unlocked
+    workflow_state: Optional[str] = None          # computed coarse workflow stage
 
 
 class KnowledgeProgress(BaseModel):

@@ -1257,3 +1257,37 @@ agent_communication:
       (6) Negative: submit BEFORE start -> 409. (7) Negative: create system_design -> 422.
       Also confirm no regressions: auth/login, onboarding, mission generation, roadmap,
       companies return 200 with no 500s.
+  - agent: "main"
+    message: |
+      Phase 3A REFINEMENT (evidence contract) applied — additive & backward compatible.
+      Canonical immutable AssessmentEvidence now carries type-agnostic scalars
+      (accuracy, proficiency, completion_quality, confidence_delta) + extensibility bags
+      (metrics, signals, tags) + schema_version "1.0"; recommendations are now derived
+      from evidence (not raw score). No new collection; no planner/LI/mission changes.
+      113 unit tests pass. PLEASE VERIFY VIA LIVE API that the coding lifecycle still
+      works end-to-end and that GET /api/assessments/{id}/evidence returns the canonical
+      fields (schema_version, accuracy, metrics, signals) and that after /evaluate the
+      recommendation next_action is present. Same steps/creds as the message above.
+  - agent: "main"
+    message: |
+      Phase 3B (Assessment -> Learner Intelligence integration) implemented — BACKEND
+      ONLY, additive, deterministic. When a coding assessment is EVALUATED, its
+      immutable evidence is translated into a LearnerIntelligenceUpdate and APPENDED
+      to a new append-only collection (learner_intelligence_updates). New read-only
+      endpoints expose it. 200 unit tests pass; no regressions; planner path unchanged.
+      PLEASE VERIFY VIA LIVE API (creds admin@prepos.io / Admin@123):
+      (1) Full coding lifecycle: POST /api/assessments (coding, roadmap_node_id
+          "dsa.sliding_window.core", target_company "google") -> start -> submit a
+          STRONG attempt (passed_tests=10,total_tests=10,edge_cases_passed=3,
+          edge_cases_total=3,claimed_time_complexity "O(n)", explanation >=80 chars,
+          solved true) -> evaluate -> 200 completed, verdict "correct".
+      (2) GET /api/learner-intelligence/updates -> 200, a non-empty list; the newest
+          update has confidence_delta > 0, strength_detected true, weakness_detected
+          false, and a non-empty reasons[] (explainability).
+      (3) GET /api/learner-intelligence/state -> 200; by_node contains
+          "dsa.sliding_window.core" with assessment_count >= 1 and strengths includes it.
+      (4) Run a SECOND assessment on the same node with a WEAK attempt (passed_tests=1,
+          total_tests=10, solved false), evaluate, then GET /updates again -> the newest
+          update has confidence_delta < 0, weakness_detected true, revision_hint true.
+      (5) REGRESSION: auth/login, mission generation, GET /api/companies, roadmap still
+          200 with no 500s; existing /api/assessments endpoints still work.

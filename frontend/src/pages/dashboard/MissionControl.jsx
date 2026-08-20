@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import {
   Target, ShieldCheck, RefreshCcw, GraduationCap,
   Sparkles, Check, SkipForward, Loader2,
-  CheckCircle2, Circle, Clock, Zap, TrendingUp, ChevronDown, Route, Calendar,
+  CheckCircle2, Circle, Clock, Zap, TrendingUp, ChevronDown, Route, Calendar, ClipboardCheck,
 } from 'lucide-react';
 import { format, formatDistanceToNow, parseISO } from 'date-fns';
 import { GlassCard } from '@/components/common/GlassCard';
@@ -414,6 +414,45 @@ export default function MissionControl() {
                 );
               })}
             </div>
+
+            {/* Phase 3C · Assessment checkpoint — the final step of the daily
+                mission. Unlocks once every study & coding task is done. */}
+            {!missionSkipped && (
+              <div className="mt-4">
+                <button
+                  onClick={() => navigate(`/app/assessment/${mission.id}`)}
+                  disabled={doneCount < tasks.length || missionCompleted || mission.assessment_status === 'completed'}
+                  data-testid="mission-take-assessment"
+                  className={cn(
+                    'w-full text-left flex items-center gap-3 rounded-lg border px-3 py-2.5 transition-colors',
+                    mission.assessment_status === 'completed'
+                      ? 'border-emerald-400/40 bg-emerald-400/[0.12]'
+                      : 'border-primary/30 bg-primary/[0.06]',
+                    (doneCount < tasks.length || missionCompleted || mission.assessment_status === 'completed')
+                      ? 'cursor-not-allowed opacity-70'
+                      : 'hover:bg-primary/[0.12]',
+                  )}
+                >
+                  <span className={cn('h-5 w-5 rounded-full border flex items-center justify-center shrink-0',
+                    mission.assessment_status === 'completed' ? 'border-emerald-400 bg-emerald-400 text-emerald-950' : 'border-primary/40 text-primary')}>
+                    {mission.assessment_status === 'completed'
+                      ? <Check className="h-3 w-3" strokeWidth={3} />
+                      : <ClipboardCheck className="h-3 w-3" />}
+                  </span>
+                  <span className="flex-1 text-sm text-foreground">Take Assessment</span>
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-primary">
+                    {mission.assessment_status === 'completed'
+                      ? 'Done'
+                      : doneCount < tasks.length ? 'Locked' : 'Start Assessment'}
+                  </span>
+                </button>
+                {doneCount < tasks.length && !missionCompleted && (
+                  <p className="mt-1.5 text-xs text-muted-foreground">
+                    Finish your study and coding tasks to unlock the assessment.
+                  </p>
+                )}
+              </div>
+            )}
 
             {!missionCompleted && !missionSkipped && (
               <div className="mt-6 flex flex-wrap gap-2.5">

@@ -422,6 +422,11 @@ async def get_todays_mission(user=Depends(get_current_user)):
     today = today_date_str()
     doc = await db.daily_missions.find_one({"user_id": user["id"], "date": today})
     if doc:
+        # Phase 3C: populate the optional assessment-workflow fields (reads
+        # the linked assessment as source of truth). Additive & safe for old
+        # missions.
+        from routes_mission_assessment import enrich_mission_assessment
+        await enrich_mission_assessment(db, doc, user["id"])
         mission = DailyMission(**_clean(doc))
         # Lazy-enrich existing missions that pre-date the Adaptive Mission
         # Engine (or where the AI layer was unavailable on generation day).
@@ -532,6 +537,12 @@ async def complete_mission(mission_id: str, user=Depends(get_current_user)):
         return DailyMission(**_clean(doc))
     if doc["status"] == "skipped":
         raise HTTPException(status_code=409, detail="Mission was skipped — cannot complete.")
+
+    # Phase 3C · Assessment is the final checkpoint. If this mission has a
+    # linked assessment it MUST be completed first. Backward compatible:
+    # missions without a linked assessment complete exactly as before.
+    from routes_mission_assessment import assert_assessment_allows_completion
+    await assert_assessment_allows_completion(db, doc, user["id"])
 
     now = _now_iso()
     onboarding = await _get_onboarding(db, user["id"])
@@ -1032,6 +1043,10 @@ async def get_dashboard(user=Depends(get_current_user)):
     if not mission_doc:
         await _generate_today_mission(db, user["id"])
         mission_doc = await db.daily_missions.find_one({"user_id": user["id"], "date": today})
+    # Phase 3C: enrich with the optional assessment-workflow fields so the
+    # Mission Control checkpoint reflects the linked assessment's status.
+    from routes_mission_assessment import enrich_mission_assessment
+    await enrich_mission_assessment(db, mission_doc, user["id"])
     mission = DailyMission(**_clean(mission_doc))
 
     # Daily login activity (once per day)

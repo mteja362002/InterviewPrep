@@ -109,7 +109,8 @@ async def evaluate_assessment(user_id: str, assessment_id: str) -> Optional[Asse
     result = evaluate(a.attempt, a.rubric, a.question)
     feedback = build_feedback(result, a.question)
     evidence = build_evidence(a, result, attempt=a.attempt, question=a.question)
-    recommendation = build_recommendation(result, feedback, question=a.question)
+    # Requirement: recommendations are derived from EVIDENCE, not the raw score.
+    recommendation = build_recommendation(evidence, feedback)
 
     a.result = result
     a.feedback = feedback

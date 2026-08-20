@@ -57,13 +57,28 @@ def build_evidence(
         assessment_type=assessment.assessment_type,
         roadmap_node_id=assessment.roadmap_node_id,
         mission_id=assessment.mission_id,
-        coding_accuracy=coding_accuracy,
-        problem_solving=problem_solving,
+        verdict=result.verdict,
+        # canonical normalized scalars (type-agnostic)
+        accuracy=coding_accuracy,
+        proficiency=problem_solving,
         completion_quality=completion_quality,
+        confidence_delta=topic_confidence_delta,
         difficulty_achieved=(question.difficulty if question else None),
-        repeated_mistakes=repeated_mistakes,
-        topic_confidence_delta=topic_confidence_delta,
+        # canonical boolean signals
         weakness_confirmation=weakness_confirmation,
         revision_trigger=revision_trigger,
-        verdict=result.verdict,
+        repeated_mistakes=repeated_mistakes,
+        # extensibility bags — per-dimension detail lives here so future
+        # assessment types enrich evidence WITHOUT any schema change.
+        metrics={
+            "overall_score": round(result.overall_score / 100.0, 3),
+            "edge_case_coverage": round(result.edge_case_coverage, 3),
+            **{f"dim_{d.key}": round(d.score / 100.0, 3) for d in result.dimension_scores},
+        },
+        signals={
+            "weakness_confirmation": weakness_confirmation,
+            "revision_trigger": revision_trigger,
+            "repeated_mistakes": repeated_mistakes,
+        },
+        tags=[t for t in [result.complexity_rating] if t],
     )

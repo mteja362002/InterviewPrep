@@ -80,6 +80,16 @@ async def evaluate_assessment(assessment_id: str, user=Depends(get_current_user)
         raise HTTPException(status_code=404, detail="Assessment not found")
     if a.result is None:
         raise HTTPException(status_code=409, detail="Assessment has no submitted attempt to evaluate")
+    # Phase 3B: hand the immutable evidence to Learner Intelligence (the
+    # canonical consumer). Best-effort at the orchestration boundary so the
+    # Assessment Engine stays a pure producer and completion never breaks if
+    # the integration hiccups. The engine itself never touches planner/LI.
+    if a.evidence is not None:
+        try:
+            from services.learner_intelligence.evidence_integration import ingest_evidence
+            await ingest_evidence(a.evidence, user_id=_uid(user))
+        except Exception:  # pragma: no cover - defensive; must not fail completion
+            pass
     return a.to_doc()
 
 

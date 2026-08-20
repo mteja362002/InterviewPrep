@@ -132,8 +132,64 @@ class TestFeedbackAndRecommendation:
                       explanation="y" * 90, code="ok", solved=True)
         res = evaluate(att, a.rubric, a.question)
         fb = build_feedback(res, a.question)
-        rec = build_recommendation(res, fb, question=a.question)
+        ev = build_evidence(a, res, attempt=att, question=a.question)
+        rec = build_recommendation(ev, fb)
         assert rec.next_action == "advance"
+
+    def test_recommendation_revise_derived_from_evidence(self):
+        a = _coding_assessment()
+        att = Attempt(passed_tests=0, total_tests=10, solved=False)
+        res = evaluate(att, a.rubric, a.question)
+        fb = build_feedback(res, a.question)
+        ev = build_evidence(a, res, attempt=att, question=a.question)
+        rec = build_recommendation(ev, fb)
+        assert rec.next_action == "revise"
+
+
+class TestEvidenceContract:
+    """Phase 3A refinement — canonical, generic, immutable evidence contract."""
+
+    def _completed_evidence(self, solved=True):
+        a = _coding_assessment()
+        att = Attempt(passed_tests=10 if solved else 1, total_tests=10,
+                      edge_cases_passed=3 if solved else 0, edge_cases_total=3,
+                      claimed_time_complexity=a.question.expected_time_complexity if solved else "O(n^2)",
+                      explanation="w" * 90, code="ok", solved=solved,
+                      metadata={"attempt_number": 1})
+        res = evaluate(att, a.rubric, a.question)
+        return build_evidence(a, res, attempt=att, question=a.question)
+
+    def test_single_canonical_model(self):
+        from assessment.schemas import Evidence, AssessmentEvidence
+        assert Evidence is AssessmentEvidence
+
+    def test_canonical_generic_fields_present(self):
+        ev = self._completed_evidence()
+        # Type-agnostic canonical scalars + extensibility bags.
+        for field in ("accuracy", "proficiency", "completion_quality",
+                      "confidence_delta", "metrics", "signals", "tags",
+                      "schema_version"):
+            assert hasattr(ev, field)
+        assert 0.0 <= ev.accuracy <= 1.0
+        assert isinstance(ev.metrics, dict) and "overall_score" in ev.metrics
+        assert isinstance(ev.signals, dict) and "revision_trigger" in ev.signals
+
+    def test_backward_compatible_aliases(self):
+        ev = self._completed_evidence()
+        assert ev.coding_accuracy == ev.accuracy
+        assert ev.problem_solving == ev.proficiency
+        assert ev.topic_confidence_delta == ev.confidence_delta
+
+    def test_evidence_is_immutable(self):
+        ev = self._completed_evidence()
+        with pytest.raises(Exception):
+            ev.accuracy = 0.0  # frozen model — must not allow mutation
+
+    def test_evidence_serializes_canonically(self):
+        ev = self._completed_evidence()
+        doc = ev.model_dump(mode="json")
+        assert doc["schema_version"] == "1.0"
+        assert "accuracy" in doc and "metrics" in doc
 
 
 # --------------------------------------------------------------------------- #

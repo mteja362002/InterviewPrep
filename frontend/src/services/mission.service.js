@@ -55,6 +55,24 @@ export const knowledgeService = {
   tree: () => api.get('/knowledge/tree').then((r) => r.data),
 };
 
+// Phase 3C — Mission → Assessment workflow. Reuses the Assessment Engine
+// (Phase 3A) and the Assessment → Learner Intelligence flow (Phase 3B).
+export const assessmentService = {
+  generateForMission: (missionId) =>
+    api.post(`/missions/${missionId}/assessment/generate`).then((r) => r.data),
+  getForMission: (missionId) =>
+    api.get(`/missions/${missionId}/assessment`).then((r) => r.data),
+  start: (id) => api.post(`/assessments/${id}/start`).then((r) => r.data),
+  submit: (id, payload) => api.post(`/assessments/${id}/submit`, payload).then((r) => r.data),
+  evaluate: (id) => api.post(`/assessments/${id}/evaluate`).then((r) => r.data),
+  get: (id) => api.get(`/assessments/${id}`).then((r) => r.data),
+};
+
+export const learnerIntelligenceService = {
+  updates: (limit = 5) =>
+    api.get('/learner-intelligence/updates', { params: { limit } }).then((r) => r.data),
+};
+
 export const readinessService = {
   companies: () => api.get('/readiness/companies').then((r) => r.data),
 };

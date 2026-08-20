@@ -120,27 +120,82 @@ class Feedback(BaseModel):
     confidence_impact: str = "neutral"           # positive | neutral | negative
 
 
-class Evidence(BaseModel):
-    """Structured evidence emitted by an assessment.
+EVIDENCE_SCHEMA_VERSION = "1.0"
 
-    IMPORTANT: evidence is EXPOSED for Learner Intelligence to consume; the
-    Assessment Engine NEVER applies it to planner or learner metrics itself.
+
+class AssessmentEvidence(BaseModel):
+    """THE single canonical Assessment Evidence contract (Phase 3A+).
+
+    This is the ONE object every assessment type produces and every future
+    consumer (Learner Intelligence, Planner, Analytics, Revision Engine, AI
+    Mentor, Company Readiness) reads — WITHOUT any assessment-type-specific
+    logic. To stay type-agnostic it exposes:
+
+      * Canonical NORMALIZED scalars (all 0..1, or -1..1 for the delta):
+        ``accuracy``, ``proficiency``, ``completion_quality``,
+        ``confidence_delta``.
+      * Canonical BOOLEAN signals: ``weakness_confirmation``,
+        ``revision_trigger``, ``repeated_mistakes`` (also mirrored in
+        ``signals`` for uniform dict access).
+      * An open ``metrics`` bag for type-specific normalized detail (e.g.
+        coding edge-case coverage, MCQ option analysis, system-design
+        component coverage) so NEW assessment types add richness WITHOUT a
+        schema change.
+      * ``tags`` for qualitative markers.
+
+    IMPORTANT invariants:
+      * EXPOSED, never applied — the Assessment Engine never mutates planner
+        or learner metrics; consumers decide how to use this evidence.
+      * IMMUTABLE — ``frozen=True`` so evidence cannot change after an
+        assessment completes (a stable, auditable record).
     """
+    model_config = ConfigDict(frozen=True, use_enum_values=True, extra="ignore")
+
+    schema_version: str = EVIDENCE_SCHEMA_VERSION
+
     assessment_id: str
     user_id: str
     assessment_type: AssessmentType
     roadmap_node_id: Optional[str] = None
     mission_id: Optional[str] = None
-    coding_accuracy: float = 0.0          # 0..1
-    problem_solving: float = 0.0          # 0..1
-    completion_quality: float = 0.0       # 0..1
+    verdict: Optional[Verdict] = None
+
+    # ---- canonical normalized scalars (type-agnostic) ----------------------
+    accuracy: float = 0.0             # 0..1  — how correct the response was
+    proficiency: float = 0.0          # 0..1  — overall demonstrated skill
+    completion_quality: float = 0.0   # 0..1  — thoroughness / coverage
+    confidence_delta: float = 0.0     # -1..1 — signed confidence suggestion
     difficulty_achieved: Optional[str] = None
-    repeated_mistakes: bool = False
-    topic_confidence_delta: float = 0.0   # -1..1 signed suggestion
+
+    # ---- canonical boolean signals -----------------------------------------
     weakness_confirmation: bool = False
     revision_trigger: bool = False
-    verdict: Optional[Verdict] = None
+    repeated_mistakes: bool = False
+
+    # ---- extensibility (no schema change for future types) -----------------
+    metrics: Dict[str, float] = Field(default_factory=dict)
+    signals: Dict[str, bool] = Field(default_factory=dict)
+    tags: List[str] = Field(default_factory=list)
+
     created_at: str = Field(default_factory=_now_iso)
+
+    # ---- backward-compatible accessors (NOT serialized) --------------------
+    # Keep the original Phase-3A field names working for any early consumer.
+    @property
+    def coding_accuracy(self) -> float:
+        return self.accuracy
+
+    @property
+    def problem_solving(self) -> float:
+        return self.proficiency
+
+    @property
+    def topic_confidence_delta(self) -> float:
+        return self.confidence_delta
+
+
+# Canonical alias — there is exactly ONE evidence model.
+Evidence = AssessmentEvidence
 
 
 class AssessmentRecommendation(BaseModel):
