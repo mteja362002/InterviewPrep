@@ -109,6 +109,17 @@ original_prd_step1: "PrepOS Phase 4 · Step 1 — Adaptive Planning Foundation.
 original_prd: "PrepOS RC1.3.4 – Knowledge Experience & Learning Workspace. Extend the existing Knowledge Base into a full learning workspace with seven lenses (All Topics, Continue Learning, Bookmarks, Favorites, Weak Topics, Revision Due, Recently Viewed). All lenses derive from data already exposed by `/api/roadmap`, `/api/roadmap/summary` and `/api/revisions/queue` — no new endpoint, no new Mongo collection, no schema change. Bookmark/Favorite toggles reuse the existing RC1.3.2B mutation hooks (`useToggleBookmark`, `useToggleFavorite`) so a single toggle updates deep node, tree, workspace list, and Mission Control together. Recently-viewed tracking is a user-scoped localStorage list (`prepos:recently-viewed:v1:<userId>`) recorded when DeepTopicPage loads a node — cross-user isolation matches RC1.3.3 React Query key scheme. `useProgressTree` is now a thin backwards-compat shim over `useRoadmapTree`, removing a hidden global-cache leak. Stat strip reuses `useRoadmapSummary` — no extra API call. Search + filters remain client-side and stack on top of the active view. Weak-topic filter reuses the same signals the adaptive planner already uses (confidence, weakness_score, revision_due) — no new algorithm."
 
 backend:
+  - task: "Phase 2B — Company-Aware Adaptive Planner (Company Intelligence as an active, bounded, deterministic planner signal; opt-in; automatic fallback)"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/company_intelligence/scoring.py, /app/backend/company_intelligence/bias_engine.py, /app/backend/company_intelligence/explainability.py, /app/backend/services/learning_engine/ranking.py, /app/backend/services/learning_engine/context.py, /app/backend/services/learning_engine/adaptive_weights.py, /app/backend/services/learning_engine/planner.py, /app/backend/services/learning_engine/insight.py, /app/backend/routes_missions.py, /app/backend/tests/test_company_aware_planner_phase2b.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Company Intelligence is now an ACTIVE planner signal via a Company Weight Engine (scoring/bias/explainability) that consumes ONLY compiled artifacts (CompanyContext). One bounded weighted term `company_intelligence_score` (weight 6.0, signal ~0..1.3) added to ranking.score_learning_node. ACTIVATION IS OPT-IN: LearnerContext.company_intelligence_enabled (default False); planner exposes company_intelligence param; routes_missions passes True. Learner intelligence still dominates (CI weighted ~0..8 vs knowledge_gap up to ~100). Automatic fallback to roadmap.company_importance when CI disabled/empty/unknown-company/exception. Explainability block returned in breakdown + surfaced by insight. VERIFY via pytest (NO server/DB/env; server cannot boot here - backend/.env absent, do NOT provision): (1) NEW tests/test_company_aware_planner_phase2b.py (expected 19 passed), (2) REGRESSION tests/test_learning_engine.py tests/test_adaptive_planning_phase4_step2.py tests/test_company_aware_ranking.py tests/test_candidate_generation.py tests/test_eligibility_engine.py tests/test_learning_stage_engine.py tests/test_recommendation_insight.py tests/test_company_context_phase2a.py tests/test_company_intelligence.py (expected 108 passed). Total 127."
   - task: "Phase 2A — Company Context Layer (additive bridge from Company Intelligence runtime loader to Adaptive Planner; planner-inert)"
     implemented: true
     working: "NA"
@@ -1004,8 +1015,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Phase 2A — Company Context Layer (additive bridge from Company Intelligence runtime loader to Adaptive Planner; planner-inert)"
-    - "Phase 1 — Canonical Company Intelligence layer (validator, deterministic compiler, runtime loader, read-only APIs) + remove raw editorial `sections` from public API"
+    - "Phase 2B — Company-Aware Adaptive Planner (Company Intelligence as an active, bounded, deterministic planner signal; opt-in; automatic fallback)"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
@@ -1013,32 +1023,34 @@ test_plan:
 agent_communication:
   - agent: "main"
     message: |
-      Please VERIFY Phase 2A (Company Context) + the still-unverified Phase 1
-      `sections` fix. Everything is PURE unit/in-process — NO server, DB, or env
-      is required (and the server cannot boot here: backend/.env is absent and I
-      was told not to provision it). Use pytest only; do NOT attempt live HTTP.
+      Please VERIFY Phase 2B (Company-Aware Adaptive Planner). PURE unit/pytest
+      only — NO server, DB, or env (server cannot boot: backend/.env absent, do
+      NOT provision, do NOT curl live endpoints, do NOT run frontend tests).
 
       RUN (from /app/backend), report pass/fail per file/class:
-        1) Phase 2A + Phase 1 (new):
-           python -m pytest tests/test_company_context_phase2a.py tests/test_company_intelligence.py -n 0 -q
-           Expected: 46 passed.
-        2) Planner/learning-engine REGRESSION (backward compatibility):
-           python -m pytest tests/test_learning_engine.py tests/test_adaptive_planning_phase4_step2.py tests/test_company_aware_ranking.py tests/test_candidate_generation.py tests/test_eligibility_engine.py tests/test_learning_stage_engine.py tests/test_recommendation_insight.py -n 0 -q
-           Expected: 62 passed.
+        1) Phase 2B new suite:
+           python -m pytest tests/test_company_aware_planner_phase2b.py -n 0 -q
+           Expected: 19 passed.
+        2) FULL regression + prior phases (backward compatibility — MUST be unchanged):
+           python -m pytest tests/test_learning_engine.py tests/test_adaptive_planning_phase4_step2.py tests/test_company_aware_ranking.py tests/test_candidate_generation.py tests/test_eligibility_engine.py tests/test_learning_stage_engine.py tests/test_recommendation_insight.py tests/test_company_context_phase2a.py tests/test_company_intelligence.py -n 0 -q
+           Expected: 108 passed.
 
       CONFIRM EXPLICITLY:
-        - Phase 1 bug fix: `sections` NOT exposed by the public company API
-          (TestCompanyAPI::test_full_artifact_has_no_raw_markdown,
-           TestLoader::test_public_view_excludes_sections,
-           TestLoader::test_sections_available_internally).
-        - Phase 2A: CompanyContext is planner-inert — ranking + score_candidate
-          identical with/without company_context
-          (TestBackwardCompatibility::test_ranking_identical_with_and_without_company_context,
-           TestBackwardCompatibility::test_score_candidate_unaffected_by_company_context).
-        - Empty selection, multiple companies, and unknown/UI-only ('others') ids
-          are handled without raising.
+        - Company Intelligence is ACTIVE only when enabled: with CI enabled the
+          `company_intelligence_score` term is > 0 and total_score increases;
+          with CI disabled it is 0.0 and total is unchanged (the ONLY delta
+          between enabled/disabled is the bounded CI term).
+        - Learner intelligence DOMINATES (CI weighted contribution stays modest
+          vs knowledge_gap) — TestPlannerIntegration::test_ci_never_dominates_learner_signal.
+        - Fallback: unknown/UI-only ('others') company or no selection -> CI term
+          0.0, no crash — TestFallback::*.
+        - Experience level: new_grad gets a SMALLER HLD signal than senior
+          — TestScoringEngine::test_experience_level_suppresses_design_for_new_grad.
+        - Confidence scaling and explainability (top_company, reasons, confidence)
+          are present.
+        - NO regressions in the 108-test suite.
 
-      Do NOT modify source files; this is a verification run only.
+      Do NOT modify source files; verification run only.
 
   - agent: "main"
     message: |

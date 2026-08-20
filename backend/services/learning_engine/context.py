@@ -120,6 +120,13 @@ class LearnerContext:
     # None so any caller that does not opt in behaves exactly as before.
     company_context: Optional["CompanyContext"] = None
 
+    # ---- Company Intelligence activation (Phase 2B) -------------------------
+    # When True AND company_context is present/non-empty, the scoring engine
+    # adds the bounded Company Intelligence term. Defaults to False so every
+    # existing caller (and every existing test) gets byte-identical scores and
+    # the planner transparently falls back to roadmap.company_importance().
+    company_intelligence_enabled: bool = False
+
     # ---- Cross-cut helpers --------------------------------------------------
     # knowledge_rows is a separate view over knowledge (topic-level scores
     # for company-readiness estimation). Kept distinct from progress_rows
@@ -378,6 +385,7 @@ def build_learner_context(
     knowledge_rows: Optional[Iterable[dict]] = None,
     skip_node_ids: Optional[Iterable[str]] = None,
     company_context: Optional["CompanyContext"] = None,
+    company_intelligence_enabled: bool = False,
 ) -> LearnerContext:
     """Assemble a LearnerContext from raw inputs.
 
@@ -415,4 +423,5 @@ def build_learner_context(
         knowledge_rows=list(knowledge_rows or []),
         skip_node_ids=set(skip_node_ids or []),
         company_context=company_context,
+        company_intelligence_enabled=bool(company_intelligence_enabled),
     )

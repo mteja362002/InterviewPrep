@@ -159,6 +159,7 @@ async def get_today_learning_node(
     skip_node_ids: Optional[Iterable[str]] = None,
     skipped_node_ids: Optional[Iterable[str]] = None,
     recent_track_ids: Optional[Iterable[str]] = None,
+    company_intelligence: bool = False,
 ) -> Optional[dict]:
     """Return the best learning recommendation for the user.
 
@@ -199,6 +200,7 @@ async def get_today_learning_node(
         completed_dates=completed_dates,
         knowledge_rows=knowledge_rows,
         skip_node_ids=skip_node_ids,
+        company_intelligence_enabled=company_intelligence,
     )
 
     # ---- 1. Revision short-circuit ---------------------------------------

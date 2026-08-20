@@ -55,6 +55,9 @@ def _highlights(breakdown: dict, company_relevance: dict, fits_today: Optional[b
         highlights.append(f"Unlocks {count} future topic{'s' if count != 1 else ''}")
     if fits_today:
         highlights.append("Fits today's study time")
+    ci = breakdown.get("company_intelligence")
+    if ci and ci.get("reasons"):
+        highlights.append(ci["reasons"][0])
     return highlights
 
 
@@ -230,4 +233,11 @@ def build_recommendation_insight(
         result["readiness_delta_estimate"] = readiness_delta_estimate
     if validation is not None:
         result["validation"] = validation
+    # Phase 2B · Company Intelligence explainability (present only when the
+    # planner ran with company_intelligence enabled and a company profile
+    # contributed). Absent -> pre-Phase-2B payload, byte-identical.
+    ci = score_breakdown.get("company_intelligence")
+    if ci is not None:
+        result["company_intelligence"] = ci
+        result["company_intelligence_score"] = score_breakdown.get("company_intelligence_score", 0.0)
     return result

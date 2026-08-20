@@ -366,6 +366,32 @@ def score_learning_node(
     company_key = track or node_id
     company_score = sum(roadmap.company_importance(company_key, company) for company in companies)
 
+    # ---- Phase 2B · Company Intelligence term ---------------------------
+    # Bounded ADDITIVE nudge from compiled Company Intelligence. Active ONLY
+    # when the LearnerContext opted in AND carries a non-empty company_context.
+    # Any failure degrades to 0.0 so the planner falls back to the roadmap-only
+    # company_score (deterministic, never raises).
+    company_intel_score = 0.0
+    company_intel_breakdown = None
+    if learner_context is not None and getattr(learner_context, "company_intelligence_enabled", False):
+        cc = getattr(learner_context, "company_context", None)
+        if cc is not None and not getattr(cc, "is_empty", True):
+            try:
+                from company_intelligence.scoring import (
+                    compute_company_intelligence_signal,
+                    experience_level_from_position,
+                )
+                level = experience_level_from_position(getattr(learner_context, "position", None))
+                company_intel_score, contributions = compute_company_intelligence_signal(
+                    cc, node, level=level,
+                )
+                if contributions:
+                    from company_intelligence.explainability import summarize_contributions
+                    company_intel_breakdown = summarize_contributions(contributions)
+            except Exception:  # pragma: no cover - defensive fallback
+                company_intel_score = 0.0
+                company_intel_breakdown = None
+
     difficulty_penalty = _DIFFICULTY_PENALTY.get(difficulty, 0.2)
     interview_importance = float(node.get("interview_importance") or 0.0)
     interview_frequency = float(node.get("interview_frequency") or 0.0)
@@ -453,6 +479,7 @@ def score_learning_node(
         knowledge_gap * mastery_weight
         + effective_gap * w["effective_knowledge_gap"]
         + company_score * w["company_score"]
+        + company_intel_score * w["company_intelligence_score"]
         + roi_score * w["roi_score"]
         - difficulty_penalty * w["difficulty_penalty"]
         - min(estimated_minutes, 60) * w["estimated_minutes"]
@@ -480,6 +507,8 @@ def score_learning_node(
         "mastery": mastery,
         "mastery_weight": mastery_weight,
         "company_score": company_score,
+        "company_intelligence_score": company_intel_score,
+        "company_intelligence": company_intel_breakdown,
         "difficulty": difficulty,
         "difficulty_penalty": difficulty_penalty,
         "estimated_minutes": estimated_minutes,

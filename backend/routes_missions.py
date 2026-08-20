@@ -335,6 +335,7 @@ async def _generate_today_mission(db, user_id: str) -> DailyMission:
             skip_node_ids=skip_ids,
             skipped_node_ids=skipped_node_ids,
             recent_track_ids=recent_track_ids,
+            company_intelligence=True,
         )
 
     learning_recommendation = await _pick_learning_recommendation()

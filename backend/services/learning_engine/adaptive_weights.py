@@ -113,6 +113,17 @@ DEFAULT_ADAPTIVE_WEIGHTS: dict = {
     #  where the learner's confidence has dropped since completion —
     #  spaced-repetition + confidence signal combined.
     "revision_confidence_bonus": 20.0,
+
+    # ---- Phase 2B · Company Intelligence -------------------------------
+    # `company_intelligence_score`: bounded ADDITIVE nudge from compiled
+    #  Company Intelligence (subject importance x evidence confidence x
+    #  experience-level factor x priority bias). Active ONLY when a
+    #  LearnerContext has company_intelligence_enabled=True AND a non-empty
+    #  company_context; otherwise the term is 0.0 and the planner falls back
+    #  to the roadmap-only `company_score`. Deliberately small so Company
+    #  Intelligence INFLUENCES but never DOMINATES learner intelligence
+    #  (compare knowledge_gap up to ~100 and subject_transition_bonus 100).
+    "company_intelligence_score": 6.0,
 }
 
 
