@@ -43,6 +43,7 @@ from services.learning_engine.composition import (
 
 if TYPE_CHECKING:  # avoid any runtime import cost / cycle
     from services.learning_engine.company_context import CompanyContext
+    from services.learner_intelligence.snapshot import LearnerIntelligenceSnapshot
 
 _COMPLETED_STATUSES = {"completed", "mastered", "revision_due"}
 
@@ -127,7 +128,21 @@ class LearnerContext:
     # the planner transparently falls back to roadmap.company_importance().
     company_intelligence_enabled: bool = False
 
-    # ---- Cross-cut helpers --------------------------------------------------
+    # ---- Learner Intelligence (Phase 2C · additive, opt-in) -----------------
+    # A precomputed, deterministic snapshot of HOW this learner learns
+    # (velocity, retention, confidence trend, weakness stability, consistency,
+    # revision health, coding growth, mastery trend, difficulty adaptation,
+    # readiness trend). It TRAVELS ALONGSIDE the planner state and is consumed
+    # by the scoring engine ONLY when ``learner_intelligence_enabled`` is True
+    # AND the snapshot is non-empty. Defaults to None so every existing caller
+    # (and test) gets byte-identical behaviour and the planner falls back to
+    # its pre-2C logic automatically.
+    learner_intelligence: Optional["LearnerIntelligenceSnapshot"] = None
+
+    # When True AND a non-empty learner_intelligence snapshot is present, the
+    # scoring engine adds the bounded Learner Intelligence term. Defaults to
+    # False for byte-identical backward compatibility.
+    learner_intelligence_enabled: bool = False
     # knowledge_rows is a separate view over knowledge (topic-level scores
     # for company-readiness estimation). Kept distinct from progress_rows
     # (node-level) because they serve different math.
@@ -386,6 +401,8 @@ def build_learner_context(
     skip_node_ids: Optional[Iterable[str]] = None,
     company_context: Optional["CompanyContext"] = None,
     company_intelligence_enabled: bool = False,
+    learner_intelligence: Optional["LearnerIntelligenceSnapshot"] = None,
+    learner_intelligence_enabled: bool = False,
 ) -> LearnerContext:
     """Assemble a LearnerContext from raw inputs.
 
@@ -409,6 +426,23 @@ def build_learner_context(
         from services.learning_engine.company_context import build_company_context
         company_context = build_company_context(resolved_companies)
 
+    # Learner Intelligence (Phase 2C): compute the lightweight snapshot from
+    # the data this context already carries. Local import avoids a cycle;
+    # the builder never raises (returns an empty snapshot on any problem) so
+    # this is always safe and, when disabled, never affects scoring. When a
+    # caller injects a precomputed snapshot (event-driven cache), reuse it.
+    resolved_position = (onboarding or {}).get("current_position")
+    if learner_intelligence is None:
+        from services.learner_intelligence.engine import build_snapshot
+        learner_intelligence = build_snapshot(
+            progress_rows=rows,
+            recent_completions=list(recent_completions or []),
+            completed_dates=list(completed_dates or []),
+            recent_track_ids=list(recent_track_ids or []),
+            skipped_node_ids=list(skipped_node_ids or []),
+            position=resolved_position,
+        )
+
     return LearnerContext(
         onboarding=dict(onboarding or {}),
         progress_rows=rows,
@@ -424,4 +458,6 @@ def build_learner_context(
         skip_node_ids=set(skip_node_ids or []),
         company_context=company_context,
         company_intelligence_enabled=bool(company_intelligence_enabled),
+        learner_intelligence=learner_intelligence,
+        learner_intelligence_enabled=bool(learner_intelligence_enabled),
     )

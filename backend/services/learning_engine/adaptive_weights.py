@@ -124,6 +124,19 @@ DEFAULT_ADAPTIVE_WEIGHTS: dict = {
     #  Intelligence INFLUENCES but never DOMINATES learner intelligence
     #  (compare knowledge_gap up to ~100 and subject_transition_bonus 100).
     "company_intelligence_score": 6.0,
+
+    # ---- Phase 2C · Learner Intelligence -------------------------------
+    # `learner_intelligence_score`: bounded ADDITIVE nudge derived from the
+    #  precomputed LearnerIntelligenceSnapshot (weakness stability, mastery
+    #  trend, difficulty adaptation, velocity overload). Active ONLY when a
+    #  LearnerContext has learner_intelligence_enabled=True AND a non-empty
+    #  snapshot; otherwise the term is 0.0 and the planner falls back to its
+    #  pre-2C scoring. The raw signal is clamped to [-3, 3] in the planner
+    #  adapter, so with this weight the contribution stays in the same order
+    #  of magnitude as company_intelligence_score — it INFLUENCES which
+    #  learner-relevant node wins but never DOMINATES the core knowledge_gap
+    #  term (which reaches ~100). The learner remains highest priority.
+    "learner_intelligence_score": 5.0,
 }
 
 

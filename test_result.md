@@ -1163,3 +1163,57 @@ agent_communication:
           unless a runtime check disagrees with the static findings.
         - `test_result.md` `working` field is deliberately left as "NA"
           for all five tasks (no runtime verification performed).
+
+#====================================================================================================
+# PHASE 2C — LEARNER INTELLIGENCE ENGINE
+#====================================================================================================
+
+backend:
+  - task: "Learner Intelligence Engine (Phase 2C) — deterministic learner modelling + planner integration"
+    implemented: true
+    working: "NA"
+    file: "services/learner_intelligence/*, services/learning_engine/ranking.py, context.py, planner.py, insight.py, adaptive_weights.py, routes_missions.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: |
+            Implemented a new deterministic (NO AI/ML/random) Learner Intelligence
+            Engine at backend/services/learner_intelligence/ computing 10 signals
+            (velocity, retention, confidence trend, weakness stability, consistency,
+            revision health, coding growth, mastery trend, difficulty adaptation,
+            interview readiness trend) from EXISTING knowledge_nodes data (no new
+            Mongo collections). It produces a compute-once LearnerIntelligenceSnapshot
+            consumed by the planner via a bounded additive scoring term
+            (learner_intelligence_score, raw clamped to [-3,3], weight 5.0), opt-in
+            via get_today_learning_node(learner_intelligence=True) which
+            routes_missions now passes. Disabled-by-default = byte-identical to 2B.
+            43 new unit tests pass; existing pure-unit suite unchanged (the only 2
+            failing tests — test_interview_pacing + test_onboarding_knowledge_seed —
+            are PRE-EXISTING failures confirmed on a pristine clone, unrelated to 2C).
+            REQUEST: validate that mission generation (POST /api/missions/today or the
+            existing generate flow) still returns 200 and that the recommendation
+            insight now carries a `learner_intelligence` block once the learner has
+            some progress. Also confirm no 500s / regressions on existing endpoints.
+            Test creds: admin@prepos.io / Admin@123 (see /app/memory/test_credentials.md).
+            Onboarding may need completing once via POST /api/onboarding.
+
+metadata:
+  phase_2c_created_by: "main_agent"
+
+agent_communication:
+  - agent: "main"
+    message: |
+      Phase 2C (Learner Intelligence Engine) implemented — BACKEND ONLY, no
+      user-visible features. Please focus testing on: (1) existing mission
+      generation still works end-to-end (no 500s), (2) the daily mission's
+      recommendation_insight contains a `learner_intelligence` object (with
+      reasons/difficulty/confidence) after the admin has completed at least one
+      task/mission so progress exists, (3) core existing endpoints (auth,
+      onboarding, roadmap, missions, dashboard, companies, mentor) return their
+      documented shapes with no regressions. The learner intelligence term is
+      additive & bounded and defaults OFF; it is enabled only inside the mission
+      planner path. If the learner has no progress yet, the snapshot is empty and
+      the planner falls back (this is expected, not a bug).

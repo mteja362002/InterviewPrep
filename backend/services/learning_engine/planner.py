@@ -112,6 +112,23 @@ def _attach_insight(
             difficulty=(node.get("difficulty") or "medium"),
         )
 
+    # Phase 2C: the learner-level explainability block (difficulty action,
+    # confidence band, readiness trajectory, reasons) is derived from the
+    # precomputed snapshot only when Learner Intelligence is enabled and
+    # non-empty. Absent otherwise -> pre-2C insight payload, byte-identical.
+    learner_intel_summary = None
+    li_snapshot = getattr(context, "learner_intelligence", None)
+    if (
+        getattr(context, "learner_intelligence_enabled", False)
+        and li_snapshot is not None
+        and not getattr(li_snapshot, "is_empty", True)
+    ):
+        try:
+            from services.learner_intelligence.explainability import summarize_snapshot
+            learner_intel_summary = summarize_snapshot(li_snapshot, node=node)
+        except Exception:  # pragma: no cover - defensive
+            learner_intel_summary = None
+
     return build_recommendation_insight(
         node,
         score_breakdown=priority.breakdown,
@@ -121,6 +138,7 @@ def _attach_insight(
         continuity=priority.continuity,
         likely_next_topics=likely,
         readiness_delta_estimate=readiness_est,
+        learner_intelligence=learner_intel_summary,
     )
 
 
@@ -160,6 +178,7 @@ async def get_today_learning_node(
     skipped_node_ids: Optional[Iterable[str]] = None,
     recent_track_ids: Optional[Iterable[str]] = None,
     company_intelligence: bool = False,
+    learner_intelligence: bool = False,
 ) -> Optional[dict]:
     """Return the best learning recommendation for the user.
 
@@ -201,6 +220,7 @@ async def get_today_learning_node(
         knowledge_rows=knowledge_rows,
         skip_node_ids=skip_node_ids,
         company_intelligence_enabled=company_intelligence,
+        learner_intelligence_enabled=learner_intelligence,
     )
 
     # ---- 1. Revision short-circuit ---------------------------------------

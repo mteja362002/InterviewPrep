@@ -392,6 +392,34 @@ def score_learning_node(
                 company_intel_score = 0.0
                 company_intel_breakdown = None
 
+    # ---- Phase 2C · Learner Intelligence term ---------------------------
+    # Bounded ADDITIVE nudge from the precomputed LearnerIntelligenceSnapshot.
+    # Active ONLY when the LearnerContext opted in AND carries a non-empty
+    # snapshot. Any failure degrades to 0.0 so the planner falls back to its
+    # pre-2C scoring (deterministic, never raises). The snapshot is computed
+    # ONCE per context (compute-once / consume-many) — this reads it, it does
+    # not recompute learner history per candidate.
+    learner_intel_score = 0.0
+    learner_intel_breakdown = None
+    if learner_context is not None and getattr(learner_context, "learner_intelligence_enabled", False):
+        li = getattr(learner_context, "learner_intelligence", None)
+        if li is not None and not getattr(li, "is_empty", True):
+            try:
+                from services.learner_intelligence.planner_adapter import (
+                    learner_intelligence_signal,
+                )
+                learner_intel_score, li_contributions = learner_intelligence_signal(
+                    li, node, position=position,
+                )
+                if li_contributions:
+                    from services.learner_intelligence.explainability import (
+                        summarize_contributions as _summarize_li,
+                    )
+                    learner_intel_breakdown = _summarize_li(li_contributions)
+            except Exception:  # pragma: no cover - defensive fallback
+                learner_intel_score = 0.0
+                learner_intel_breakdown = None
+
     difficulty_penalty = _DIFFICULTY_PENALTY.get(difficulty, 0.2)
     interview_importance = float(node.get("interview_importance") or 0.0)
     interview_frequency = float(node.get("interview_frequency") or 0.0)
@@ -480,6 +508,7 @@ def score_learning_node(
         + effective_gap * w["effective_knowledge_gap"]
         + company_score * w["company_score"]
         + company_intel_score * w["company_intelligence_score"]
+        + learner_intel_score * w["learner_intelligence_score"]
         + roi_score * w["roi_score"]
         - difficulty_penalty * w["difficulty_penalty"]
         - min(estimated_minutes, 60) * w["estimated_minutes"]
@@ -509,6 +538,8 @@ def score_learning_node(
         "company_score": company_score,
         "company_intelligence_score": company_intel_score,
         "company_intelligence": company_intel_breakdown,
+        "learner_intelligence_score": learner_intel_score,
+        "learner_intelligence": learner_intel_breakdown,
         "difficulty": difficulty,
         "difficulty_penalty": difficulty_penalty,
         "estimated_minutes": estimated_minutes,

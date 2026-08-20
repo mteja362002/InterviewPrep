@@ -58,6 +58,9 @@ def _highlights(breakdown: dict, company_relevance: dict, fits_today: Optional[b
     ci = breakdown.get("company_intelligence")
     if ci and ci.get("reasons"):
         highlights.append(ci["reasons"][0])
+    li = breakdown.get("learner_intelligence")
+    if li and li.get("reasons"):
+        highlights.append(li["reasons"][0])
     return highlights
 
 
@@ -158,6 +161,7 @@ def build_recommendation_insight(
     likely_next_topics: Optional[list] = None,
     readiness_delta_estimate: Optional[dict] = None,
     validation: Optional[dict] = None,
+    learner_intelligence: Optional[dict] = None,
 ) -> dict:
     """Assemble the structured, explainable Recommendation Insight for one node.
 
@@ -240,4 +244,16 @@ def build_recommendation_insight(
     if ci is not None:
         result["company_intelligence"] = ci
         result["company_intelligence_score"] = score_breakdown.get("company_intelligence_score", 0.0)
+    # Phase 2C · Learner Intelligence explainability. Two complementary views:
+    #   * the per-node contribution breakdown from the scoring adapter
+    #     (present only when the term fired), and
+    #   * the learner-level snapshot summary (difficulty action, confidence
+    #     band, readiness trajectory, reasons) passed by the planner.
+    # Both are additive keys — absent -> pre-2C payload, byte-identical.
+    li = score_breakdown.get("learner_intelligence")
+    if li is not None:
+        result["learner_intelligence_factors"] = li
+        result["learner_intelligence_score"] = score_breakdown.get("learner_intelligence_score", 0.0)
+    if learner_intelligence is not None:
+        result["learner_intelligence"] = learner_intelligence
     return result
