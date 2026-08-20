@@ -11,6 +11,8 @@ import {
   assessmentService, missionService, learnerIntelligenceService,
 } from '@/services/mission.service';
 import { formatApiError } from '@/utils/formatApiError';
+import { useMissionContext } from '@/contexts/MissionContextProvider';
+import { TodaysMissionBanner } from '@/components/mission/TodaysMissionBanner';
 
 function difficultyChipClass(d) {
   if (d === 'easy') return 'border-emerald-400/30 bg-emerald-400/10 text-emerald-300';
@@ -29,6 +31,11 @@ export default function Assessment() {
   const [mission, setMission] = useState(null);
   const [result, setResult] = useState(null);
   const [liUpdate, setLiUpdate] = useState(null);
+
+  // Shared Mission Context — pre-start info (objectives) + progress sync.
+  const { refresh: refreshMission, tasks: mcTasks } = useMissionContext();
+  const missionCtx = (mcTasks || []).find((t) => t.mission_context)?.mission_context || null;
+  const missionObjectives = missionCtx?.learning_objectives || [];
 
   // Structured coding-attempt form (matches backend SubmitAssessmentRequest).
   const [form, setForm] = useState({
@@ -57,7 +64,8 @@ export default function Assessment() {
       } catch (err) {
         if (cancelled) return;
         toast.error(formatApiError(err));
-        navigate('/app/mission-control');
+        // §11 — explicit empty state; never silently bounce or substitute.
+        setPhase('unavailable');
       }
     })();
     return () => { cancelled = true; };
@@ -95,6 +103,7 @@ export default function Assessment() {
       setResult(evaluated);
       setLiUpdate(Array.isArray(updates) && updates.length ? updates[0] : null);
       setPhase('result');
+      refreshMission();
     } catch (err) {
       toast.error(formatApiError(err));
       setPhase('attempt');
@@ -106,6 +115,24 @@ export default function Assessment() {
       <div className="py-24 flex flex-col items-center gap-3 text-muted-foreground">
         <Loader2 className="h-5 w-5 animate-spin" />
         <span className="overline">Preparing assessment</span>
+      </div>
+    );
+  }
+
+  if (phase === 'unavailable') {
+    return (
+      <div className="max-w-2xl mx-auto py-16">
+        <button
+          onClick={() => navigate('/app/mission-control')}
+          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" /> Back to Mission Control
+        </button>
+        <GlassCard className="p-8 text-center mt-4" data-testid="assessment-unavailable">
+          <p className="text-sm text-muted-foreground">
+            Assessment is currently unavailable for this topic.
+          </p>
+        </GlassCard>
       </div>
     );
   }
@@ -217,6 +244,17 @@ export default function Assessment() {
       >
         <ArrowLeft className="h-4 w-4" /> Back to Mission Control
       </button>
+
+      {/* Pre-start Mission Context (§4): topic, type, difficulty, time, companies. */}
+      <TodaysMissionBanner className="mb-4" />
+      {missionObjectives.length > 0 && (
+        <GlassCard className="p-4 mb-4" data-testid="assessment-objectives">
+          <div className="overline mb-2">Learning Objectives</div>
+          <ul className="text-sm space-y-1 text-muted-foreground">
+            {missionObjectives.map((o, i) => <li key={i}>• {o}</li>)}
+          </ul>
+        </GlassCard>
+      )}
 
       <GlassCard className="p-6">
         <div className="flex items-center gap-2.5 mb-4">

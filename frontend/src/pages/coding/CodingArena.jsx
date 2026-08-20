@@ -20,6 +20,8 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { cn } from '@/lib/utils';
+import { useMissionContext } from '@/contexts/MissionContextProvider';
+import { TodaysMissionBanner } from '@/components/mission/TodaysMissionBanner';
 
 function difficultyChip(d) {
   const cls = d === 'easy'   ? 'border-emerald-400/30 bg-emerald-400/10 text-emerald-300'
@@ -47,6 +49,9 @@ export default function CodingArena() {
   const [searchResult, setSearchResult] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
   const [searchError, setSearchError] = useState('');
+
+  // Shared Mission Context — used to sync progress back to Mission Control.
+  const { refresh: refreshMission } = useMissionContext();
 
   const load = useCallback(async () => {
     try {
@@ -169,6 +174,18 @@ export default function CodingArena() {
           </Button>
         </div>
       </div>
+
+      {/* Today's Mission Context — shared single source of truth (§12). */}
+      <TodaysMissionBanner />
+
+      {/* Explicit empty state (§11): never substitute another topic. */}
+      {primary_pattern && assignments.length === 0 && (
+        <GlassCard className="p-6 text-center" data-testid="arena-empty-state">
+          <p className="text-sm text-muted-foreground">
+            No representative problems available for this learning node.
+          </p>
+        </GlassCard>
+      )}
 
       {/* LeetCode search by problem ID */}
       <GlassCard className="p-5">
@@ -395,7 +412,7 @@ export default function CodingArena() {
         assignment={feedbackFor}
         open={!!feedbackFor}
         onClose={() => setFeedbackFor(null)}
-        onSubmitted={async () => { setFeedbackFor(null); await load(); }}
+        onSubmitted={async () => { setFeedbackFor(null); await load(); refreshMission(); }}
       />
     </div>
   );

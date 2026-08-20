@@ -8,6 +8,7 @@ import { GlassCard } from '@/components/common/GlassCard';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { dashboardService, roadmapService } from '@/services/mission.service';
+import { TodaysMissionBanner } from '@/components/mission/TodaysMissionBanner';
 import api from '@/services/api';
 import { cn } from '@/lib/utils';
 import { WeeklyActivityWidget } from '@/components/dashboard/WeeklyActivityWidget';
@@ -176,6 +177,9 @@ export default function CommandAnalytics() {
           <RefreshCw className="h-3.5 w-3.5" /> Refresh
         </button>
       </div>
+
+      {/* Today's Mission Context — same source of truth as every other page. */}
+      <TodaysMissionBanner />
 
       {/* KPI row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">

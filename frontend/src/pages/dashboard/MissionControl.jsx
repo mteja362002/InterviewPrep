@@ -163,7 +163,7 @@ export default function MissionControl() {
   const navigate = useNavigate();
   const mentor = useMentorContext();
   // Phase 3D — the shared, fetch-once Mission Context. CTAs derive from here.
-  const { getTaskContext } = useMissionContext();
+  const { getTaskContext, refresh: refreshMission } = useMissionContext();
 
   // Which task, if any, is currently mid-flight. Derived from the
   // toggle mutation so we don't need to track it in local state.
@@ -173,7 +173,7 @@ export default function MissionControl() {
 
   const onToggleTask = (taskId) => {
     if (!missionId) return;
-    toggleTask.mutate(taskId);
+    toggleTask.mutate(taskId, { onSettled: () => refreshMission() });
   };
 
   const onCompleteMission = () => {
@@ -181,7 +181,7 @@ export default function MissionControl() {
     setBusyAction('complete');
     completeMissionM.mutate(undefined, {
       onSuccess: () => toast.success('Mission completed. Streak updated.'),
-      onSettled: () => setBusyAction(null),
+      onSettled: () => { setBusyAction(null); refreshMission(); },
     });
   };
 

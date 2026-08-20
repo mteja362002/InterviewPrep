@@ -25,6 +25,8 @@ import { NodeActions } from '@/components/progress/NodeActions';
 import { AIContentTabs } from '@/components/knowledge/AIContentTabs';
 import { AIInterviewCards } from '@/components/knowledge/AIInterviewCards';
 import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
+import { useMissionContext } from '@/contexts/MissionContextProvider';
+import { TodaysMissionBanner } from '@/components/mission/TodaysMissionBanner';
 
 const BUCKET_LABEL = {
   green:  { label: 'Fresh',   cls: 'text-emerald-300 border-emerald-400/30 bg-emerald-400/10' },
@@ -85,6 +87,8 @@ export default function DeepTopicPage() {
   const setConfidenceM = useSetNodeConfidence();
   const recordAttemptM = useRecordAttempt();
   const saveNotesM = useSaveNodeNotes();
+  // Shared Mission Context: know if this is today's node + sync progress back.
+  const { isTodaysNode, refresh: refreshMission } = useMissionContext();
   const savingConf = setConfidenceM.isPending;
   const savingNotes = saveNotesM.isPending;
 
@@ -161,6 +165,9 @@ export default function DeepTopicPage() {
         </button>
       </div>
 
+      {/* Today's Mission Context — shown when this is today's mission node. */}
+      {isTodaysNode(nodeId) && <TodaysMissionBanner nodeId={nodeId} className="mb-2" />}
+
       {/* Hero */}
       <GlassCard className="p-6 sm:p-8 relative overflow-hidden" data-testid="topic-hero">
         <div className="absolute -top-20 -right-20 h-56 w-56 rounded-full bg-primary/10 blur-3xl" />
@@ -224,7 +231,7 @@ export default function DeepTopicPage() {
                   onClick={() => {
                     setStatusM.mutate(
                       { nodeId: node.id, status: s },
-                      { onSuccess: () => toast.success(`Marked as ${s.replace('_', ' ')}.`) },
+                      { onSuccess: () => { toast.success(`Marked as ${s.replace('_', ' ')}.`); refreshMission(); } },
                     );
                   }}
                   data-testid={`topic-mark-${s}`}

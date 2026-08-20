@@ -109,6 +109,42 @@ original_prd_step1: "PrepOS Phase 4 · Step 1 — Adaptive Planning Foundation.
 original_prd: "PrepOS RC1.3.4 – Knowledge Experience & Learning Workspace. Extend the existing Knowledge Base into a full learning workspace with seven lenses (All Topics, Continue Learning, Bookmarks, Favorites, Weak Topics, Revision Due, Recently Viewed). All lenses derive from data already exposed by `/api/roadmap`, `/api/roadmap/summary` and `/api/revisions/queue` — no new endpoint, no new Mongo collection, no schema change. Bookmark/Favorite toggles reuse the existing RC1.3.2B mutation hooks (`useToggleBookmark`, `useToggleFavorite`) so a single toggle updates deep node, tree, workspace list, and Mission Control together. Recently-viewed tracking is a user-scoped localStorage list (`prepos:recently-viewed:v1:<userId>`) recorded when DeepTopicPage loads a node — cross-user isolation matches RC1.3.3 React Query key scheme. `useProgressTree` is now a thin backwards-compat shim over `useRoadmapTree`, removing a hidden global-cache leak. Stat strip reuses `useRoadmapSummary` — no extra API call. Search + filters remain client-side and stack on top of the active view. Weak-topic filter reuses the same signals the adaptive planner already uses (confidence, weakness_score, revision_due) — no new algorithm."
 
 backend:
+  - task: "Phase 3D Slice B — Unified Mission Experience (all learning pages consume shared Mission Context; execution-state sync; empty states; explainability; docs)"
+    implemented: true
+    working: "NA"
+    file: "frontend: src/contexts/MissionContextProvider.jsx, src/components/mission/TodaysMissionBanner.jsx, src/pages/dashboard/MissionControl.jsx, src/pages/coding/CodingArena.jsx, src/pages/knowledge/DeepTopicPage.jsx, src/pages/assessment/Assessment.jsx, src/pages/analytics/CommandAnalytics.jsx; docs/frontend/mission-experience.md"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: |
+          PHASE 3D Slice B (frontend only — no backend changes; app cannot boot
+          here so ESLint-verified, user runs live integration). All learning
+          pages now consume the shared MissionContextProvider (fetch-once):
+          - Provider extended with MissionExecutionState (status/progressPct/
+            kb|arena|assessment completed/lastUpdated) + refresh() that
+            invalidates missionContext + missionToday queries (real-time sync).
+          - New shared TodaysMissionBanner (single formatting of topic/stage/
+            difficulty/time/companies/assessment type) used by KB node page,
+            Coding Arena, Assessment, Analytics (§12 consistency).
+          - Coding Arena: banner + explicit empty state ("No representative
+            problems available for this learning node."); refresh() on feedback.
+          - Assessment: pre-start banner + learning objectives; explicit empty
+            state ("Assessment is currently unavailable for this topic.") instead
+            of bouncing; refresh() after completion.
+          - Knowledge Base (DeepTopicPage): banner when isTodaysNode; refresh()
+            on Mark-completed.
+          - Mission Control: task toggle / complete now refresh() shared context.
+          - AI Mentor (§6) already passes topic_node_id; backend assembles full
+            context — NO React-side context assembly (verified, unchanged).
+          - WhyThisMissionDialog (§7) already renders backend recommendation_insight
+            only — reused, no new component (verified, unchanged).
+          - docs/frontend/mission-experience.md added.
+          ESLint clean on all 7 changed files. No backend/pytest changes in this
+          slice (Slice A endpoint + 27 tests already green).
+
   - task: "Phase 3D Slice A — Mission Context projection endpoint (GET /api/missions/today/context) + canonical activity->CTA mapping"
     implemented: true
     working: "NA"

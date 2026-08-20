@@ -1,8 +1,10 @@
-import React, { createContext, useContext, useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, { createContext, useContext, useMemo, useCallback } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { missionService } from '@/services/mission.service';
 import { qk } from '@/queries/keys';
 import { useAuth } from '@/contexts/AuthContext';
+
+const ASSESSMENT_ACTIVITIES = ['quiz', 'behavioral', 'design', 'system_design'];
 
 /**
  * MissionContextProvider (Phase 3D · Mission Experience)
@@ -25,6 +27,7 @@ const MissionContextCtx = createContext(null);
 export function MissionContextProvider({ children }) {
   const { user } = useAuth();
   const userId = user?.id;
+  const queryClient = useQueryClient();
 
   const query = useQuery({
     queryKey: qk.missionContext(userId),
@@ -35,6 +38,15 @@ export function MissionContextProvider({ children }) {
     // mutation layer trigger refetches when progress changes.
     staleTime: 5 * 60 * 1000,
   });
+
+  // Real-time synchronization (Phase 3D Slice B, §10): any page that completes
+  // KB / Arena / Assessment work calls refresh() to invalidate BOTH the shared
+  // Mission Context and the dashboard, so Mission Control updates with no
+  // manual page refresh and no duplicate fetch elsewhere.
+  const refresh = useCallback(() => {
+    queryClient.invalidateQueries({ queryKey: qk.missionContext(userId) });
+    queryClient.invalidateQueries({ queryKey: qk.missionToday(userId) });
+  }, [queryClient, userId]);
 
   const value = useMemo(() => {
     const data = query.data || null;
@@ -47,6 +59,33 @@ export function MissionContextProvider({ children }) {
       byTask[t.task_id] = t;
     }
 
+    // ---- MissionExecutionState (§9): shared progress across every page ---- //
+    const total = tasks.length;
+    const completedCount = tasks.filter((t) => t.completed).length;
+    const progressPct = total ? Math.round((completedCount / total) * 100) : 0;
+    const overallStatus = total === 0
+      ? 'not_started'
+      : completedCount === total
+        ? 'completed'
+        : completedCount > 0
+          ? 'in_progress'
+          : 'not_started';
+    const allDone = (list) => list.length > 0 && list.every((t) => t.completed);
+    const studyTasks = tasks.filter((t) => t.activity_type === 'study' || t.activity_type === 'flashcards');
+    const codingTasks = tasks.filter((t) => t.activity_type === 'coding');
+    const assessmentTasks = tasks.filter((t) => ASSESSMENT_ACTIVITIES.includes(t.activity_type));
+
+    const executionState = {
+      status: overallStatus,
+      progressPct,
+      completedCount,
+      totalCount: total,
+      kbCompleted: allDone(studyTasks),
+      arenaCompleted: allDone(codingTasks),
+      assessmentCompleted: allDone(assessmentTasks),
+      lastUpdated: query.dataUpdatedAt || null,
+    };
+
     return {
       missionId: data?.mission_id || null,
       date: data?.date || null,
@@ -58,11 +97,13 @@ export function MissionContextProvider({ children }) {
       recommendationInsight: data?.recommendation_insight || null,
       aiNarrative: data?.ai_narrative || null,
       tasks,
+      executionState,
       isLoading: query.isLoading,
       isFetching: query.isFetching,
       isError: query.isError,
       error: query.error,
       refetch: query.refetch,
+      refresh,
       /** Resolve a task's Mission Context by task id (preferred) or node id. */
       getTaskContext: ({ taskId, nodeId } = {}) => {
         if (taskId && byTask[taskId]) return byTask[taskId];
@@ -70,8 +111,10 @@ export function MissionContextProvider({ children }) {
         return null;
       },
       getContextByNodeId: (nodeId) => (nodeId ? byNode[nodeId] || null : null),
+      /** True when the given node is part of today's mission. */
+      isTodaysNode: (nodeId) => !!(nodeId && byNode[nodeId]),
     };
-  }, [query.data, query.isLoading, query.isFetching, query.isError, query.error, query.refetch]);
+  }, [query.data, query.dataUpdatedAt, query.isLoading, query.isFetching, query.isError, query.error, query.refetch, refresh]);
 
   return (
     <MissionContextCtx.Provider value={value}>
