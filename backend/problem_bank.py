@@ -242,7 +242,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": False
+        "representative": True
     },
 
     {
@@ -323,7 +323,7 @@ PROBLEMS = [
         "source_lists": [
             "leetcode150"
         ],
-        "representative": False
+        "representative": True
     },
 
     {
@@ -376,7 +376,7 @@ PROBLEMS = [
             "others"
         ],
         "source_lists": [],
-        "representative": False
+        "representative": True
     },
     
         {
@@ -406,7 +406,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
 
        # ================= Two Pointers =================
@@ -564,7 +564,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": False
+        "representative": True
     },
 
     {
@@ -655,7 +655,7 @@ PROBLEMS = [
             "neetcode150",
             "striver"
         ],
-        "representative": True
+        "representative": False
     },
        
        # ================= Arrays =================
@@ -726,7 +726,7 @@ PROBLEMS = [
             "neetcode150",
             "striver"
         ],
-        "representative": False
+        "representative": True
     },
 
     {
@@ -847,7 +847,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
 
     {
@@ -880,7 +880,7 @@ PROBLEMS = [
             "neetcode150",
             "striver"
         ],
-        "representative": True
+        "representative": False
     },
 
     {
@@ -944,7 +944,58 @@ PROBLEMS = [
             "neetcode150",
             "striver"
         ],
-        "representative": False
+        "representative": True
+    },
+
+    {
+        "id": "lc-283",
+        "leetcode_id": 283,
+        "title": "Move Zeroes",
+        "difficulty": "easy",
+        "learning_stage": "foundation",
+        "pattern": "arrays",
+        "primary_pattern": "arrays",
+        "estimated_minutes": 15,
+        "leetcode_url": "https://leetcode.com/problems/move-zeroes/",
+        "tags": [
+            "two_pointers"
+        ],
+        "prerequisite_patterns": [
+            "arrays"
+        ],
+        "frequency": "high",
+        "companies": [
+            "google",
+            "amazon",
+            "microsoft"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-1109",
+        "leetcode_id": 1109,
+        "title": "Corporate Flight Bookings",
+        "difficulty": "medium",
+        "learning_stage": "core",
+        "pattern": "arrays",
+        "primary_pattern": "arrays",
+        "estimated_minutes": 25,
+        "leetcode_url": "https://leetcode.com/problems/corporate-flight-bookings/",
+        "tags": [
+            "prefix_sum"
+        ],
+        "prerequisite_patterns": [
+            "arrays"
+        ],
+        "frequency": "medium",
+        "companies": [
+            "google",
+            "amazon",
+            "microsoft"
+        ],
+        "source_lists": [],
+        "representative": True
     },
   
     # ================= Hashing =================
@@ -1015,7 +1066,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": False
+        "representative": True
     },
 
     {
@@ -1173,7 +1224,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
    
    # ================= Binary Search =================
@@ -1271,7 +1322,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": False
+        "representative": True
     },
 
     {
@@ -1398,7 +1449,7 @@ PROBLEMS = [
             "neetcode150",
             "striver"
         ],
-        "representative": True
+        "representative": False
     },
 
     {
@@ -1428,7 +1479,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
 
     {
@@ -1492,7 +1543,7 @@ PROBLEMS = [
             "neetcode150",
             "striver"
         ],
-        "representative": True
+        "representative": False
     },
 
     {
@@ -1588,7 +1639,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": False
+        "representative": True
     },
 
     {
@@ -1711,7 +1762,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
 
     {
@@ -1774,7 +1825,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
        
        # ================= Linked List =================
@@ -1836,7 +1887,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": False
+        "representative": True
     },
 
     {
@@ -1868,7 +1919,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
 
     {
@@ -1899,7 +1950,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": False
+        "representative": True
     },
 
     {
@@ -1964,7 +2015,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
 
     {
@@ -2162,7 +2213,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": False
+        "representative": True
     },
 
     {
@@ -2258,7 +2309,7 @@ PROBLEMS = [
             "blind75",
             "leetcode150"
         ],
-        "representative": False
+        "representative": True
     },
 
     {
@@ -2424,7 +2475,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
 
     {
@@ -2516,7 +2567,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
     
       # ================= Graphs =================
@@ -2586,7 +2637,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": False
+        "representative": True
     },
 
     {
@@ -2804,7 +2855,7 @@ PROBLEMS = [
         "source_lists": [
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
 
     {
@@ -2836,7 +2887,7 @@ PROBLEMS = [
             "blind75",
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
 
     {
@@ -2924,7 +2975,7 @@ PROBLEMS = [
         "source_lists": [
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
 
     {
@@ -2957,7 +3008,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
 
     {
@@ -2989,7 +3040,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
 
     {
@@ -3308,7 +3359,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
 
     {
@@ -3372,7 +3423,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
 
     {
@@ -3405,7 +3456,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
 
         # ================= Dynamic Programming =================
@@ -3619,7 +3670,7 @@ PROBLEMS = [
             "blind75",
             "leetcode150"
         ],
-        "representative": False
+        "representative": True
     },
 
     {
@@ -3647,7 +3698,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": False
+        "representative": True
     },
 
     {
@@ -3680,7 +3731,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
 
     {
@@ -3804,7 +3855,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
 
     {
@@ -3867,7 +3918,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
 
     {
@@ -4018,7 +4069,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
 
         # ================= Backtracking =================
@@ -4180,7 +4231,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": False
+        "representative": True
     },
 
     {
@@ -4274,7 +4325,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": False
+        "representative": True
     },
 
     {
@@ -4367,7 +4418,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
     
     {
@@ -4397,7 +4448,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
     
     {
@@ -4427,7 +4478,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
     
     # ================= Intervals =================
@@ -4706,7 +4757,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
 
     {
@@ -4732,7 +4783,7 @@ PROBLEMS = [
         "source_lists": [
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
 
     {
@@ -4741,8 +4792,8 @@ PROBLEMS = [
         "title": "Decode String",
         "difficulty": "medium",
         "learning_stage": "core",
-        "pattern": "strings",
-        "primary_pattern": "strings",
+        "pattern": "stack",
+        "primary_pattern": "stack",
         "estimated_minutes": 35,
         "leetcode_url": "https://leetcode.com/problems/decode-string/",
         "tags": [
@@ -4796,7 +4847,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
 
     {
@@ -4915,7 +4966,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
     
     {
@@ -4946,7 +4997,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
     
     # ================= Bit Manipulation =================
@@ -5039,7 +5090,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": True
+        "representative": False
     },
 
     {
@@ -5066,7 +5117,7 @@ PROBLEMS = [
             "leetcode150",
             "neetcode150"
         ],
-        "representative": False
+        "representative": True
     },
 
     {
@@ -5190,177 +5241,1232 @@ PROBLEMS = [
         ],
         "representative": True
     },
-    
-]
-
-
-# ============================================================
-# Problem Bank Helper Functions
-# ============================================================
-
-def problem_by_id(problem_id: str):
-    """
-    Returns a problem by its stable PrepOS ID.
-    Example:
-        problem_by_id("lc-3")
-    """
-    return next((p for p in PROBLEMS if p["id"] == problem_id), None)
-
-
-def problems_by_pattern(pattern: str):
-    """
-    Returns all problems belonging to a pattern.
-
-    Backward compatible:
-    - Uses `primary_pattern` if present.
-    - Falls back to legacy `pattern`.
-    """
-    return [
-        p
-        for p in PROBLEMS
-        if p.get("primary_pattern", p["pattern"]) == pattern
-    ]
-
-
-def pattern_counts():
-    """
-    Returns:
     {
-        "sliding_window": 8,
-        "arrays": 7,
-        ...
+        "id": "lc-35",
+        "leetcode_id": 35,
+        "title": "Search Insert Position",
+        "difficulty": "easy",
+        "learning_stage": "foundation",
+        "pattern": "binary_search",
+        "primary_pattern": "binary_search",
+        "estimated_minutes": 15,
+        "leetcode_url": "https://leetcode.com/problems/search-insert-position/",
+        "tags": [
+            "arrays",
+            "search"
+        ],
+        "prerequisite_patterns": [
+            "arrays"
+        ],
+        "frequency": "high",
+        "companies": [
+            "google",
+            "amazon",
+            "microsoft"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-224",
+        "leetcode_id": 224,
+        "title": "Basic Calculator",
+        "difficulty": "hard",
+        "learning_stage": "advanced",
+        "pattern": "stack",
+        "primary_pattern": "stack",
+        "estimated_minutes": 40,
+        "leetcode_url": "https://leetcode.com/problems/basic-calculator/",
+        "tags": [
+            "math",
+            "string",
+            "recursion"
+        ],
+        "prerequisite_patterns": [
+            "stack"
+        ],
+        "frequency": "high",
+        "companies": [
+            "google",
+            "amazon",
+            "meta"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-232",
+        "leetcode_id": 232,
+        "title": "Implement Queue using Stacks",
+        "difficulty": "easy",
+        "learning_stage": "foundation",
+        "pattern": "queue",
+        "primary_pattern": "queue",
+        "estimated_minutes": 15,
+        "leetcode_url": "https://leetcode.com/problems/implement-queue-using-stacks/",
+        "tags": [
+            "stack",
+            "design",
+            "queue"
+        ],
+        "prerequisite_patterns": [
+            "stack"
+        ],
+        "frequency": "medium",
+        "companies": [
+            "amazon",
+            "microsoft"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-225",
+        "leetcode_id": 225,
+        "title": "Implement Stack using Queues",
+        "difficulty": "easy",
+        "learning_stage": "foundation",
+        "pattern": "queue",
+        "primary_pattern": "queue",
+        "estimated_minutes": 15,
+        "leetcode_url": "https://leetcode.com/problems/implement-stack-using-queues/",
+        "tags": [
+            "queue",
+            "design",
+            "stack"
+        ],
+        "prerequisite_patterns": [
+            "queue"
+        ],
+        "frequency": "medium",
+        "companies": [
+            "amazon"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-933",
+        "leetcode_id": 933,
+        "title": "Number of Recent Calls",
+        "difficulty": "easy",
+        "learning_stage": "core",
+        "pattern": "queue",
+        "primary_pattern": "queue",
+        "estimated_minutes": 20,
+        "leetcode_url": "https://leetcode.com/problems/number-of-recent-calls/",
+        "tags": [
+            "design",
+            "queue",
+            "data stream"
+        ],
+        "prerequisite_patterns": [
+            "queue"
+        ],
+        "frequency": "low",
+        "companies": [],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-649",
+        "leetcode_id": 649,
+        "title": "Dota2 Senate",
+        "difficulty": "medium",
+        "learning_stage": "core",
+        "pattern": "queue",
+        "primary_pattern": "queue",
+        "estimated_minutes": 35,
+        "leetcode_url": "https://leetcode.com/problems/dota2-senate/",
+        "tags": [
+            "string",
+            "greedy",
+            "queue"
+        ],
+        "prerequisite_patterns": [
+            "queue"
+        ],
+        "frequency": "low",
+        "companies": [],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-622",
+        "leetcode_id": 622,
+        "title": "Design Circular Queue",
+        "difficulty": "medium",
+        "learning_stage": "advanced",
+        "pattern": "queue",
+        "primary_pattern": "queue",
+        "estimated_minutes": 40,
+        "leetcode_url": "https://leetcode.com/problems/design-circular-queue/",
+        "tags": [
+            "design",
+            "queue",
+            "array",
+            "linked list"
+        ],
+        "prerequisite_patterns": [
+            "queue"
+        ],
+        "frequency": "medium",
+        "companies": [
+            "amazon",
+            "microsoft"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-700",
+        "leetcode_id": 700,
+        "title": "Search in a Binary Search Tree",
+        "difficulty": "easy",
+        "learning_stage": "foundation",
+        "pattern": "trees",
+        "primary_pattern": "trees",
+        "estimated_minutes": 15,
+        "leetcode_url": "https://leetcode.com/problems/search-in-a-binary-search-tree/",
+        "tags": [
+            "tree",
+            "binary search tree",
+            "binary tree"
+        ],
+        "prerequisite_patterns": [
+            "trees"
+        ],
+        "frequency": "low",
+        "companies": [],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-701",
+        "leetcode_id": 701,
+        "title": "Insert into a Binary Search Tree",
+        "difficulty": "medium",
+        "learning_stage": "foundation",
+        "pattern": "trees",
+        "primary_pattern": "trees",
+        "estimated_minutes": 25,
+        "leetcode_url": "https://leetcode.com/problems/insert-into-a-binary-search-tree/",
+        "tags": [
+            "tree",
+            "binary search tree",
+            "binary tree"
+        ],
+        "prerequisite_patterns": [
+            "trees"
+        ],
+        "frequency": "medium",
+        "companies": [
+            "amazon"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-235",
+        "leetcode_id": 235,
+        "title": "Lowest Common Ancestor of a Binary Search Tree",
+        "difficulty": "medium",
+        "learning_stage": "core",
+        "pattern": "trees",
+        "primary_pattern": "trees",
+        "estimated_minutes": 25,
+        "leetcode_url": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/",
+        "tags": [
+            "tree",
+            "depth-first search",
+            "binary search tree",
+            "binary tree"
+        ],
+        "prerequisite_patterns": [
+            "trees"
+        ],
+        "frequency": "high",
+        "companies": [
+            "amazon",
+            "meta"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-450",
+        "leetcode_id": 450,
+        "title": "Delete Node in a BST",
+        "difficulty": "medium",
+        "learning_stage": "advanced",
+        "pattern": "trees",
+        "primary_pattern": "trees",
+        "estimated_minutes": 40,
+        "leetcode_url": "https://leetcode.com/problems/delete-node-in-a-bst/",
+        "tags": [
+            "tree",
+            "binary search tree",
+            "binary tree"
+        ],
+        "prerequisite_patterns": [
+            "trees"
+        ],
+        "frequency": "medium",
+        "companies": [
+            "microsoft"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-669",
+        "leetcode_id": 669,
+        "title": "Trim a Binary Search Tree",
+        "difficulty": "medium",
+        "learning_stage": "advanced",
+        "pattern": "trees",
+        "primary_pattern": "trees",
+        "estimated_minutes": 35,
+        "leetcode_url": "https://leetcode.com/problems/trim-a-binary-search-tree/",
+        "tags": [
+            "tree",
+            "depth-first search",
+            "binary search tree",
+            "binary tree"
+        ],
+        "prerequisite_patterns": [
+            "trees"
+        ],
+        "frequency": "low",
+        "companies": [],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-480",
+        "leetcode_id": 480,
+        "title": "Sliding Window Median",
+        "difficulty": "hard",
+        "learning_stage": "advanced",
+        "pattern": "heap",
+        "primary_pattern": "heap",
+        "estimated_minutes": 40,
+        "leetcode_url": "https://leetcode.com/problems/sliding-window-median/",
+        "tags": [
+            "array",
+            "hash table",
+            "sliding window",
+            "heap (priority queue)"
+        ],
+        "prerequisite_patterns": [
+            "heap"
+        ],
+        "frequency": "medium",
+        "companies": [
+            "amazon"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-733",
+        "leetcode_id": 733,
+        "title": "Flood Fill",
+        "difficulty": "easy",
+        "learning_stage": "foundation",
+        "pattern": "graphs",
+        "primary_pattern": "graphs",
+        "estimated_minutes": 15,
+        "leetcode_url": "https://leetcode.com/problems/flood-fill/",
+        "tags": [
+            "array",
+            "depth-first search",
+            "breadth-first search",
+            "matrix"
+        ],
+        "prerequisite_patterns": [
+            "graphs"
+        ],
+        "frequency": "low",
+        "companies": [],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-210",
+        "leetcode_id": 210,
+        "title": "Course Schedule II",
+        "difficulty": "medium",
+        "learning_stage": "core",
+        "pattern": "graphs",
+        "primary_pattern": "graphs",
+        "estimated_minutes": 35,
+        "leetcode_url": "https://leetcode.com/problems/course-schedule-ii/",
+        "tags": [
+            "depth-first search",
+            "breadth-first search",
+            "graph",
+            "topological sort"
+        ],
+        "prerequisite_patterns": [
+            "graphs"
+        ],
+        "frequency": "high",
+        "companies": [
+            "amazon"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-1489",
+        "leetcode_id": 1489,
+        "title": "Find Critical and Pseudo-Critical Edges in Minimum Spanning Tree",
+        "difficulty": "hard",
+        "learning_stage": "advanced",
+        "pattern": "graphs",
+        "primary_pattern": "graphs",
+        "estimated_minutes": 45,
+        "leetcode_url": "https://leetcode.com/problems/find-critical-and-pseudo-critical-edges-in-minimum-spanning-tree/",
+        "tags": [
+            "union find",
+            "graph",
+            "sorting",
+            "minimum spanning tree",
+            "biconnected component"
+        ],
+        "prerequisite_patterns": [
+            "graphs"
+        ],
+        "frequency": "low",
+        "companies": [],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-37",
+        "leetcode_id": 37,
+        "title": "Sudoku Solver",
+        "difficulty": "hard",
+        "learning_stage": "advanced",
+        "pattern": "backtracking",
+        "primary_pattern": "backtracking",
+        "estimated_minutes": 45,
+        "leetcode_url": "https://leetcode.com/problems/sudoku-solver/",
+        "tags": [
+            "array",
+            "hash table",
+            "backtracking",
+            "matrix"
+        ],
+        "prerequisite_patterns": [
+            "backtracking"
+        ],
+        "frequency": "low",
+        "companies": [],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-455",
+        "leetcode_id": 455,
+        "title": "Assign Cookies",
+        "difficulty": "easy",
+        "learning_stage": "foundation",
+        "pattern": "greedy",
+        "primary_pattern": "greedy",
+        "estimated_minutes": 15,
+        "leetcode_url": "https://leetcode.com/problems/assign-cookies/",
+        "tags": [
+            "array",
+            "greedy",
+            "sorting"
+        ],
+        "prerequisite_patterns": [
+            "greedy"
+        ],
+        "frequency": "low",
+        "companies": [],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-605",
+        "leetcode_id": 605,
+        "title": "Can Place Flowers",
+        "difficulty": "easy",
+        "learning_stage": "foundation",
+        "pattern": "greedy",
+        "primary_pattern": "greedy",
+        "estimated_minutes": 20,
+        "leetcode_url": "https://leetcode.com/problems/can-place-flowers/",
+        "tags": [
+            "array",
+            "greedy"
+        ],
+        "prerequisite_patterns": [
+            "greedy"
+        ],
+        "frequency": "medium",
+        "companies": [
+            "amazon"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-135",
+        "leetcode_id": 135,
+        "title": "Candy",
+        "difficulty": "hard",
+        "learning_stage": "advanced",
+        "pattern": "greedy",
+        "primary_pattern": "greedy",
+        "estimated_minutes": 40,
+        "leetcode_url": "https://leetcode.com/problems/candy/",
+        "tags": [
+            "array",
+            "greedy"
+        ],
+        "prerequisite_patterns": [
+            "greedy"
+        ],
+        "frequency": "medium",
+        "companies": [
+            "amazon"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-746",
+        "leetcode_id": 746,
+        "title": "Min Cost Climbing Stairs",
+        "difficulty": "easy",
+        "learning_stage": "foundation",
+        "pattern": "dynamic_programming",
+        "primary_pattern": "dynamic_programming",
+        "estimated_minutes": 25,
+        "leetcode_url": "https://leetcode.com/problems/min-cost-climbing-stairs/",
+        "tags": [
+            "array",
+            "dynamic programming"
+        ],
+        "prerequisite_patterns": [
+            "dynamic_programming"
+        ],
+        "frequency": "medium",
+        "companies": [
+            "amazon"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-847",
+        "leetcode_id": 847,
+        "title": "Shortest Path Visiting All Nodes",
+        "difficulty": "hard",
+        "learning_stage": "advanced",
+        "pattern": "dynamic_programming",
+        "primary_pattern": "dynamic_programming",
+        "estimated_minutes": 45,
+        "leetcode_url": "https://leetcode.com/problems/shortest-path-visiting-all-nodes/",
+        "tags": [
+            "bit manipulation",
+            "breadth-first search",
+            "graph",
+            "bitmask",
+            "shortest path"
+        ],
+        "prerequisite_patterns": [
+            "graphs",
+            "dynamic_programming"
+        ],
+        "frequency": "low",
+        "companies": [],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-208",
+        "leetcode_id": 208,
+        "title": "Implement Trie (Prefix Tree)",
+        "difficulty": "medium",
+        "learning_stage": "foundation",
+        "pattern": "trie",
+        "primary_pattern": "trie",
+        "estimated_minutes": 25,
+        "leetcode_url": "https://leetcode.com/problems/implement-trie-prefix-tree/",
+        "tags": [
+            "hash table",
+            "string",
+            "design",
+            "trie"
+        ],
+        "prerequisite_patterns": [
+            "trees"
+        ],
+        "frequency": "high",
+        "companies": [
+            "amazon",
+            "microsoft"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-211",
+        "leetcode_id": 211,
+        "title": "Design Add and Search Words Data Structure",
+        "difficulty": "medium",
+        "learning_stage": "core",
+        "pattern": "trie",
+        "primary_pattern": "trie",
+        "estimated_minutes": 35,
+        "leetcode_url": "https://leetcode.com/problems/design-add-and-search-words-data-structure/",
+        "tags": [
+            "string",
+            "depth-first search",
+            "design",
+            "trie"
+        ],
+        "prerequisite_patterns": [
+            "trie"
+        ],
+        "frequency": "medium",
+        "companies": [
+            "meta"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-648",
+        "leetcode_id": 648,
+        "title": "Replace Words",
+        "difficulty": "medium",
+        "learning_stage": "core",
+        "pattern": "trie",
+        "primary_pattern": "trie",
+        "estimated_minutes": 30,
+        "leetcode_url": "https://leetcode.com/problems/replace-words/",
+        "tags": [
+            "array",
+            "hash table",
+            "string",
+            "trie"
+        ],
+        "prerequisite_patterns": [
+            "trie"
+        ],
+        "frequency": "low",
+        "companies": [
+            "uber"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-212",
+        "leetcode_id": 212,
+        "title": "Word Search II",
+        "difficulty": "hard",
+        "learning_stage": "advanced",
+        "pattern": "trie",
+        "primary_pattern": "trie",
+        "estimated_minutes": 45,
+        "leetcode_url": "https://leetcode.com/problems/word-search-ii/",
+        "tags": [
+            "array",
+            "string",
+            "backtracking",
+            "trie",
+            "matrix"
+        ],
+        "prerequisite_patterns": [
+            "trie",
+            "backtracking"
+        ],
+        "frequency": "high",
+        "companies": [
+            "amazon",
+            "microsoft"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-1268",
+        "leetcode_id": 1268,
+        "title": "Search Suggestions System",
+        "difficulty": "medium",
+        "learning_stage": "advanced",
+        "pattern": "trie",
+        "primary_pattern": "trie",
+        "estimated_minutes": 35,
+        "leetcode_url": "https://leetcode.com/problems/search-suggestions-system/",
+        "tags": [
+            "array",
+            "string",
+            "trie",
+            "sorting",
+            "heap (priority queue)"
+        ],
+        "prerequisite_patterns": [
+            "trie"
+        ],
+        "frequency": "high",
+        "companies": [
+            "amazon"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-547",
+        "leetcode_id": 547,
+        "title": "Number of Provinces",
+        "difficulty": "medium",
+        "learning_stage": "foundation",
+        "pattern": "union_find",
+        "primary_pattern": "union_find",
+        "estimated_minutes": 35,
+        "leetcode_url": "https://leetcode.com/problems/number-of-provinces/",
+        "tags": [
+            "depth-first search",
+            "breadth-first search",
+            "union find",
+            "graph"
+        ],
+        "prerequisite_patterns": [
+            "graphs"
+        ],
+        "frequency": "high",
+        "companies": [
+            "amazon"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-721",
+        "leetcode_id": 721,
+        "title": "Accounts Merge",
+        "difficulty": "medium",
+        "learning_stage": "core",
+        "pattern": "union_find",
+        "primary_pattern": "union_find",
+        "estimated_minutes": 45,
+        "leetcode_url": "https://leetcode.com/problems/accounts-merge/",
+        "tags": [
+            "array",
+            "hash table",
+            "string",
+            "depth-first search",
+            "breadth-first search",
+            "union find"
+        ],
+        "prerequisite_patterns": [
+            "union_find",
+            "hashing"
+        ],
+        "frequency": "high",
+        "companies": [
+            "facebook",
+            "amazon"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-685",
+        "leetcode_id": 685,
+        "title": "Redundant Connection II",
+        "difficulty": "hard",
+        "learning_stage": "advanced",
+        "pattern": "union_find",
+        "primary_pattern": "union_find",
+        "estimated_minutes": 45,
+        "leetcode_url": "https://leetcode.com/problems/redundant-connection-ii/",
+        "tags": [
+            "depth-first search",
+            "breadth-first search",
+            "union find",
+            "graph"
+        ],
+        "prerequisite_patterns": [
+            "union_find"
+        ],
+        "frequency": "medium",
+        "companies": [],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-201",
+        "leetcode_id": 201,
+        "title": "Bitwise AND of Numbers Range",
+        "difficulty": "medium",
+        "learning_stage": "advanced",
+        "pattern": "bit_manipulation",
+        "primary_pattern": "bit_manipulation",
+        "estimated_minutes": 35,
+        "leetcode_url": "https://leetcode.com/problems/bitwise-and-of-numbers-range/",
+        "tags": [
+            "bit manipulation"
+        ],
+        "prerequisite_patterns": [
+            "bit_manipulation"
+        ],
+        "frequency": "medium",
+        "companies": [
+            "amazon"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-509",
+        "leetcode_id": 509,
+        "title": "Fibonacci Number",
+        "difficulty": "easy",
+        "learning_stage": "foundation",
+        "pattern": "recursion",
+        "primary_pattern": "recursion",
+        "estimated_minutes": 15,
+        "leetcode_url": "https://leetcode.com/problems/fibonacci-number/",
+        "tags": [
+            "math",
+            "dynamic programming",
+            "recursion",
+            "memoization"
+        ],
+        "prerequisite_patterns": [],
+        "frequency": "high",
+        "companies": [
+            "amazon"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-344",
+        "leetcode_id": 344,
+        "title": "Reverse String",
+        "difficulty": "easy",
+        "learning_stage": "foundation",
+        "pattern": "recursion",
+        "primary_pattern": "recursion",
+        "estimated_minutes": 15,
+        "leetcode_url": "https://leetcode.com/problems/reverse-string/",
+        "tags": [
+            "two pointers",
+            "string"
+        ],
+        "prerequisite_patterns": [],
+        "frequency": "medium",
+        "companies": [
+            "apple"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-50",
+        "leetcode_id": 50,
+        "title": "Pow(x, n)",
+        "difficulty": "medium",
+        "learning_stage": "advanced",
+        "pattern": "recursion",
+        "primary_pattern": "recursion",
+        "estimated_minutes": 35,
+        "leetcode_url": "https://leetcode.com/problems/powx-n/",
+        "tags": [
+            "math",
+            "recursion"
+        ],
+        "prerequisite_patterns": [
+            "recursion"
+        ],
+        "frequency": "high",
+        "companies": [
+            "facebook"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-95",
+        "leetcode_id": 95,
+        "title": "Unique Binary Search Trees II",
+        "difficulty": "medium",
+        "learning_stage": "advanced",
+        "pattern": "recursion",
+        "primary_pattern": "recursion",
+        "estimated_minutes": 45,
+        "leetcode_url": "https://leetcode.com/problems/unique-binary-search-trees-ii/",
+        "tags": [
+            "dynamic programming",
+            "backtracking",
+            "tree",
+            "binary search tree",
+            "binary tree"
+        ],
+        "prerequisite_patterns": [
+            "recursion",
+            "trees"
+        ],
+        "frequency": "medium",
+        "companies": [
+            "amazon"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-912",
+        "leetcode_id": 912,
+        "title": "Sort an Array",
+        "difficulty": "medium",
+        "learning_stage": "foundation",
+        "pattern": "sorting",
+        "primary_pattern": "sorting",
+        "estimated_minutes": 25,
+        "leetcode_url": "https://leetcode.com/problems/sort-an-array/",
+        "tags": [
+            "array",
+            "divide and conquer",
+            "sorting",
+            "heap (priority queue)",
+            "merge sort",
+            "bucket sort",
+            "radix sort"
+        ],
+        "prerequisite_patterns": [],
+        "frequency": "high",
+        "companies": [
+            "amazon",
+            "microsoft"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-75",
+        "leetcode_id": 75,
+        "title": "Sort Colors",
+        "difficulty": "medium",
+        "learning_stage": "foundation",
+        "pattern": "sorting",
+        "primary_pattern": "sorting",
+        "estimated_minutes": 25,
+        "leetcode_url": "https://leetcode.com/problems/sort-colors/",
+        "tags": [
+            "array",
+            "two pointers",
+            "sorting"
+        ],
+        "prerequisite_patterns": [],
+        "frequency": "high",
+        "companies": [
+            "facebook",
+            "amazon"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-179",
+        "leetcode_id": 179,
+        "title": "Largest Number",
+        "difficulty": "medium",
+        "learning_stage": "core",
+        "pattern": "sorting",
+        "primary_pattern": "sorting",
+        "estimated_minutes": 35,
+        "leetcode_url": "https://leetcode.com/problems/largest-number/",
+        "tags": [
+            "array",
+            "string",
+            "greedy",
+            "sorting"
+        ],
+        "prerequisite_patterns": [
+            "sorting"
+        ],
+        "frequency": "high",
+        "companies": [
+            "amazon"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-164",
+        "leetcode_id": 164,
+        "title": "Maximum Gap",
+        "difficulty": "hard",
+        "learning_stage": "advanced",
+        "pattern": "sorting",
+        "primary_pattern": "sorting",
+        "estimated_minutes": 45,
+        "leetcode_url": "https://leetcode.com/problems/maximum-gap/",
+        "tags": [
+            "array",
+            "sorting",
+            "bucket sort",
+            "radix sort"
+        ],
+        "prerequisite_patterns": [
+            "sorting"
+        ],
+        "frequency": "medium",
+        "companies": [],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-493",
+        "leetcode_id": 493,
+        "title": "Reverse Pairs",
+        "difficulty": "hard",
+        "learning_stage": "advanced",
+        "pattern": "sorting",
+        "primary_pattern": "sorting",
+        "estimated_minutes": 45,
+        "leetcode_url": "https://leetcode.com/problems/reverse-pairs/",
+        "tags": [
+            "array",
+            "binary search",
+            "divide and conquer",
+            "binary indexed tree",
+            "segment tree",
+            "merge sort",
+            "ordered set"
+        ],
+        "prerequisite_patterns": [
+            "sorting"
+        ],
+        "frequency": "medium",
+        "companies": [
+            "amazon"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-28",
+        "leetcode_id": 28,
+        "title": "Find the Index of the First Occurrence in a String",
+        "difficulty": "easy",
+        "learning_stage": "advanced",
+        "pattern": "strings",
+        "primary_pattern": "strings",
+        "estimated_minutes": 20,
+        "leetcode_url": "https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string/",
+        "tags": [
+            "two pointers",
+            "string",
+            "string matching"
+        ],
+        "prerequisite_patterns": [
+            "strings"
+        ],
+        "frequency": "medium",
+        "companies": [
+            "amazon"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-68",
+        "leetcode_id": 68,
+        "title": "Text Justification",
+        "difficulty": "hard",
+        "learning_stage": "advanced",
+        "pattern": "strings",
+        "primary_pattern": "strings",
+        "estimated_minutes": 45,
+        "leetcode_url": "https://leetcode.com/problems/text-justification/",
+        "tags": [
+            "array",
+            "string",
+            "simulation"
+        ],
+        "prerequisite_patterns": [
+            "strings"
+        ],
+        "frequency": "medium",
+        "companies": [
+            "amazon"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-307",
+        "leetcode_id": 307,
+        "title": "Range Sum Query - Mutable",
+        "difficulty": "medium",
+        "learning_stage": "foundation",
+        "pattern": "segment_tree",
+        "primary_pattern": "segment_tree",
+        "estimated_minutes": 35,
+        "leetcode_url": "https://leetcode.com/problems/range-sum-query-mutable/",
+        "tags": [
+            "array",
+            "design",
+            "binary indexed tree",
+            "segment tree"
+        ],
+        "prerequisite_patterns": [
+            "arrays"
+        ],
+        "frequency": "medium",
+        "companies": [
+            "amazon"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-729",
+        "leetcode_id": 729,
+        "title": "My Calendar I",
+        "difficulty": "medium",
+        "learning_stage": "core",
+        "pattern": "segment_tree",
+        "primary_pattern": "segment_tree",
+        "estimated_minutes": 30,
+        "leetcode_url": "https://leetcode.com/problems/my-calendar-i/",
+        "tags": [
+            "array",
+            "binary search",
+            "design",
+            "interval tree",
+            "ordered set"
+        ],
+        "prerequisite_patterns": [
+            "segment_tree"
+        ],
+        "frequency": "high",
+        "companies": [
+            "google"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-731",
+        "leetcode_id": 731,
+        "title": "My Calendar II",
+        "difficulty": "medium",
+        "learning_stage": "core",
+        "pattern": "segment_tree",
+        "primary_pattern": "segment_tree",
+        "estimated_minutes": 45,
+        "leetcode_url": "https://leetcode.com/problems/my-calendar-ii/",
+        "tags": [
+            "array",
+            "binary search",
+            "design",
+            "interval tree",
+            "ordered set"
+        ],
+        "prerequisite_patterns": [
+            "segment_tree"
+        ],
+        "frequency": "medium",
+        "companies": [
+            "google"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-732",
+        "leetcode_id": 732,
+        "title": "My Calendar III",
+        "difficulty": "hard",
+        "learning_stage": "advanced",
+        "pattern": "segment_tree",
+        "primary_pattern": "segment_tree",
+        "estimated_minutes": 45,
+        "leetcode_url": "https://leetcode.com/problems/my-calendar-iii/",
+        "tags": [
+            "array",
+            "binary search",
+            "design",
+            "segment tree",
+            "interval tree",
+            "ordered set"
+        ],
+        "prerequisite_patterns": [
+            "segment_tree"
+        ],
+        "frequency": "medium",
+        "companies": [
+            "google"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-315",
+        "leetcode_id": 315,
+        "title": "Count of Smaller Numbers After Self",
+        "difficulty": "hard",
+        "learning_stage": "advanced",
+        "pattern": "segment_tree",
+        "primary_pattern": "segment_tree",
+        "estimated_minutes": 45,
+        "leetcode_url": "https://leetcode.com/problems/count-of-smaller-numbers-after-self/",
+        "tags": [
+            "array",
+            "binary search",
+            "divide and conquer",
+            "binary indexed tree",
+            "segment tree",
+            "merge sort",
+            "ordered set"
+        ],
+        "prerequisite_patterns": [
+            "segment_tree",
+            "sorting"
+        ],
+        "frequency": "high",
+        "companies": [
+            "amazon",
+            "google"
+        ],
+        "source_lists": [],
+        "representative": True
+    },
+    {
+        "id": "lc-699",
+        "leetcode_id": 699,
+        "title": "Falling Squares",
+        "difficulty": "hard",
+        "learning_stage": "advanced",
+        "pattern": "segment_tree",
+        "primary_pattern": "segment_tree",
+        "estimated_minutes": 45,
+        "leetcode_url": "https://leetcode.com/problems/falling-squares/",
+        "tags": [
+            "array",
+            "segment tree",
+            "ordered set"
+        ],
+        "prerequisite_patterns": [
+            "segment_tree"
+        ],
+        "frequency": "medium",
+        "companies": [
+            "riot games"
+        ],
+        "source_lists": [],
+        "representative": True
     }
-
-    Uses the canonical pattern field.
-    """
-    counts = {}
-
-    for p in PROBLEMS:
-        pattern = p.get("primary_pattern", p["pattern"])
-        counts[pattern] = counts.get(pattern, 0) + 1
-
-    return counts
-
-
-def representative_problems():
-    """
-    Returns all representative interview problems.
-
-    These are the flagship problems of each pattern
-    used by:
-        - AI Mentor
-        - Revision Engine
-        - Interview Crash Course
-        - Mission Engine
-    """
-    return [
-        p
-        for p in PROBLEMS
-        if p.get("representative", False)
-    ]
-
-
-def problems_by_learning_stage(stage: str):
-    """
-    Example:
-        problems_by_learning_stage("foundation")
-    """
-    return [
-        p
-        for p in PROBLEMS
-        if p.get("learning_stage") == stage
-    ]
-
-
-def problems_by_frequency(frequency: str):
-    """
-    Example:
-        problems_by_frequency("very_high")
-    """
-    return [
-        p
-        for p in PROBLEMS
-        if p.get("frequency") == frequency
-    ]
-
-
-def representative_problems_by_pattern(pattern: str):
-    """
-    Returns representative problems for a given pattern.
-
-    Example:
-        representative_problems_by_pattern("sliding_window")
-    """
-    return [
-        p
-        for p in PROBLEMS
-        if p.get("representative", False)
-        and p.get("primary_pattern", p["pattern"]) == pattern
-    ]
-
-
-def problems_by_source(source: str):
-    """
-    Example:
-        problems_by_source("blind75")
-    """
-    source = source.lower()
-
-    return [
-        p
-        for p in PROBLEMS
-        if source in [s.lower() for s in p.get("source_lists", [])]
-    ]
-
-
-def problems_by_tag(tag: str):
-    """
-    Example:
-        problems_by_tag("hashing")
-    """
-    tag = tag.lower()
-
-    return [
-        p
-        for p in PROBLEMS
-        if tag in [t.lower() for t in p.get("tags", [])]
-    ]
-
-
-def problems_by_difficulty(difficulty: str):
-    """
-    Example:
-        problems_by_difficulty("hard")
-    """
-    return [
-        p
-        for p in PROBLEMS
-        if p.get("difficulty") == difficulty
-    ]
-    
-def is_valid_company(company: str) -> bool:
-    """
-    Returns True if the company key exists in the canonical registry.
-    """
-    return company in COMPANIES
-
-# Which pattern to pick from a subtopic string in mission engine.
-SUBTOPIC_TO_PATTERN = {
-    "Sliding Window":            "sliding_window",
-    "Two Pointers":              "two_pointers",
-    "Dynamic Programming":       "dynamic_programming",
-    "Trees & Recursion":         "trees",
-    "Graphs · BFS & DFS":        "graphs",
-    "Graphs":                    "graphs",
-    "Heaps & Priority Queues":   "heap",
-    "Backtracking":              "backtracking",
-    "Binary Search":             "binary_search",
-    "Arrays":                    "arrays",
-    "Hashing":                   "hashing",
-    "Stack":                     "stack",
-    "Linked List":               "linked_list",
-    "Intervals":                 "intervals",
-    "Strings":                   "strings",
-    "Bit Manipulation":          "bit_manipulation",
-    "Greedy":                    "greedy",
-}
+]
