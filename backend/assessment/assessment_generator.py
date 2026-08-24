@@ -35,12 +35,8 @@ def _resolve_pattern(roadmap_node_id: Optional[str]) -> Optional[str]:
     """Best-effort deterministic pattern resolution from a node id."""
     if not roadmap_node_id:
         return None
-    nid = roadmap_node_id.lower()
-    # Longest key first so 'two_pointers' wins over 'pointers' style partials.
-    for pattern in sorted(problem_bank.PATTERN_TO_DOMAIN.keys(), key=len, reverse=True):
-        if pattern in nid or pattern.replace("_", "") in nid.replace("_", ""):
-            return pattern
-    return None
+    import roadmap as roadmap_module
+    return roadmap_module.pattern_for_node(roadmap_node_id)
 
 
 def _candidate_pool(pattern: Optional[str]) -> List[dict]:
@@ -94,6 +90,7 @@ def generate_coding_assessment(
     roadmap_node_id: Optional[str] = None,
     difficulty: Optional[str] = None,
     target_company: Optional[str] = None,
+    exclude_ids: Optional[List[str]] = None,
     **_ignored,
 ) -> Question:
     """Generate a coding Question by reference to problem_bank."""
@@ -101,9 +98,14 @@ def generate_coding_assessment(
         roadmap_node_id=roadmap_node_id,
         difficulty=difficulty,
         target_company=target_company,
+        exclude_ids=exclude_ids,
     )
     if not problem:
-        raise ValueError("No coding problem could be selected for the given context.")
+        from fastapi import HTTPException
+        raise HTTPException(
+            status_code=400,
+            detail="No coding problem could be selected for the given context. It may be exhausted or invalid."
+        )
 
     pattern = problem.get("primary_pattern", problem.get("pattern"))
     return Question(

@@ -50,3 +50,18 @@ def first_unlockable_node(progress_rows: Optional[Iterable[dict]] = None) -> Opt
     """Return the first roadmap learning node that is unlockable."""
     unlocked = next_unlockable_nodes(progress_rows)
     return unlocked[0] if unlocked else None
+
+
+def get_curriculum_eligible_nodes(progress_rows: Optional[Iterable[dict]] = None) -> List[dict]:
+    """Return learning nodes passing both subject-gate and node-gate.
+
+    Unlike ``get_unlocked_nodes`` (which checks only node-level
+    prerequisites), this also enforces ``subject_prerequisites`` — nodes
+    from locked subjects (e.g. DSA before Java is completed) are
+    filtered out.
+
+    Used by the Curriculum Progression Engine's eligibility layer.
+    """
+    roadmap = get_roadmap()
+    completed_ids = _completed_node_ids(progress_rows)
+    return roadmap.get_curriculum_eligible_nodes(completed_ids)

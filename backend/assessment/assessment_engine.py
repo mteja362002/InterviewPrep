@@ -37,11 +37,15 @@ async def create_assessment(
 ) -> Assessment:
     """Create a PENDING assessment with a generated question + rubric."""
     difficulty = req.difficulty or default_difficulty(position)
+    prior = await history.list_for_user(user_id, limit=200)
+    exclude_ids = [p.question.problem_id for p in prior if p.question and p.question.problem_id]
+
     generator = get_generator(req.assessment_type)  # raises if unsupported
     question = generator(
         roadmap_node_id=req.roadmap_node_id,
         difficulty=difficulty,
         target_company=req.target_company,
+        exclude_ids=exclude_ids,
     )
     rubric = get_rubric(req.assessment_type)
 

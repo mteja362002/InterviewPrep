@@ -18,6 +18,7 @@ import { formatApiError } from '@/utils/formatApiError';
 import { cn } from '@/lib/utils';
 import { useMentorContext } from '@/contexts/MentorContext';
 import { useMissionContext } from '@/contexts/MissionContextProvider';
+import { useAIPanel } from '@/contexts/AIPanelContext';
 import { ProgressBar } from '@/components/progress/ProgressBar';
 import { WhyThisMissionDialog } from '@/components/mission/WhyThisMissionDialog';
 
@@ -89,7 +90,7 @@ function TaskActions({
       {task.node_id && (
         <button
           type="button"
-          onClick={() => onOpenMentor(task.node_id)}
+          onClick={() => onOpenMentor(task)}
           disabled={busyAction === `mentor-${task.node_id}`}
           className="h-10 inline-flex items-center justify-center w-10 rounded-lg border border-primary/30 bg-primary/10 hover:bg-primary/15 text-primary transition-colors disabled:opacity-50"
           data-testid={`mission-task-mentor-${task.id}`}
@@ -162,6 +163,7 @@ export default function MissionControl() {
   const [expandedDomain, setExpandedDomain] = useState(null);
   const navigate = useNavigate();
   const mentor = useMentorContext();
+  const aiPanel = useAIPanel();
   // Phase 3D — the shared, fetch-once Mission Context. CTAs derive from here.
   const { getTaskContext, refresh: refreshMission } = useMissionContext();
 
@@ -206,16 +208,8 @@ export default function MissionControl() {
   };
   const onFlashcards = () => toast('Flashcards are coming soon.');
 
-  const onOpenMentorForNode = async (nodeId) => {
-    setBusyAction(`mentor-${nodeId}`);
-    try {
-      await mentor.startNewChat({ topicNodeId: nodeId });
-      navigate('/app/ai-mentor');
-    } catch (err) {
-      toast.error(formatApiError(err));
-    } finally {
-      setBusyAction(null);
-    }
+  const onOpenMentorForNode = (task) => {
+    aiPanel.openWith(task.title, { topicNodeId: task.node_id });
   };
 
   if (loading || !data) {

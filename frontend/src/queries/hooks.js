@@ -34,6 +34,7 @@ export function useDashboard(options = {}) {
     queryKey: qk.dashboard(userId),
     queryFn: () => dashboardService.get(),
     enabled: !!userId,
+    staleTime: 2 * 60 * 1000,
     ...options,
   });
 }
@@ -58,6 +59,7 @@ export function useRoadmapSummary(options = {}) {
     queryKey: qk.roadmapSummary(userId),
     queryFn: () => roadmapService.summary(),
     enabled: !!userId,
+    staleTime: 2 * 60 * 1000,
     ...options,
   });
 }

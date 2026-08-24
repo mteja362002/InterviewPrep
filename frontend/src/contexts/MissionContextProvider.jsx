@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { missionService } from '@/services/mission.service';
 import { qk } from '@/queries/keys';
 import { useAuth } from '@/contexts/AuthContext';
+import { useDashboard } from '@/queries/hooks';
 
 const ASSESSMENT_ACTIVITIES = ['quiz', 'behavioral', 'design', 'system_design'];
 
@@ -28,11 +29,12 @@ export function MissionContextProvider({ children }) {
   const { user } = useAuth();
   const userId = user?.id;
   const queryClient = useQueryClient();
+  const { data: dashboardData } = useDashboard();
 
   const query = useQuery({
     queryKey: qk.missionContext(userId),
     queryFn: () => missionService.getTodayContext(),
-    enabled: !!userId,
+    enabled: !!userId && !!dashboardData?.mission,
     // Today's mission does not change within a session unless a mutation
     // invalidates it, so keep it fresh for the whole session and let the
     // mutation layer trigger refetches when progress changes.

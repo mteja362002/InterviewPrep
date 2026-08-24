@@ -252,6 +252,7 @@ export function AIAssistantPanel() {
                   data-testid={APP_SHELL.aiInput}
                   value={text}
                   onChange={(e) => setText(e.target.value)}
+                  autoFocus
                   placeholder={lessonMode ? 'Ask for a full lesson (e.g., "Teach me HashMap")…' : 'Ask the Mentor…'}
                   rows={2}
                   className="flex-1 resize-none bg-transparent px-3.5 py-2.5 text-sm outline-none placeholder:text-muted-foreground text-foreground"

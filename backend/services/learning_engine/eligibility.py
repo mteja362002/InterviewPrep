@@ -93,7 +93,7 @@ def eligible_learning_nodes(
     keeps the pre-Phase-4-Step-2 behaviour byte-identical.
     """
     # Local import to avoid a cycle at module import time.
-    from services.learning_engine.unlock import get_unlocked_nodes as _base_get_unlocked
+    from services.learning_engine.unlock import get_curriculum_eligible_nodes as _base_get_unlocked
 
     skip_ids = set(skip_node_ids or [])
     completed_ids = {

@@ -320,6 +320,69 @@ class RoadmapEngine:
         completed = set(completed_topic_ids)
         return all(pre in completed for pre in topic.get("topic_prerequisites") or [])
 
+    # ---------- Subject-gate filters (Curriculum Progression Engine) ----------
+
+    def completed_subject_ids(self, completed_nodes: Iterable[str]) -> List[str]:
+        """Return track IDs where all foundation+core learning nodes are done.
+
+        A subject is "completed for prerequisite purposes" when every
+        learning node with ``learning_stage ∈ {foundation, core}`` has a
+        matching entry in *completed_nodes*.  Advanced/interview nodes
+        are depth, not breadth — they are NOT required for gating.
+
+        This is the exact derivation consumed by
+        ``get_curriculum_eligible_nodes`` and the Subject Progression
+        Engine to enforce subject-level prerequisites without introducing
+        a separate stored "subject completion" flag.
+        """
+        completed = set(completed_nodes)
+        result: List[str] = []
+        for track in self._raw["tracks"]:
+            track_id = track["id"]
+            fc_nodes = [
+                n for n in self.get_track_learning_nodes(track_id)
+                if n.get("learning_stage") in ("foundation", "core", None)
+            ]
+            if not fc_nodes:
+                # Tracks with no learning nodes at all (structural only)
+                # cannot be "completed" — skip.
+                continue
+            if all(n["id"] in completed for n in fc_nodes):
+                result.append(track_id)
+        return result
+
+    def get_curriculum_eligible_nodes(
+        self, completed_nodes: Iterable[str],
+    ) -> List[dict]:
+        """Return learning nodes passing BOTH subject-gate AND node-gate.
+
+        Two-layer filter:
+        1. **Subject gate** — the node's track must have its
+           ``subject_prerequisites`` satisfied (checked via
+           ``completed_subject_ids``).
+        2. **Node gate** — the node's own ``prerequisites`` must be
+           satisfied (existing ``is_unlocked`` logic).
+
+        Tracks with no ``subject_prerequisites`` (e.g. Programming
+        Fundamentals, Behavioral) pass the subject gate unconditionally.
+        """
+        completed = set(completed_nodes)
+        done_subjects = set(self.completed_subject_ids(completed))
+        result: List[dict] = []
+        for node in self.get_learning_nodes():
+            track_id = node.get("track")
+            track = self.get(track_id) if track_id else None
+            # Subject gate: track prerequisites must all be completed subjects
+            if track:
+                subj_prereqs = track.get("subject_prerequisites") or []
+                if not all(sp in done_subjects for sp in subj_prereqs):
+                    continue
+            # Node gate: node-level prerequisites
+            if not self.is_unlocked(node["id"], completed):
+                continue
+            result.append(node)
+        return result
+
     # ---------- Learning-node traversal ----------
     @staticmethod
     def _is_learning_node(node: dict) -> bool:

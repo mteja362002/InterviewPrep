@@ -426,14 +426,10 @@ async def _generate_today_mission(db, user_id: str) -> DailyMission:
     # tomorrow preview + week goal. Silent no-op if AI is unavailable.
     try:
         from ai_mentor.mission_planner import enrich_mission
+        import asyncio
         mission_doc = mission.model_dump()
-        enriched = await enrich_mission(db, user_id=user_id, mission_doc=mission_doc)
-        if enriched is not mission_doc:
-            mission = DailyMission(**_clean(enriched)) if _clean(enriched) else mission
-        else:
-            for k in ("ai_narrative", "tomorrow_preview", "week_goal"):
-                if enriched.get(k) is not None:
-                    setattr(mission, k, enriched[k])
+        # Make enrichment asynchronous so it doesn't block mission generation (Phase 4)
+        asyncio.create_task(enrich_mission(db, user_id=user_id, mission_doc=mission_doc))
     except Exception as e:  # noqa: BLE001 — never let AI kill mission gen
         logger.warning("mission_planner enrichment failed: %s", e)
 
@@ -459,10 +455,9 @@ async def get_todays_mission(user=Depends(get_current_user)):
         if not (mission.ai_narrative or mission.tomorrow_preview or mission.week_goal):
             try:
                 from ai_mentor.mission_planner import enrich_mission
-                enriched = await enrich_mission(db, user_id=user["id"], mission_doc=_clean(doc))
-                for k in ("ai_narrative", "tomorrow_preview", "week_goal"):
-                    if enriched.get(k) is not None:
-                        setattr(mission, k, enriched[k])
+                import asyncio
+                # Make enrichment asynchronous so it doesn't block initial page load (Phase 4)
+                asyncio.create_task(enrich_mission(db, user_id=user["id"], mission_doc=_clean(doc)))
             except Exception as e:  # noqa: BLE001
                 logger.warning("mission_planner lazy-enrich failed: %s", e)
         return mission
@@ -491,7 +486,7 @@ async def get_todays_mission_context(user=Depends(get_current_user)):
     else:
         mission = await _generate_today_mission(db, user["id"])
 
-    onboarding = await _get_onboarding(db, user["id"])
+    onboarding = await _require_onboarding(db, user["id"])
     target_companies = (onboarding or {}).get("target_companies", []) or []
 
     tasks_out = []
@@ -1136,20 +1131,31 @@ async def get_dashboard(user=Depends(get_current_user)):
     await enrich_mission_assessment(db, mission_doc, user["id"])
     mission = DailyMission(**_clean(mission_doc))
 
-    # Daily login activity (once per day)
-    login_today = await db.activity_events.find_one({
+    # Run independent queries in parallel
+    import asyncio
+    login_today_task = db.activity_events.find_one({
         "user_id": user["id"], "kind": "daily_login",
         "ts": {"$gte": f"{today}T00:00:00"},
     })
+    act_cur = db.activity_events.find({"user_id": user["id"]}, {"_id": 0}).sort("ts", -1).limit(5)
+    adj_cursor = db.mission_adjustments.find(
+        {"user_id": user["id"], "for_date": today}, {"_id": 0},
+    ).sort("created_at", -1).limit(1)
+
+    login_today, knowledge, streak, revisions, activity, adj_list = await asyncio.gather(
+        login_today_task,
+        _get_knowledge(db, user["id"]),
+        _get_streak(db, user["id"]),
+        get_revisions_for_user(db, user["id"], CURRENT_VERSION, limit=6, due_only=False),
+        act_cur.to_list(length=5),
+        adj_cursor.to_list(length=1),
+    )
+
     if not login_today:
         await _log_activity(db, user["id"], "daily_login", "Signed in")
 
-    knowledge = await _get_knowledge(db, user["id"])
-    streak = await _get_streak(db, user["id"])
     readiness = compute_readiness(knowledge, onboarding)
     streak_grid = streak_days_grid(streak)
-
-    revisions = await get_revisions_for_user(db, user["id"], CURRENT_VERSION, limit=6, due_only=False)
 
     baseline = onboarding.get("self_assessment", {})
     progress_by_topic = {kp["topic"]: kp for kp in knowledge}
@@ -1173,10 +1179,6 @@ async def get_dashboard(user=Depends(get_current_user)):
             "completions": kp.get("completions", 0) if kp else 0,
         })
 
-    # LIMIT to latest 5 activities
-    act_cur = db.activity_events.find({"user_id": user["id"]}, {"_id": 0}).sort("ts", -1).limit(5)
-    activity = await act_cur.to_list(length=5)
-
     # Company readiness (targets first, top-6 total)
     target_companies = onboarding.get("target_companies", [])
     company_readiness = []
@@ -1189,11 +1191,6 @@ async def get_dashboard(user=Depends(get_current_user)):
             "is_target": c in target_companies,
         })
 
-    # Latest mission adjustment (sort desc so newest adaptive decision wins)
-    adj_cursor = db.mission_adjustments.find(
-        {"user_id": user["id"], "for_date": today}, {"_id": 0},
-    ).sort("created_at", -1).limit(1)
-    adj_list = await adj_cursor.to_list(length=1)
     adj_doc = adj_list[0] if adj_list else None
 
     # Single source of truth for interview-deadline pacing — the same function

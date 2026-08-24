@@ -267,7 +267,40 @@ async def get_today_learning_node(
         entry_progress = context.progress_map.get(entry_node.get("id"), {})
         return _finalize(entry_node, entry_progress, context, insight=insight)
 
-    # ---- 4. Candidate generation ----------------------------------------
+    # ---- 3.5 Curriculum Progression Engine (session-based pipeline) ------
+    # The session pipeline builds a SubjectLearningSession for every
+    # track, selects the best subjects for today, and picks the
+    # deterministic next topic within each.  If it produces a primary
+    # recommendation, it wins.  If not (e.g. all subjects mastered),
+    # the fallback candidate pipeline below runs.
+    try:
+        from services.learning_engine.subject_progression import (
+            build_all_sessions, build_daily_learning_plan,
+        )
+        sessions = build_all_sessions(roadmap, context.progress_map)
+        plan = build_daily_learning_plan(
+            sessions, roadmap,
+            recent_track_ids=list(context.recent_track_ids or []),
+        )
+        if plan.task_plans:
+            primary = plan.task_plans[0]
+            node = roadmap.get(primary.node_id)
+            if node is not None:
+                priority = score_candidate(node, context)
+                insight = _attach_insight(priority, context)
+                # Enrich insight with session explanations
+                insight["task_explanations"] = plan.plan_insight.get("task_explanations", [])
+                if plan.plan_narrative:
+                    insight["plan_narrative"] = plan.plan_narrative
+                top_progress = context.progress_map.get(primary.node_id, {})
+                return _finalize(node, top_progress, context, insight=insight)
+    except Exception:
+        # Defensive: if the session pipeline fails for any reason,
+        # fall through to the existing candidate generation pipeline.
+        # This guarantees backward compatibility during rollout.
+        pass
+
+    # ---- 4. Candidate generation (FALLBACK) -----------------------------
     candidates = generate_candidate_nodes(
         eligible, context.progress_map, subject_states, roadmap=roadmap,
         target_companies=context.target_companies, urgency=context.urgency,
@@ -285,3 +318,4 @@ async def get_today_learning_node(
     top_progress = context.progress_map.get(top.node.get("id"), {})
     insight = _attach_insight(top, context)
     return _finalize(top.node, top_progress, context, insight=insight)
+
