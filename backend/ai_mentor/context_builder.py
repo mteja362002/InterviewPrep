@@ -246,7 +246,7 @@ async def _load_recent_notes(db, user_id: str, roadmap) -> List[Dict[str, Any]]:
 
 # ---------- Prerequisite chain (the "hard rule" the mentor obeys) ----------
 
-_COMPLETED_STATUSES = {"completed", "mastered"}
+from services.progress_engine import DONE_STATUSES as _COMPLETED_STATUSES
 
 
 def _is_complete(progress_row: Optional[Dict[str, Any]]) -> bool:

@@ -30,7 +30,7 @@ _FOUNDATION_BONUS = DEFAULT_ADAPTIVE_WEIGHTS["foundation_bonus"]
 # additive; the scoring formula never inspects a specific band name.
 _FATIGUE_ELIGIBLE_POSITIONS = {"1-3", "3-5", "5+"}
 
-_COMPLETED_STATUSES = {"completed", "mastered", "revision_due"}
+from services.progress_engine import COMPLETED_STATUSES as _COMPLETED_STATUSES
 
 # Difficulty ordinal used by the smoothness signal (Phase 4 Step 2).
 _DIFFICULTY_ORDINAL = {"easy": 0, "medium": 1, "hard": 2}

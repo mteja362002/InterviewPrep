@@ -232,6 +232,7 @@ async def _record_completed_task_progress(
     db, user_id: str, task: dict, difficulty: str, baseline: dict, now: str,
 ) -> str:
     """Persist one completed task on the canonical per-node progress row."""
+    from services.progress_repository import upsert_progress_from_score
     node_id = _progress_node_id_for_task(task)
     existing_node = await db.knowledge_nodes.find_one(
         {"user_id": user_id, "roadmap_version": CURRENT_VERSION, "node_id": node_id}, {"_id": 0},
@@ -239,15 +240,14 @@ async def _record_completed_task_progress(
     baseline_score = baseline.get(task["topic"], 5) * 10
     current = float(existing_node["mastery_percentage"]) if existing_node else float(baseline_score)
     new_score = apply_knowledge_gain(current, difficulty, task["kind"])
-    fields = score_to_node_fields(new_score)
-    await db.knowledge_nodes.update_one(
-        {"user_id": user_id, "roadmap_version": CURRENT_VERSION, "node_id": node_id},
-        {"$set": {
-            **fields,
-            "user_id": user_id, "roadmap_version": CURRENT_VERSION, "node_id": node_id,
-            "status": "completed", "completion_date": now, "updated_at": now,
-        }},
-        upsert=True,
+    await upsert_progress_from_score(
+        db,
+        user_id=user_id,
+        roadmap_version=CURRENT_VERSION,
+        node_id=node_id,
+        score=new_score,
+        status_override="completed",
+        completion_date=now,
     )
     await mark_node_for_revision(db, user_id, CURRENT_VERSION, node_id)
     return node_id
@@ -955,6 +955,7 @@ async def submit_problem_feedback(
         # Sync to Roadmap KnowledgeNode (pattern node + track node)
         try:
             from roadmap import CURRENT_VERSION as _V
+            from services.progress_repository import upsert_progress_from_confidence
             targets = {progress_node_id}
             for nid in targets:
                 # Confidence is weighted running average with new feedback point
@@ -964,22 +965,16 @@ async def submit_problem_feedback(
                 )
                 prev_conf = float(existing.get("confidence", 0.0)) if existing else 0.0
                 new_conf = round((prev_conf * 3 + payload.confidence) / 4, 2)
-                weak = max(0.0, 100 - new_conf * 10)
-                mastery = min(100.0, new_conf * 10)
-                bucket = "green" if new_conf >= 7 else "yellow" if new_conf >= 4 else "red"
                 solved = payload.solved_status != "could_not_solve"
                 status = "mastered" if solved and new_conf >= 9 else "completed" if solved else "in_progress"
-                await db.knowledge_nodes.update_one(
-                    {"user_id": user["id"], "roadmap_version": _V, "node_id": nid},
-                    {"$set": {
-                        "user_id": user["id"], "roadmap_version": _V, "node_id": nid,
-                        "confidence": new_conf, "weakness_score": weak,
-                        "mastery_percentage": mastery,
-                        "revision_bucket": bucket, "status": status,
-                        **({"completion_date": _now_iso()} if solved else {}),
-                        "updated_at": _now_iso(),
-                    }},
-                    upsert=True,
+                await upsert_progress_from_confidence(
+                    db,
+                    user_id=user["id"],
+                    roadmap_version=_V,
+                    node_id=nid,
+                    confidence=new_conf,
+                    status_override=status,
+                    completion_date=_now_iso() if solved else None,
                 )
         except Exception:
             pass  # Roadmap sync is best-effort

@@ -14,6 +14,19 @@ from datetime import datetime, timezone
 from typing import Dict, Iterable, Optional
 
 
+# ---------------------------------------------------------------------------
+# Canonical status vocabulary — import from here, never redefine.
+# ---------------------------------------------------------------------------
+
+# Statuses that mean the learner has "done" this node at least once.
+# Use this for eligibility gating, prerequisite checks, and rollup counting.
+COMPLETED_STATUSES = frozenset({"completed", "mastered", "revision_due"})
+
+# Subset: truly done (no pending revision). Use for strict "is this finished?"
+# checks like remaining-curriculum counts.
+DONE_STATUSES = frozenset({"completed", "mastered"})
+
+
 def _normalize_status(raw: Optional[str]) -> str:
     return raw or "not_started"
 
@@ -162,11 +175,10 @@ def count_remaining_learning_nodes(roadmap, progress_rows: Dict[str, dict]) -> i
     (services/learning_engine/pacing.py) — kept here alongside the other
     canonical `knowledge_nodes` readers rather than duplicated per caller.
     """
-    done_statuses = {"completed", "mastered"}
     remaining = 0
     for node in roadmap.get_learning_nodes():
         row = progress_rows.get(node["id"])
-        if not row or row.get("status") not in done_statuses:
+        if not row or row.get("status") not in DONE_STATUSES:
             remaining += 1
     return remaining
 
@@ -203,6 +215,19 @@ def score_to_node_fields(score: float) -> dict:
         "revision_bucket": bucket,
         "status": status,
     }
+
+
+def confidence_to_node_fields(confidence: float) -> dict:
+    """Convert a 0-10 confidence value into derived KnowledgeNode fields.
+
+    Canonical inverse of ``score_to_node_fields`` for call-sites that
+    receive a confidence rating (e.g. the confidence slider endpoint,
+    coding-feedback sync) rather than a 0-100 mastery score. Both
+    functions produce the exact same field set so callers can use them
+    interchangeably.
+    """
+    mastery = min(100.0, max(0.0, confidence) * 10.0)
+    return score_to_node_fields(mastery)
 
 
 # RC1.3.6A — Phase 2: stage-aware onboarding seeding.

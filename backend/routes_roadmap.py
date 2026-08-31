@@ -12,7 +12,8 @@ from roadmap import get_roadmap, CURRENT_VERSION
 from problem_bank import problem_by_id
 from ai_service import AIProviderError
 from knowledge_generation import ensure_content, read_cache, clear_cache
-from services.progress_engine import build_canonical_progress, load_user_progress_rows
+from services.progress_engine import build_canonical_progress, load_user_progress_rows, confidence_to_node_fields
+from services.revision_engine import first_revision_date
 from services.learning_engine.roi import compute_learning_roi
 from services.learning_engine.ranking import _is_foundation_node
 from mission_engine import compute_readiness
@@ -70,11 +71,9 @@ async def _ensure_user_version(db, user_id: str) -> str:
 
 
 def _bucket(confidence: float, weakness_score: float) -> str:
-    if confidence >= 7 and weakness_score < 30:
-        return "green"
-    if confidence >= 4:
-        return "yellow"
-    return "red"
+    """Legacy adapter — delegates to canonical bucket in score_to_node_fields."""
+    from services.progress_engine import confidence_to_node_fields as _ctf
+    return _ctf(confidence)["revision_bucket"]
 
 
 async def _load_user_progress(db, user_id: str) -> dict:
@@ -524,22 +523,12 @@ async def update_confidence(node_id: str, payload: KnowledgeConfidenceUpdate, us
         raise HTTPException(status_code=404, detail="Node not found")
 
     conf = float(payload.confidence)
-    weakness = max(0.0, 100 - conf * 10)
-    mastery = min(100.0, conf * 10)
-    # Use the normalized status vocabulary.
-    if conf >= 9:
-        status = STATUS_MASTERED
-    elif conf > 0:
-        status = STATUS_IN_PROGRESS
-    else:
-        status = STATUS_NOT_STARTED
-    bucket = _bucket(conf, weakness)
+    fields = confidence_to_node_fields(conf)
+    status = fields["status"]
 
     set_doc = {
         "user_id": user["id"], "node_id": node_id, "roadmap_version": version,
-        "confidence": conf, "weakness_score": weakness,
-        "mastery_percentage": mastery,
-        "status": status, "revision_bucket": bucket,
+        **fields,
         "updated_at": _now_iso(),
     }
     # Stamp completion_date when transitioning into completed/mastered.
@@ -572,13 +561,15 @@ async def update_status(node_id: str, payload: KnowledgeStatusUpdate, user=Depen
     # When marking completed/mastered, snap sensible defaults if the row was empty.
     if status in (STATUS_COMPLETED, STATUS_MASTERED):
         set_doc["completion_date"] = now
-        # Schedule a first revision 3 days out — spaced-repetition friendly default.
-        set_doc["next_revision"] = (datetime.now(timezone.utc) + timedelta(days=3)).isoformat()
-        # Bump mastery baseline if none yet.
+        # Load existing row for confidence lookup and mastery baseline check.
         existing = await db.knowledge_nodes.find_one(
             {"user_id": user["id"], "node_id": node_id, "roadmap_version": version},
             {"mastery_percentage": 1, "confidence": 1},
         ) or {}
+        # Schedule a first revision via canonical Revision Engine (confidence-adjusted).
+        existing_conf = int(existing.get("confidence", 6))
+        set_doc["next_revision"] = first_revision_date(existing_conf)
+        # Bump mastery baseline if none yet.
         if not existing.get("mastery_percentage"):
             set_doc["mastery_percentage"] = 100.0 if status == STATUS_MASTERED else 80.0
         if not existing.get("confidence"):

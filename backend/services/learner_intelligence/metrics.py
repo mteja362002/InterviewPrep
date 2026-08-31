@@ -20,8 +20,8 @@ from typing import List, Optional, Sequence
 # --------------------------------------------------------------------------- #
 
 # A learner-completed roadmap node counts toward activity when its status is
-# one of these (matches learning_engine.context / unlock).
-COMPLETED_STATUSES = {"completed", "mastered", "revision_due"}
+# one of these — canonical definition lives in services.progress_engine.
+from services.progress_engine import COMPLETED_STATUSES  # re-exported for LI consumers
 
 # Trend labels (confidence / velocity / retention / consistency).
 INCREASING = "increasing"

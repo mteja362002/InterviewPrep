@@ -40,14 +40,13 @@ from typing import Dict, Iterable, List, Optional
 
 from services.learning_engine.stage_engine import SubjectLearningState, _STAGE_ORDER
 from services.learning_engine.unlock import get_unlocked_nodes
-from services.progress_engine import _node_stage_index
+from services.progress_engine import COMPLETED_STATUSES as _COMPLETED_STATUSES, _node_stage_index
 
 # Matches the pacing engine's ACCELERATED/CRITICAL urgency tiers
 # (services/learning_engine/pacing.py) — "interview urgency" widening only
 # kicks in once the learner is genuinely time-pressured.
 INTERVIEW_URGENCY_THRESHOLD = 0.7
 
-_COMPLETED_STATUSES = {"completed", "mastered", "revision_due"}
 
 
 def _stage_cap_index(subject_state: SubjectLearningState, *, urgency: float = 0.0) -> int:

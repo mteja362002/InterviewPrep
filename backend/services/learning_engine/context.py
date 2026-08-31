@@ -45,7 +45,7 @@ if TYPE_CHECKING:  # avoid any runtime import cost / cycle
     from services.learning_engine.company_context import CompanyContext
     from services.learner_intelligence.snapshot import LearnerIntelligenceSnapshot
 
-_COMPLETED_STATUSES = {"completed", "mastered", "revision_due"}
+from services.progress_engine import COMPLETED_STATUSES as _COMPLETED_STATUSES
 
 # Phase 4 Step 2 · Effective-knowledge blending.
 #

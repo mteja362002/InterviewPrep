@@ -4,6 +4,7 @@ from __future__ import annotations
 from typing import Iterable, List, Optional
 
 from roadmap import get_roadmap
+from services.progress_engine import COMPLETED_STATUSES
 
 
 def _completed_node_ids(progress_rows: Iterable[dict]) -> set:
@@ -13,7 +14,7 @@ def _completed_node_ids(progress_rows: Iterable[dict]) -> set:
         if isinstance(row, dict):
             status = (row.get("status") or "").lower()
             node_id = row.get("node_id")
-            if node_id and status in {"completed", "mastered", "revision_due"}:
+            if node_id and status in COMPLETED_STATUSES:
                 completed.add(node_id)
     return completed
 

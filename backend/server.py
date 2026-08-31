@@ -141,6 +141,8 @@ async def on_startup():
         roadmap_progress_repository, roadmap,
     )
 
+    from services.progress_engine import score_to_node_fields
+
     async for u in db.users.find({}, {"id": 1, "roadmap_version": 1}):
         uid = u["id"]
         if not u.get("roadmap_version"):
@@ -153,7 +155,9 @@ async def on_startup():
             if not roadmap.get(track_id):
                 continue
             score = float(kp.get("score", 0))
-            conf = min(10.0, score / 10.0)
+            fields = score_to_node_fields(score)
+            # Legacy migration: treat any positive score as "in_progress"
+            fields["status"] = "in_progress" if score > 0 else "not_started"
             existing = await db.knowledge_nodes.find_one(
                 {"user_id": uid, "roadmap_version": CURRENT_VERSION, "node_id": track_id},
                 {"_id": 0},
@@ -163,11 +167,7 @@ async def on_startup():
                 await db.knowledge_nodes.update_one(
                     {"user_id": uid, "roadmap_version": CURRENT_VERSION, "node_id": track_id},
                     {"$set": {
-                        "confidence": conf,
-                        "mastery_percentage": score,
-                        "weakness_score": max(0.0, 100 - score),
-                        "status": "in_progress" if score > 0 else "available",
-                        "revision_bucket": "green" if conf >= 7 else "yellow" if conf >= 4 else "red",
+                        **fields,
                         "updated_at": datetime.now(timezone.utc).isoformat(),
                     }},
                 )
@@ -175,10 +175,7 @@ async def on_startup():
                 await db.knowledge_nodes.insert_one({
                     "user_id": uid, "roadmap_version": CURRENT_VERSION,
                     "node_id": track_id,
-                    "confidence": conf, "mastery_percentage": score,
-                    "weakness_score": max(0.0, 100 - score),
-                    "status": "in_progress" if score > 0 else "available",
-                    "revision_bucket": "green" if conf >= 7 else "yellow" if conf >= 4 else "red",
+                    **fields,
                     "updated_at": datetime.now(timezone.utc).isoformat(),
                     "notes": None,
                 })
@@ -198,9 +195,10 @@ async def on_startup():
             if not pattern_nodes:
                 continue
             nid = pattern_nodes[0]["id"]
-            conf = float(row.get("avg_conf") or 0)
+            # Migration heuristic: use feedback count to estimate mastery
             mastery = min(100.0, row["count"] * 12.5)
-            weak = max(0.0, 100 - conf * 10)
+            fields = score_to_node_fields(mastery)
+            fields["status"] = "in_progress"
             existing = await db.knowledge_nodes.find_one(
                 {"user_id": uid, "roadmap_version": CURRENT_VERSION, "node_id": nid},
                 {"_id": 0},
@@ -209,11 +207,7 @@ async def on_startup():
                 await db.knowledge_nodes.update_one(
                     {"user_id": uid, "roadmap_version": CURRENT_VERSION, "node_id": nid},
                     {"$set": {
-                        "confidence": round(conf, 2),
-                        "mastery_percentage": round(mastery, 2),
-                        "weakness_score": round(weak, 2),
-                        "status": "in_progress",
-                        "revision_bucket": "green" if conf >= 7 else "yellow" if conf >= 4 else "red",
+                        **fields,
                         "updated_at": datetime.now(timezone.utc).isoformat(),
                     }},
                 )
@@ -221,11 +215,7 @@ async def on_startup():
                 await db.knowledge_nodes.insert_one({
                     "user_id": uid, "roadmap_version": CURRENT_VERSION,
                     "node_id": nid,
-                    "confidence": round(conf, 2),
-                    "mastery_percentage": round(mastery, 2),
-                    "weakness_score": round(weak, 2),
-                    "status": "in_progress",
-                    "revision_bucket": "green" if conf >= 7 else "yellow" if conf >= 4 else "red",
+                    **fields,
                     "updated_at": datetime.now(timezone.utc).isoformat(),
                     "notes": None,
                 })

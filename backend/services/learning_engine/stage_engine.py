@@ -30,12 +30,7 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Dict, Iterable, List, Optional
 
-from services.progress_engine import _STAGE_ORDER, _node_stage_index
-
-# Mirrors the completed-status set already used by
-# services/learning_engine/unlock.py::_completed_node_ids and
-# services/learning_engine/planner.py::COMPLETED_STATUSES.
-_COMPLETED_STATUSES = {"completed", "mastered", "revision_due"}
+from services.progress_engine import _STAGE_ORDER, _node_stage_index, COMPLETED_STATUSES as _COMPLETED_STATUSES
 
 
 @dataclass

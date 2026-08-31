@@ -31,7 +31,7 @@ from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
 # Constants
 # ---------------------------------------------------------------------------
 
-_COMPLETED_STATUSES = frozenset({"completed", "mastered", "revision_due"})
+from services.progress_engine import COMPLETED_STATUSES as _COMPLETED_STATUSES
 _MASTERED_STATUSES = frozenset({"completed", "mastered"})
 
 # Fairness constants
