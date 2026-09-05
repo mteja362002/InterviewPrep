@@ -135,6 +135,11 @@ async def get_settings(user=Depends(get_current_user)):
 async def update_settings(payload: SettingsUpdate, user=Depends(get_current_user)):
     from server import db
     updates = payload.model_dump(exclude_none=True)
+    # ai_config is no longer part of SettingsUpdate (AI Gateway owns
+    # provider selection).  Old clients may still send it — Pydantic
+    # silently drops unknown fields, but we also explicitly strip it
+    # as a defence-in-depth measure before writing to MongoDB.
+    updates.pop("ai_config", None)
     if updates:
         updates["updated_at"] = _now_iso()
         await db.settings.update_one(

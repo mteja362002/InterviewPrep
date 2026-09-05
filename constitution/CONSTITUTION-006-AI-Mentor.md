@@ -59,7 +59,7 @@ The AI Mentor's quality comes entirely from the context injected into each call.
 
 ### AM-003 — Provider Abstraction is Mandatory
 
-All LLM calls MUST go through `ai_service.complete_json()`. No module may directly instantiate `google.genai.Client` or any provider SDK. This ensures that provider migration (Gemini → OpenAI → Claude) requires changes only in `ai_service.py`.
+All LLM calls MUST go through `ai_service.complete()` with a typed `AICapability` enum. No module may directly instantiate `google.genai.Client` or any provider SDK. The AI Gateway (`ai_gateway/`) owns provider selection, routing, retry, and failover. Consumer modules never reference providers, models, or API keys.
 
 ### AM-004 — Graceful Degradation
 
@@ -129,7 +129,7 @@ Total context: ~1-2 KB (structured). This MUST fit in the system prompt without 
 2. Assemble learner context snapshot (`context_builder.build_context()`)
 3. Build system prompt with context
 4. Build user message
-5. Call `ai_service.complete_json()` (or streaming variant)
+5. Call `ai_service.complete()` with the appropriate `AICapability` enum
 6. Persist user message + assistant response to `mentor_messages`
 7. Update `mentor_conversations.updated_at`
 8. Return response
@@ -151,7 +151,7 @@ Total context: ~1-2 KB (structured). This MUST fit in the system prompt without 
 
 **Guarantees:**
 - Returns cached content if `(node_id, roadmap_version)` exists in `knowledge_content`
-- On cache miss: calls `prompt_builder.build_prompt(node, roadmap)` then `ai_service.complete_json()`
+- On cache miss: calls `prompt_builder.build_prompt(node, roadmap)` then `ai_service.complete()`
 - Parses LLM response with `prompt_builder.parse_content()` (malformed → empty defaults)
 - Persists to `knowledge_content`
 - Returns the content dict
@@ -173,26 +173,41 @@ Total context: ~1-2 KB (structured). This MUST fit in the system prompt without 
 
 ---
 
-## LLM Provider Abstraction
+## AI Gateway Architecture
 
-### `ai_service.complete_json(system, prompt, provider, model, api_key, temperature) → dict`
+### `ai_service.complete(capability, system_message, prompt, session_id) → str`
 
-**Supported providers:** `gemini` (default), `openai` (planned), `claude` (planned), `deepseek` (planned)
+The public façade delegates to the AI Gateway (`ai_gateway/gateway.py`), which owns:
+
+- **Capability resolution** via `CapabilityRegistry` — maps `AICapability` enums to execution parameters (temperature, max_tokens, timeout, retry policy)
+- **Provider routing** via `RoutingPolicy` — orders available providers by priority, filters by capability support
+- **Retry with failover** — exponential backoff within a provider, then failover to the next
+- **Error classification** — raw SDK exceptions → structured `AIProviderError` with provider-neutral messages
+
+**Registered capabilities:**
+
+| Capability | Temperature | Max Tokens | Timeout | Structured |
+|-----------|-------------|------------|---------|------------|
+| `KNOWLEDGE_GENERATION` | 0.7 | 8192 | 30s | Yes |
+| `MENTOR_CHAT` | 0.6 | 4096 | 30s | No |
+| `MENTOR_LESSON` | 0.6 | 4096 | 30s | Yes |
+| `MISSION_NARRATIVE` | 0.4 | 2048 | 20s | Yes |
+| `ASSESSMENT_CONTENT` | 0.5 | 4096 | 30s | Yes |
+
+**Provider discovery:** `ProviderRegistry.load_from_environment()` reads `GEMINI_API_KEY`, `EMERGENT_LLM_KEY`, and future `OPENROUTER_API_KEY` from environment variables. Providers are stateless adapters — they know nothing about env vars, priorities, or configuration.
 
 **Error kinds:**
-| Kind | Fallback |
-|------|---------|
-| `invalid_key` | Raise `AIProviderError` (no fallback — user must fix key) |
-| `rate_limit` | Try Emergent LLM key if configured |
-| `quota_exhausted` | Try Emergent LLM key if configured |
-| `model_not_found` | Try Emergent LLM key if configured |
+| Kind | Status | Retryable |
+|------|--------|----------|
+| `invalid_key` | 401 | No |
+| `rate_limit` | 429 | Yes |
+| `model_not_found` | 404 | No |
+| `timeout` | 504 | Yes |
+| `upstream` | 502 | Yes |
+| `no_providers` | 503 | No |
+| `all_providers_failed` | 503 | No |
 
-**Emergent fallback:**
-- Activated by `EMERGENT_LLM_KEY` environment variable
-- Model: `EMERGENT_LLM_MODEL` env var (default: `gemini-2.5-flash`)
-- Transparent to caller — no behavior change
-
-**User AI config:** Each user may supply their own `api_key`, `provider`, `model_name`, and `temperature` via `UserSettings.ai_config`. This is loaded per-request from `settings` collection.
+**User AI config:** Deprecated. Users no longer configure providers, models, or API keys. `UserSettings.ai_config` exists only for MongoDB backward compatibility and is never read by any consumer code.
 
 ---
 
@@ -272,7 +287,7 @@ The AI Mentor SHOULD use streaming responses to improve perceived latency. The f
 3. KB content is globally shared — different users MUST receive identical KB content for the same `(node_id, roadmap_version)`.
 4. Mission narrative is generated at most once per `DailyMission` document.
 5. The AI Mentor NEVER writes to learner-state collections.
-6. `ai_service.complete_json()` is the ONLY path for LLM calls in PrepOS.
+6. `ai_service.complete()` is the ONLY path for LLM calls in PrepOS. Consumer modules use typed `AICapability` enums — never raw provider/model strings.
 
 ---
 
@@ -291,9 +306,9 @@ The AI Mentor SHOULD use streaming responses to improve perceived latency. The f
 
 ## Future Evolution
 
-- **Streaming responses:** All `POST /api/mentor/message` calls SHOULD return a streaming HTTP response. `ai_service.py` adds a `stream_json()` method. Context assembly is unchanged.
+- **Streaming responses:** All `POST /api/mentor/message` calls SHOULD return a streaming HTTP response. The gateway adds a `stream_complete()` method. Context assembly is unchanged.
 - **Voice interface:** A future voice mentor interface calls `mentor_service.py` with audio-transcribed text. The response is passed to a TTS service. No changes to `mentor_service.py` required.
-- **Additional providers:** Add to `ai_service.py` provider dispatch. No consumer changes.
-- **Fine-tuned models:** PrepOS may fine-tune a Gemini model on curated interview Q&A. Switch the default `model_name` in `UserSettings.ai_config`. No architecture change.
+- **Additional providers:** Add a new adapter in `ai_gateway/providers/`, register in `ProviderRegistry.load_from_environment()`. Zero consumer changes.
+- **Fine-tuned models:** Switch the model in the provider's environment variable (`GEMINI_MODEL`). No architecture change.
 - **Context ranking:** As context signals grow, a future version may rank and trim signals by relevance to the current question using embeddings. This is purely an enhancement to `context_builder.py`.
-- **Proactive mentor push:** A future feature sends proactive mentor tips based on the learner's upcoming revision queue. Implemented as a scheduled job reading `knowledge_nodes` → generating tip via `ai_service.py` → sending via `email_service.py`. No mentor architecture change.
+- **Proactive mentor push:** A future feature sends proactive mentor tips based on the learner's upcoming revision queue. Implemented as a scheduled job reading `knowledge_nodes` → generating tip via `ai_service.complete()` → sending via `email_service.py`. No mentor architecture change.

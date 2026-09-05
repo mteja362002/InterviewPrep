@@ -9,7 +9,9 @@ Three distinct responsibilities in one cohesive module:
 
 ``ProviderRegistry``
     Knows **which** providers are available.  Stores ``ProviderDefinition``
-    entries discovered at startup.  Does NOT make routing decisions.
+    entries discovered at startup.  Owns environment-variable discovery
+    and adapter instantiation via ``load_from_environment()``.
+    Does NOT make routing decisions.
 
 ``RoutingPolicy``
     Decides **which** provider to try and in **what order**.  Consults
@@ -20,6 +22,7 @@ Three distinct responsibilities in one cohesive module:
 from __future__ import annotations
 
 import logging
+import os
 from typing import Dict, List, Optional
 
 from ai_gateway.models import (
@@ -30,7 +33,7 @@ from ai_gateway.models import (
     RetryPolicy,
 )
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 # ===========================================================================
@@ -90,7 +93,7 @@ class CapabilityRegistry:
     def register(self, capability: AICapability, profile: CapabilityProfile) -> None:
         """Register or override a capability profile."""
         self._profiles[capability] = profile
-        log.info("Capability registered: %s", capability.value)
+        logger.info("Capability registered: %s", capability.value)
 
     def resolve(self, capability: AICapability) -> CapabilityProfile:
         """Return the profile for *capability*, or raise ``AIProviderError``."""
@@ -113,15 +116,81 @@ class CapabilityRegistry:
 # ===========================================================================
 
 class ProviderRegistry:
-    """Stores discovered providers.  No routing logic.
+    """Stores discovered providers.  Owns environment-variable discovery.
 
-    Populated once at startup via ``discover()`` from
-    ``ai_gateway.providers``.  The registry is the single source of truth
-    for which providers are available in this process.
+    ``load_from_environment()`` reads API key env vars, instantiates
+    adapters, creates ``ProviderDefinition`` entries, and registers them.
+    The registry is the single source of truth for which providers are
+    available in this process.  Does NOT make routing decisions.
     """
 
     def __init__(self) -> None:
         self._providers: Dict[str, ProviderDefinition] = {}
+
+    # ---- Environment discovery -----------------------------------------
+
+    def load_from_environment(self) -> None:
+        """Read environment variables and register all available providers.
+
+        Provider adapters are stateless — they know nothing about env vars,
+        priorities, or configuration.  This method owns all of that.
+
+        Adding a new provider requires:
+            1. A new adapter in ``ai_gateway/providers/``.
+            2. An env-var check in this method.
+            3. Setting the env var in deployment.
+
+        Zero changes to ``gateway.py``, ``routing.py`` routing policy,
+        or any consumer module.
+        """
+        all_capabilities = set(AICapability)
+
+        # -- Gemini (primary) -----------------------------------------------
+        gemini_key = (os.environ.get("GEMINI_API_KEY") or "").strip()
+        gemini_model = (os.environ.get("GEMINI_MODEL") or "gemini-2.5-flash").strip()
+        if gemini_key:
+            from ai_gateway.providers.gemini import GeminiAdapter
+
+            self.register(ProviderDefinition(
+                id="gemini-primary",
+                priority=10,
+                capabilities=set(all_capabilities),
+                model=gemini_model,
+                api_key=gemini_key,
+                transport="direct",
+                adapter=GeminiAdapter(),
+            ))
+            logger.info("Provider registered: gemini-primary (model=%s)", gemini_model)
+
+        # -- Gemini (emergent fallback) -------------------------------------
+        emergent_key = (os.environ.get("EMERGENT_LLM_KEY") or "").strip()
+        emergent_model = (os.environ.get("EMERGENT_LLM_MODEL") or "gemini-2.5-flash").strip()
+        if emergent_key and emergent_key != gemini_key:
+            from ai_gateway.providers.gemini import GeminiAdapter
+
+            self.register(ProviderDefinition(
+                id="gemini-emergent",
+                priority=20,
+                capabilities=set(all_capabilities),
+                model=emergent_model,
+                api_key=emergent_key,
+                transport="direct",
+                adapter=GeminiAdapter(),
+            ))
+            logger.info("Provider registered: gemini-emergent (model=%s)", emergent_model)
+
+        # -- OpenRouter (future) --------------------------------------------
+        openrouter_key = (os.environ.get("OPENROUTER_API_KEY") or "").strip()
+        if openrouter_key:
+            logger.info("OpenRouter key detected — adapter not yet implemented, skipping")
+
+        if not self._providers:
+            logger.warning(
+                "No AI providers discovered.  Set GEMINI_API_KEY or "
+                "EMERGENT_LLM_KEY to enable AI features."
+            )
+
+    # ---- Registry operations -------------------------------------------
 
     def register(self, definition: ProviderDefinition) -> None:
         """Add a provider to the registry."""

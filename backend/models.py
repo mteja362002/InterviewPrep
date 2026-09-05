@@ -94,7 +94,16 @@ class OnboardingRecord(BaseModel):
 # ============ Settings ============
 
 class AIConfig(BaseModel):
-    provider: str = "gemini"  # gemini | openai | claude | deepseek
+    """DEPRECATED — retained only for MongoDB backward compatibility.
+
+    As of Sprint 4 (AI Gateway migration), AI configuration is owned
+    entirely by the application via the AI Gateway.  Users no longer
+    configure providers, models, or API keys.  This class exists solely
+    so that existing MongoDB ``user_settings`` documents deserialise
+    without error.  It must NOT be written to or read from by any
+    consumer code.
+    """
+    provider: str = "gemini"
     model_name: str = "gemini-flash-latest"
     api_key: Optional[str] = None
     temperature: float = Field(default=0.7, ge=0, le=2)
@@ -119,7 +128,9 @@ class UserSettings(BaseModel):
 
 class SettingsUpdate(BaseModel):
     theme: Optional[str] = None
-    ai_config: Optional[AIConfig] = None
+    # ai_config intentionally omitted — AI configuration is owned by the
+    # AI Gateway.  Incoming ai_config payloads are silently ignored in
+    # routes_user.py.
     notification_prefs: Optional[NotificationPrefs] = None
 
 

@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import {
-  BookOpen, Sparkles, Bookmark, ChevronRight,
-  Layers, Users, AlertTriangle, RefreshCw, Loader2, KeyRound, Wand2,
+  BookOpen, Sparkles, Bookmark,
+  Layers, Users, AlertTriangle, RefreshCw, Loader2, Wand2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { GlassCard } from '@/components/common/GlassCard';
@@ -19,8 +18,7 @@ import { useAIContent } from '@/hooks/useAIContent';
  * Behavior:
  *   - On mount: GET /roadmap/nodes/{id}/content — never triggers generation.
  *   - If not available: render an empty-state with a "Generate with AI"
- *     button that POSTs /content/generate. Missing API key falls through to
- *     a hint pointing at Settings.
+ *     button that POSTs /content/generate.
  *   - After generation, MongoDB caches the response; every subsequent visit
  *     is a cache read.
  */
@@ -94,7 +92,7 @@ export function AIContentTabs({ nodeId }) {
             disabled={generating}
             data-testid="ai-content-regenerate"
             className="inline-flex items-center gap-1 text-[11px] font-mono uppercase tracking-wider text-muted-foreground hover:text-primary transition-colors disabled:opacity-50"
-            title="Regenerate content — will call Gemini again"
+            title="Regenerate content"
           >
             {generating ? <Loader2 className="h-3 w-3 animate-spin" /> : <RefreshCw className="h-3 w-3" />}
             Regenerate
@@ -112,10 +110,7 @@ export function AIContentTabs({ nodeId }) {
       )}
 
       {available && (
-        <div className="mt-4 pt-3 border-t border-white/[0.05] flex items-center justify-between text-[10px] font-mono text-muted-foreground/70">
-          <span data-testid="ai-content-meta">
-            Powered by {content.provider} · {content.model_name}
-          </span>
+        <div className="mt-4 pt-3 border-t border-white/[0.05] flex items-center justify-end text-[10px] font-mono text-muted-foreground/70">
           {content.generated_at && (
             <span>Generated {new Date(content.generated_at).toLocaleDateString()}</span>
           )}
@@ -143,7 +138,6 @@ function PlaceholderBlock({ label }) {
 
 
 function EmptyState({ onGenerate, generating, error }) {
-  const missingKey = error?.kind === 'missing_key' || error?.kind === 'invalid_key';
   return (
     <div className="rounded-xl border border-dashed border-white/[0.08] bg-white/[0.015] p-8 text-center"
          data-testid="ai-content-empty">
@@ -155,25 +149,12 @@ function EmptyState({ onGenerate, generating, error }) {
         Content is generated once, cached in the database, and shared with the whole community.
       </p>
       {error && (
-        <div className={cn(
-          'mt-4 mx-auto max-w-md rounded-lg border px-3 py-2 text-xs text-left',
-          missingKey
-            ? 'border-amber-400/30 bg-amber-400/10 text-amber-200'
-            : 'border-rose-400/30 bg-rose-400/10 text-rose-200',
-        )} data-testid="ai-content-error">
+        <div className="mt-4 mx-auto max-w-md rounded-lg border border-rose-400/30 bg-rose-400/10 px-3 py-2 text-xs text-left text-rose-200"
+             data-testid="ai-content-error">
           <div className="flex items-start gap-2">
-            {missingKey ? <KeyRound className="h-3.5 w-3.5 mt-0.5 shrink-0" /> : <AlertTriangle className="h-3.5 w-3.5 mt-0.5 shrink-0" />}
+            <AlertTriangle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
             <div className="flex-1">
-              <div>{error.message}</div>
-              {missingKey && (
-                <Link
-                  to="/app/settings"
-                  className="mt-1 inline-flex items-center gap-1 text-primary hover:underline"
-                  data-testid="ai-content-open-settings"
-                >
-                  Open Settings <ChevronRight className="h-3 w-3" />
-                </Link>
-              )}
+              <div>AI is temporarily unavailable. Please try again in a few moments.</div>
             </div>
           </div>
         </div>

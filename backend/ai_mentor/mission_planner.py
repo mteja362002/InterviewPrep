@@ -17,24 +17,23 @@ The planner is:
   * PREREQUISITE-AWARE — reuses `context_builder` which walks
     `roadmap.prerequisites` transitively; the LLM is given the RECOMMENDED
     NEXT STEP and told to obey it.
-  * GRACEFULLY DEGRADED — if the LLM fails or the user has no key AND no
-    Emergent fallback, the mission still returns without preview fields.
+  * GRACEFULLY DEGRADED — if the AI call fails, the mission still returns
+    without preview fields.
 
-Reuses `ai_service.complete_json` (with its Emergent LLM key fallback) so we
-never touch a raw provider SDK.
+Uses `ai_service.complete()` routed through the AI Gateway with automatic
+provider failover.
 """
 from __future__ import annotations
 import json
 import logging
-import os
 import re
 from typing import Any, Dict, Optional
 
-from ai_service import complete_json, AIProviderError
+from ai_service import complete, AICapability, AIProviderError
 
 from .context_builder import build_context, serialize_context
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 _JSON_FENCE = re.compile(r"```(?:json)?\s*(\{.*?\})\s*```", re.DOTALL)
 
@@ -94,17 +93,6 @@ def _parse_json(raw: str) -> Optional[dict]:
     return None
 
 
-async def _load_ai_config(db, user_id: str) -> dict:
-    doc = await db.settings.find_one({"user_id": user_id}, {"_id": 0, "ai_config": 1}) or {}
-    ai = doc.get("ai_config") or {}
-    return {
-        "provider": ai.get("provider") or "gemini",
-        "model_name": ai.get("model_name") or "gemini-flash-latest",
-        "api_key": ai.get("api_key") or "",
-        "temperature": float(ai.get("temperature") if ai.get("temperature") is not None else 0.4),
-    }
-
-
 def _mission_snapshot(mission: dict) -> str:
     """Compact snapshot of today's mission the planner needs to reason about."""
     tasks = mission.get("tasks") or []
@@ -125,41 +113,32 @@ def _mission_snapshot(mission: dict) -> str:
 async def generate_narrative_and_previews(db, *, user_id: str, mission: dict) -> Dict[str, Any]:
     """One AI call → narrative + tomorrow_preview + week_goal.
 
-    Silent no-op if the LLM is unavailable — mission still displays without
+    Silent no-op if the AI call fails — mission still displays without
     the AI layer. This is critical: mission generation must NEVER fail
     because of an AI outage.
     """
-    cfg = await _load_ai_config(db, user_id)
-    has_emergent = bool((os.environ.get("EMERGENT_LLM_KEY") or "").strip())
-    if not cfg["api_key"] and not has_emergent:
-        log.info("mission_planner: no api_key + no Emergent fallback — skipping AI layer")
-        return {}
-
     context = await build_context(db, user_id=user_id, node_id=None)
     context_block = serialize_context(context)
     system_message = f"{_PLANNER_SYSTEM}\n\n---\n**LEARNER CONTEXT**:\n{context_block}"
     prompt = f"{_mission_snapshot(mission)}\n\nEmit the JSON envelope now."
 
     try:
-        raw = await complete_json(
+        raw = await complete(
+            capability=AICapability.MISSION_NARRATIVE,
             system_message=system_message,
             prompt=prompt,
-            provider=cfg["provider"],
-            model_name=cfg["model_name"],
-            api_key=cfg["api_key"],
-            temperature=cfg["temperature"],
             session_id=f"mission-planner::{user_id}",
         )
     except AIProviderError as e:
-        log.warning("mission_planner: AI call failed (%s) — falling back to no-narrative mission", e.kind)
+        logger.warning("mission_planner: AI call failed (%s) — falling back to no-narrative mission", e.kind)
         return {}
     except Exception as e:  # noqa: BLE001
-        log.exception("mission_planner: unexpected failure — %s", e)
+        logger.exception("mission_planner: unexpected failure — %s", e)
         return {}
 
     parsed = _parse_json(raw)
     if not parsed:
-        log.warning("mission_planner: could not parse JSON envelope")
+        logger.warning("mission_planner: could not parse JSON envelope")
         return {}
 
     return {

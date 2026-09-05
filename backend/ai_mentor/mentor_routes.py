@@ -29,7 +29,7 @@ def _ai_error_to_http(err: AIProviderError) -> HTTPException:
 @router.post("/chat", response_model=ChatResponse)
 async def chat(payload: ChatRequest, user=Depends(get_current_user)):
     """Main chat endpoint — creates a conversation on demand, persists both
-    turns, calls Gemini via the mentor service."""
+    turns, calls the AI via the mentor service."""
     from server import db
     try:
         convo, user_msg, assistant_msg, preview = await mentor_service.answer(

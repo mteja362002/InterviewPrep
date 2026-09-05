@@ -689,7 +689,6 @@ def _content_view(doc: Optional[dict]) -> dict:
             "flashcards": [],
             "related_topics": [],
             "prerequisites": [],
-            "provider": None, "model_name": None,
             "generated_at": None, "updated_at": None,
         }
     return {
@@ -701,8 +700,6 @@ def _content_view(doc: Optional[dict]) -> dict:
         "flashcards": doc.get("flashcards") or [],
         "related_topics": doc.get("related_topics") or [],
         "prerequisites": doc.get("prerequisites") or [],
-        "provider": doc.get("provider"),
-        "model_name": doc.get("model_name"),
         "generated_at": doc.get("generated_at"),
         "updated_at": doc.get("updated_at"),
     }
@@ -731,7 +728,7 @@ async def get_node_content(node_id: str, user=Depends(get_current_user)):
 @router.post("/nodes/{node_id}/content/generate")
 async def generate_node_content(node_id: str, user=Depends(get_current_user)):
     """Generate + cache AI content for a node. Idempotent on a cache hit
-    (returns the existing doc without a new Gemini call)."""
+    (returns the existing doc without a new AI call)."""
     from server import db
     version = await _ensure_user_version(db, user["id"])
     if not get_roadmap(version).get(node_id):
@@ -747,7 +744,7 @@ async def generate_node_content(node_id: str, user=Depends(get_current_user)):
 
 @router.post("/nodes/{node_id}/content/regenerate")
 async def regenerate_node_content(node_id: str, user=Depends(get_current_user)):
-    """Explicit re-generation. Clears the cache row and calls Gemini again."""
+    """Explicit re-generation. Clears the cache row and calls the AI again."""
     from server import db
     version = await _ensure_user_version(db, user["id"])
     if not get_roadmap(version).get(node_id):

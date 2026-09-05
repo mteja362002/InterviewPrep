@@ -13,12 +13,10 @@ All consumer-facing types are re-exported via ``ai_service.py``.
 """
 from __future__ import annotations
 
-import logging
+import re
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import FrozenSet, Optional, Set
-
-log = logging.getLogger(__name__)
 
 
 # ---------------------------------------------------------------------------
@@ -131,8 +129,6 @@ class AIProviderError(Exception):
 # ---------------------------------------------------------------------------
 # Error classification
 # ---------------------------------------------------------------------------
-
-import re  # noqa: E402 — grouped here with the patterns it supports
 
 _INVALID_KEY_PATTERNS = (
     re.compile(r"api[\s_-]*key[^a-z]*(not[\s_]*valid|invalid|missing|rejected)", re.I),

@@ -9,8 +9,9 @@ The gateway is the single orchestrator for all AI completions.  It owns:
     - Response pipeline   (v1: wrap raw text, future: parsing / normalisation)
     - Structured logging for telemetry
 
-The gateway is instantiated once at module load (see ``__init__.py``)
-and is called exclusively via ``ai_service.complete()``.
+The gateway is instantiated lazily via ``get_gateway()`` in
+``ai_gateway.__init__`` and is called exclusively via
+``ai_service.complete()``.
 """
 from __future__ import annotations
 
@@ -34,9 +35,8 @@ from ai_gateway.routing import (
     ProviderRegistry,
     RoutingPolicy,
 )
-from ai_gateway.providers import discover
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class Gateway:
@@ -59,17 +59,16 @@ class Gateway:
     def initialise(self) -> None:
         """Discover providers from environment and populate registries.
 
-        Called once at startup.  Safe to call multiple times (idempotent
-        after first call).
+        Called once on first request.  Safe to call multiple times
+        (idempotent after first call).
         """
         if self._initialised:
             return
 
-        for defn in discover():
-            self._provider_registry.register(defn)
+        self._provider_registry.load_from_environment()
 
         self._initialised = True
-        log.info(
+        logger.info(
             "AI Gateway initialised — %d provider(s) registered",
             self._provider_registry.count,
         )
@@ -134,7 +133,7 @@ class Gateway:
 
             except AIProviderError as err:
                 last_error = err
-                log.warning(
+                logger.warning(
                     "Provider %s failed (kind=%s) — trying next",
                     provider.id, err.kind,
                 )
@@ -159,6 +158,10 @@ class Gateway:
         profile: CapabilityProfile,
     ) -> str:
         """Try a single provider with the capability's retry policy.
+
+        Retry behaviour is strictly linear:
+            Provider A → attempt 1, 2, 3 → Provider B → attempt 1, 2, 3.
+        Never returns to Provider A after failing over.
 
         Returns raw text on success.  Raises ``AIProviderError`` when
         the provider is exhausted (all retries failed or non-retryable error).
@@ -196,7 +199,7 @@ class Gateway:
                 # Wait with exponential backoff + jitter before retrying.
                 delay = retry.base_delay_seconds * (2 ** attempt)
                 delay += random.uniform(0, 0.5)
-                log.info(
+                logger.info(
                     "Retrying provider %s (attempt %d/%d, delay=%.1fs, kind=%s)",
                     provider.id, attempt + 1, retry.max_retries,
                     delay, classified.kind,
@@ -257,7 +260,7 @@ class Gateway:
         provider: ProviderDefinition,
         latency_ms: int,
     ) -> None:
-        log.info(
+        logger.info(
             "ai_gateway.complete OK · capability=%s · provider=%s · "
             "model=%s · latency=%dms · session=%s",
             request.capability.value, provider.id,
@@ -269,7 +272,7 @@ class Gateway:
         request: AIRequest,
         last_error: AIProviderError | None,
     ) -> None:
-        log.error(
+        logger.error(
             "ai_gateway.complete FAILED · capability=%s · "
             "all_providers_exhausted · last_kind=%s · session=%s",
             request.capability.value,

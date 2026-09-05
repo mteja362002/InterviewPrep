@@ -2,10 +2,9 @@
 
 Responsibilities:
   1. Read cache from Mongo (`knowledge_content` collection).
-  2. On miss, look up the user's ai_config (provider / model / api_key).
-  3. Ask Gemini via `ai_service.complete_json()`.
-  4. Parse + persist the response.
-  5. Return the cached dict to the caller.
+  2. On miss, call the AI Gateway via `ai_service.complete()`.
+  3. Parse + persist the response.
+  4. Return the cached dict to the caller.
 
 Cache scope is GLOBAL (node_id, roadmap_version) — the first user pays the
 generation cost; everybody else reads cache. This matches the "minimize API
@@ -16,11 +15,11 @@ import logging
 from datetime import datetime, timezone
 from typing import Optional
 
-from ai_service import complete_json, AIProviderError
+from ai_service import complete, AICapability, AIProviderError
 from prompt_builder import SYSTEM_MESSAGE, build_prompt, parse_content
 from roadmap import get_roadmap
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 COLLECTION = "knowledge_content"
@@ -47,19 +46,6 @@ async def clear_cache(db, *, node_id: str, roadmap_version: str) -> int:
     return res.deleted_count
 
 
-async def _load_ai_config(db, user_id: str) -> dict:
-    """Pull the user's saved AI config from `user_settings`. Falls back to
-    the defaults from AIConfig if the user hasn't opened Settings yet."""
-    doc = await db.settings.find_one({"user_id": user_id}, {"_id": 0, "ai_config": 1}) or {}
-    ai = doc.get("ai_config") or {}
-    return {
-        "provider": ai.get("provider") or "gemini",
-        "model_name": ai.get("model_name") or "gemini-flash-latest",
-        "api_key": ai.get("api_key") or None,
-        "temperature": float(ai.get("temperature") if ai.get("temperature") is not None else 0.7),
-    }
-
-
 async def ensure_content(
     db,
     *,
@@ -68,7 +54,7 @@ async def ensure_content(
     user_id: str,
     force: bool = False,
 ) -> dict:
-    """Return content for a node, generating it via Gemini on first request.
+    """Return content for a node, generating it via AI on first request.
 
     Raises AIProviderError with a user-facing `.kind` on failure so the
     calling route can shape the HTTP response.
@@ -83,37 +69,25 @@ async def ensure_content(
     if not node:
         raise AIProviderError("Unknown roadmap node.", kind="not_found", status_code=404)
 
-    cfg = await _load_ai_config(db, user_id)
-    if not cfg["api_key"]:
-        raise AIProviderError(
-            "Please configure your Gemini API Key in Settings.",
-            kind="missing_key", status_code=400,
-        )
-
     prompt = build_prompt(node, roadmap)
-    raw = await complete_json(
+    raw = await complete(
+        capability=AICapability.KNOWLEDGE_GENERATION,
         system_message=SYSTEM_MESSAGE,
         prompt=prompt,
-        provider=cfg["provider"],
-        model_name=cfg["model_name"],
-        api_key=cfg["api_key"],
-        temperature=cfg["temperature"],
         session_id=f"kb::{node_id}",
     )
     parsed = parse_content(raw)
     if parsed.get("_parse_error"):
         # We got a response but couldn't parse — do NOT cache garbage.
-        log.warning("KB gen parse error for %s: %s", node_id, parsed.get("_raw", ""))
+        logger.warning("KB gen parse error for %s: %s", node_id, parsed.get("_raw", ""))
         raise AIProviderError(
-            "Gemini returned a response we couldn't parse. Please retry.",
+            "AI returned a response that could not be parsed. Please retry.",
             kind="parse_error", status_code=502,
         )
 
     doc = {
         "node_id": node_id,
         "roadmap_version": roadmap_version,
-        "provider": cfg["provider"],
-        "model_name": cfg["model_name"],
         "theory": parsed["theory"],
         "examples": parsed["examples"],
         "interview_tips": parsed["interview_tips"],
