@@ -48,12 +48,17 @@ _DEFAULT_PROFILES: Dict[AICapability, CapabilityProfile] = {
         timeout_seconds=30,
         retry_policy=RetryPolicy(max_retries=2),
         structured_output=True,
+        reasoning="standard",
+        cost_priority="balanced",
     ),
     AICapability.MENTOR_CHAT: CapabilityProfile(
         temperature=0.6,
         max_tokens=4096,
         timeout_seconds=30,
         retry_policy=RetryPolicy(max_retries=2),
+        reasoning="fast",
+        latency_priority="low",
+        cost_priority="economy",
     ),
     AICapability.MENTOR_LESSON: CapabilityProfile(
         temperature=0.6,
@@ -61,6 +66,7 @@ _DEFAULT_PROFILES: Dict[AICapability, CapabilityProfile] = {
         timeout_seconds=30,
         retry_policy=RetryPolicy(max_retries=2),
         structured_output=True,
+        reasoning="standard",
     ),
     AICapability.MISSION_NARRATIVE: CapabilityProfile(
         temperature=0.4,
@@ -68,13 +74,19 @@ _DEFAULT_PROFILES: Dict[AICapability, CapabilityProfile] = {
         timeout_seconds=20,
         retry_policy=RetryPolicy(max_retries=1),
         structured_output=True,
+        reasoning="fast",
+        latency_priority="low",
+        cost_priority="economy",
     ),
     AICapability.ASSESSMENT_CONTENT: CapabilityProfile(
         temperature=0.5,
         max_tokens=4096,
-        timeout_seconds=30,
+        timeout_seconds=45,
         retry_policy=RetryPolicy(max_retries=2),
         structured_output=True,
+        reasoning="deep",
+        latency_priority="relaxed",
+        cost_priority="premium",
     ),
 }
 
@@ -179,10 +191,24 @@ class ProviderRegistry:
             ))
             logger.info("Provider registered: gemini-emergent (model=%s)", emergent_model)
 
-        # -- OpenRouter (future) --------------------------------------------
+        # -- OpenRouter (preferred) -------------------------------------------
         openrouter_key = (os.environ.get("OPENROUTER_API_KEY") or "").strip()
+        openrouter_model = (
+            os.environ.get("OPENROUTER_DEFAULT_MODEL") or "google/gemini-2.5-flash"
+        ).strip()
         if openrouter_key:
-            logger.info("OpenRouter key detected — adapter not yet implemented, skipping")
+            from ai_gateway.providers.openrouter import OpenRouterAdapter
+
+            self.register(ProviderDefinition(
+                id="openrouter",
+                priority=5,
+                capabilities=set(all_capabilities),
+                model=openrouter_model,
+                api_key=openrouter_key,
+                transport="direct",
+                adapter=OpenRouterAdapter(),
+            ))
+            logger.info("Provider registered: openrouter (default_model=%s)", openrouter_model)
 
         if not self._providers:
             logger.warning(

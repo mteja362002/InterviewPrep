@@ -35,6 +35,7 @@ from ai_gateway.routing import (
     ProviderRegistry,
     RoutingPolicy,
 )
+from ai_gateway.model_selection import ModelSelector
 
 logger = logging.getLogger(__name__)
 
@@ -50,6 +51,7 @@ class Gateway:
         self._capability_registry = CapabilityRegistry()
         self._provider_registry = ProviderRegistry()
         self._routing_policy = RoutingPolicy()
+        self._model_selector = ModelSelector()
         self._initialised = False
 
     # ------------------------------------------------------------------
@@ -116,7 +118,7 @@ class Gateway:
 
         for provider in chain:
             try:
-                raw_text = await self._execute_with_provider(
+                raw_text, model_used = await self._execute_with_provider(
                     provider, request, profile,
                 )
 
@@ -127,8 +129,9 @@ class Gateway:
                     provider=provider,
                     request=request,
                     latency_ms=latency_ms,
+                    model_used=model_used,
                 )
-                self._log_success(request, provider, latency_ms)
+                self._log_success(request, provider, latency_ms, model_used)
                 return response
 
             except AIProviderError as err:
@@ -156,37 +159,59 @@ class Gateway:
         provider: ProviderDefinition,
         request: AIRequest,
         profile: CapabilityProfile,
-    ) -> str:
+    ) -> tuple[str, str]:
         """Try a single provider with the capability's retry policy.
 
         Retry behaviour is strictly linear:
             Provider A → attempt 1, 2, 3 → Provider B → attempt 1, 2, 3.
         Never returns to Provider A after failing over.
 
-        Returns raw text on success.  Raises ``AIProviderError`` when
-        the provider is exhausted (all retries failed or non-retryable error).
+        Returns ``(raw_text, model_used)`` on success.  Raises
+        ``AIProviderError`` when the provider is exhausted (all retries
+        failed or non-retryable error).
         """
         retry = profile.retry_policy
         last_error: AIProviderError | None = None
 
-        for attempt in range(retry.max_retries + 1):
-            try:
-                raw_text = await provider.adapter.complete(
-                    model=provider.model,
-                    api_key=provider.api_key,
-                    system_message=request.system_message,
-                    prompt=request.prompt,
-                    temperature=profile.temperature,
-                    max_tokens=profile.max_tokens,
-                    timeout_seconds=profile.timeout_seconds,
-                )
-                return raw_text
+        # Resolve ordered deterministic candidates.  Normal execution uses the
+        # first model; a later OpenRouter candidate is tried only when the
+        # previous one is unavailable.
+        models = self._model_selector.select_candidates(
+            capability=request.capability,
+            profile=profile,
+            provider=provider,
+        )
 
-            except AIProviderError:
-                raise   # already classified — re-raise directly
-            except Exception as exc:
-                classified = classify_error(exc)
+        for model_index, model in enumerate(models):
+            for attempt in range(retry.max_retries + 1):
+                try:
+                    raw_text = await provider.adapter.complete(
+                        model=model,
+                        api_key=provider.api_key,
+                        system_message=request.system_message,
+                        prompt=request.prompt,
+                        temperature=profile.temperature,
+                        max_tokens=profile.max_tokens,
+                        timeout_seconds=profile.timeout_seconds,
+                    )
+                    return raw_text, model
+
+                except AIProviderError as exc:
+                    classified = exc
+                except Exception as exc:
+                    classified = classify_error(exc)
+
                 last_error = classified
+
+                # An unavailable OpenRouter model can use the next configured
+                # candidate.  Other errors keep the existing retry/failover
+                # semantics unchanged.
+                if classified.kind == "model_not_found" and model_index + 1 < len(models):
+                    logger.warning(
+                        "Model %s unavailable for provider %s — trying configured fallback",
+                        model, provider.id,
+                    )
+                    break
 
                 # Non-retryable? Stop immediately.
                 if classified.kind not in retry.retryable_kinds:
@@ -233,6 +258,7 @@ class Gateway:
         provider: ProviderDefinition,
         request: AIRequest,
         latency_ms: int,
+        model_used: str = "",
     ) -> AIResponse:
         """Post-process a provider response.
 
@@ -245,7 +271,7 @@ class Gateway:
         return AIResponse(
             text=raw_text,
             provider_used=provider.id,
-            model_used=provider.model,
+            model_used=model_used or provider.model,
             latency_ms=latency_ms,
             capability=request.capability,
         )
@@ -259,12 +285,13 @@ class Gateway:
         request: AIRequest,
         provider: ProviderDefinition,
         latency_ms: int,
+        model_used: str = "",
     ) -> None:
         logger.info(
             "ai_gateway.complete OK · capability=%s · provider=%s · "
             "model=%s · latency=%dms · session=%s",
             request.capability.value, provider.id,
-            provider.model, latency_ms, request.session_id,
+            model_used or provider.model, latency_ms, request.session_id,
         )
 
     def _log_failure(

@@ -212,6 +212,17 @@ class TestProviderRegistry:
         assert registry.count == 1
         assert registry.get_by_id("gemini-primary") is not None
 
+    def test_openrouter_precedes_gemini_when_both_are_configured(self):
+        registry = ProviderRegistry()
+        with patch.dict("os.environ", {
+            "OPENROUTER_API_KEY": "or-key",
+            "GEMINI_API_KEY": "gemini-key",
+        }, clear=True):
+            registry.load_from_environment()
+
+        assert registry.get_by_id("openrouter").priority == 5
+        assert registry.get_by_id("gemini-primary").priority == 10
+
     def test_load_from_environment_deduplicates_same_key(self):
         registry = ProviderRegistry()
         with patch.dict("os.environ", {
@@ -514,3 +525,298 @@ class TestRequestPipeline:
         request = _make_request()
         result = gw._request_pipeline(request)
         assert result is request
+
+
+# ===========================================================================
+# 11. Model Selection (Phase 2)
+# ===========================================================================
+
+from ai_gateway.model_selection import ModelSelector, _MODEL_TIERS
+
+
+class _FakeOpenRouterAdapter:
+    """Fake adapter that identifies as openrouter."""
+
+    @property
+    def name(self) -> str:
+        return "openrouter"
+
+    async def complete(self, *, model, api_key, system_message, prompt,
+                       temperature, max_tokens, timeout_seconds):
+        return f"response from {model}"
+
+
+class TestModelSelector:
+    """Model tier selection and environment override tests."""
+
+    def _profile(self, reasoning="standard"):
+        return CapabilityProfile(
+            temperature=0.5, max_tokens=4096, timeout_seconds=30,
+            retry_policy=RetryPolicy(max_retries=1),
+            reasoning=reasoning,
+        )
+
+    def _openrouter_provider(self):
+        return ProviderDefinition(
+            id="openrouter", priority=5,
+            capabilities=set(AICapability),
+            model="google/gemini-2.5-flash",
+            api_key="test-key",
+            adapter=_FakeOpenRouterAdapter(),
+        )
+
+    def _gemini_provider(self):
+        from ai_gateway.providers.gemini import GeminiAdapter
+        return ProviderDefinition(
+            id="gemini-primary", priority=10,
+            capabilities=set(AICapability),
+            model="gemini-2.5-flash",
+            api_key="test-key",
+            adapter=_FakeAdapter(),  # uses _FakeAdapter (no .name)
+        )
+
+    # ---- Tier tests -------------------------------------------------------
+
+    def test_fast_tier_selects_fast_model(self):
+        selector = ModelSelector()
+        model = selector.select(
+            capability=AICapability.MISSION_NARRATIVE,
+            profile=self._profile("fast"),
+            provider=self._openrouter_provider(),
+        )
+        assert model == _MODEL_TIERS["fast"]
+        assert "lite" in model.lower() or "flash" in model.lower()
+
+    def test_standard_tier_selects_standard_model(self):
+        selector = ModelSelector()
+        model = selector.select(
+            capability=AICapability.KNOWLEDGE_GENERATION,
+            profile=self._profile("standard"),
+            provider=self._openrouter_provider(),
+        )
+        assert model == _MODEL_TIERS["standard"]
+
+    def test_deep_tier_selects_deep_model(self):
+        selector = ModelSelector()
+        model = selector.select(
+            capability=AICapability.ASSESSMENT_CONTENT,
+            profile=self._profile("deep"),
+            provider=self._openrouter_provider(),
+        )
+        assert model == _MODEL_TIERS["deep"]
+        assert "pro" in model.lower()
+
+    def test_tiers_are_differentiated(self):
+        """All three tiers must resolve to genuinely different models."""
+        assert _MODEL_TIERS["fast"] != _MODEL_TIERS["deep"]
+        # fast and standard may be the same (flash variants) but deep must differ
+        assert _MODEL_TIERS["deep"] != _MODEL_TIERS["standard"]
+
+    # ---- Environment override tests ----------------------------------------
+
+    def test_env_override_fast(self, monkeypatch):
+        monkeypatch.setenv("OPENROUTER_MODEL_FAST", "test/custom-fast")
+        # Re-import to pick up env change
+        import importlib, ai_gateway.model_selection as ms
+        importlib.reload(ms)
+        try:
+            assert ms._MODEL_TIERS["fast"] == "test/custom-fast"
+            selector = ms.ModelSelector()
+            model = selector.select(
+                capability=AICapability.MISSION_NARRATIVE,
+                profile=self._profile("fast"),
+                provider=self._openrouter_provider(),
+            )
+            assert model == "test/custom-fast"
+        finally:
+            importlib.reload(ms)
+
+    def test_env_override_accepts_ordered_candidates(self, monkeypatch):
+        monkeypatch.setenv(
+            "OPENROUTER_MODEL_FAST",
+            "test/primary-fast, openai/secondary-fast, test/primary-fast",
+        )
+        import importlib, ai_gateway.model_selection as ms
+        importlib.reload(ms)
+        try:
+            assert ms._MODEL_TIERS["fast"] == "test/primary-fast"
+            selector = ms.ModelSelector()
+            assert selector.select_candidates(
+                capability=AICapability.MISSION_NARRATIVE,
+                profile=self._profile("fast"),
+                provider=self._openrouter_provider(),
+            ) == ("test/primary-fast", "openai/secondary-fast")
+        finally:
+            importlib.reload(ms)
+
+    def test_env_override_deep(self, monkeypatch):
+        monkeypatch.setenv("OPENROUTER_MODEL_DEEP", "test/custom-deep")
+        import importlib, ai_gateway.model_selection as ms
+        importlib.reload(ms)
+        try:
+            assert ms._MODEL_TIERS["deep"] == "test/custom-deep"
+        finally:
+            importlib.reload(ms)
+
+    # ---- Non-OpenRouter providers fall through to provider.model -----------
+
+    def test_gemini_uses_provider_model(self):
+        selector = ModelSelector()
+        provider = self._gemini_provider()
+        model = selector.select(
+            capability=AICapability.KNOWLEDGE_GENERATION,
+            profile=self._profile("standard"),
+            provider=provider,
+        )
+        assert model == "gemini-2.5-flash"  # provider.model, not OpenRouter tier
+
+    def test_fake_adapter_without_name_supported(self):
+        """Existing _FakeAdapter (no .name attr) must not crash the selector."""
+        selector = ModelSelector()
+        provider = _make_provider(adapter=_FakeAdapter())
+        model = selector.select(
+            capability=AICapability.KNOWLEDGE_GENERATION,
+            profile=self._profile("standard"),
+            provider=provider,
+        )
+        assert model == "test-model"  # falls through to provider.model
+
+
+class TestCapabilityTierMapping:
+    """Verify each capability maps to the intended model tier."""
+
+    def test_knowledge_generation_is_standard(self):
+        registry = CapabilityRegistry()
+        profile = registry.resolve(AICapability.KNOWLEDGE_GENERATION)
+        assert profile.reasoning == "standard"
+
+    def test_mentor_chat_is_fast(self):
+        registry = CapabilityRegistry()
+        profile = registry.resolve(AICapability.MENTOR_CHAT)
+        assert profile.reasoning == "fast"
+
+    def test_mentor_lesson_is_standard(self):
+        registry = CapabilityRegistry()
+        profile = registry.resolve(AICapability.MENTOR_LESSON)
+        assert profile.reasoning == "standard"
+
+    def test_mission_narrative_is_fast(self):
+        registry = CapabilityRegistry()
+        profile = registry.resolve(AICapability.MISSION_NARRATIVE)
+        assert profile.reasoning == "fast"
+
+    def test_assessment_content_is_deep(self):
+        registry = CapabilityRegistry()
+        profile = registry.resolve(AICapability.ASSESSMENT_CONTENT)
+        assert profile.reasoning == "deep"
+
+
+class TestModelUsedInResponse:
+    """Verify model_used propagates correctly through the full gateway path."""
+
+    def test_model_used_is_selected_model_not_provider_default(self):
+        adapter = _FakeOpenRouterAdapter()
+        provider = ProviderDefinition(
+            id="openrouter", priority=5,
+            capabilities=set(AICapability),
+            model="default-should-not-appear",
+            api_key="test-key",
+            adapter=adapter,
+        )
+        gw = Gateway()
+        gw._initialised = True
+        gw._provider_registry.register(provider)
+
+        response = asyncio.run(gw.complete(_make_request(AICapability.MISSION_NARRATIVE)))
+        # Should be the fast-tier model, NOT "default-should-not-appear"
+        assert response.model_used == _MODEL_TIERS["fast"]
+        assert response.provider_used == "openrouter"
+
+
+class TestOpenRouterPreferred:
+    """Verify OpenRouter is preferred over Gemini when both are available."""
+
+    def test_openrouter_tried_first(self):
+        or_adapter = _FakeOpenRouterAdapter()
+        gemini_adapter = _FakeAdapter(response_text="from gemini")
+
+        or_provider = ProviderDefinition(
+            id="openrouter", priority=5,
+            capabilities=set(AICapability),
+            model="google/gemini-2.5-flash",
+            api_key="or-key",
+            adapter=or_adapter,
+        )
+        gemini_provider = ProviderDefinition(
+            id="gemini-primary", priority=10,
+            capabilities=set(AICapability),
+            model="gemini-2.5-flash",
+            api_key="g-key",
+            adapter=gemini_adapter,
+        )
+
+        gw = Gateway()
+        gw._initialised = True
+        gw._provider_registry.register(or_provider)
+        gw._provider_registry.register(gemini_provider)
+
+        response = asyncio.run(gw.complete(_make_request()))
+        assert response.provider_used == "openrouter"
+
+    def test_gemini_fallback_when_openrouter_fails(self):
+        or_adapter = _FakeOpenRouterAdapter()
+        or_adapter.complete = AsyncMock(side_effect=RuntimeError("OpenRouter down"))
+        gemini_adapter = _FakeAdapter(response_text="gemini fallback")
+
+        or_provider = ProviderDefinition(
+            id="openrouter", priority=5,
+            capabilities=set(AICapability),
+            model="google/gemini-2.5-flash",
+            api_key="or-key",
+            adapter=or_adapter,
+        )
+        gemini_provider = ProviderDefinition(
+            id="gemini-primary", priority=10,
+            capabilities=set(AICapability),
+            model="gemini-2.5-flash",
+            api_key="g-key",
+            adapter=gemini_adapter,
+        )
+
+        gw = Gateway()
+        gw._initialised = True
+        gw._provider_registry.register(or_provider)
+        gw._provider_registry.register(gemini_provider)
+
+        response = asyncio.run(gw.complete(_make_request()))
+        assert response.provider_used == "gemini-primary"
+        assert response.text == "gemini fallback"
+
+    def test_openrouter_uses_next_configured_model_when_primary_is_unavailable(self):
+        adapter = _FakeOpenRouterAdapter()
+        adapter.complete = AsyncMock(side_effect=[
+            RuntimeError("model not found"),
+            "response from configured fallback",
+        ])
+        provider = ProviderDefinition(
+            id="openrouter", priority=5,
+            capabilities=set(AICapability),
+            model="unused-default",
+            api_key="or-key",
+            adapter=adapter,
+        )
+        gw = Gateway()
+        gw._initialised = True
+        gw._provider_registry.register(provider)
+        with patch.object(
+            gw._model_selector,
+            "select_candidates",
+            return_value=("missing/model", "openai/configured-fallback"),
+        ):
+            response = asyncio.run(gw.complete(_make_request()))
+
+        assert response.provider_used == "openrouter"
+        assert response.model_used == "openai/configured-fallback"
+        assert [call.kwargs["model"] for call in adapter.complete.await_args_list] == [
+            "missing/model", "openai/configured-fallback",
+        ]

@@ -61,7 +61,7 @@ The design philosophy is inspired by **Linear, Vercel, and Cursor** — a premiu
 ### AI-Powered Features
 - **AI Mentor** — Context-grounded conversational assistant with full learner state awareness (progress, missions, company targets, knowledge gaps)
 - **AI Knowledge Base** — On-demand AI-generated theory, examples, interview tips, flashcards, and common mistakes for every roadmap node (globally cached, first-requester-pays)
-- **AI Gateway** — Provider-agnostic abstraction layer supporting Gemini (default), with pluggable architecture for OpenAI, Claude, and DeepSeek
+- **AI Gateway** — Provider-agnostic abstraction layer using OpenRouter first with Gemini fallback, supporting multiple model families through gateway configuration
 
 ### Assessment & Intelligence
 - **Assessment Engine** — Deterministic evaluation with rubric-based scoring, immutable evidence trail, difficulty calibration, and feedback generation
@@ -643,7 +643,7 @@ Deterministic evaluation system:
 ### AI Gateway (`ai_gateway/`)
 Provider-agnostic AI abstraction:
 - Singleton gateway with lazy initialization
-- Pluggable provider architecture (Gemini default)
+- Pluggable provider architecture (OpenRouter preferred, Gemini fallback)
 - Structured request/response models (`AIRequest`, `AIResponse`, `AICapability`)
 - Routing logic for provider selection
 

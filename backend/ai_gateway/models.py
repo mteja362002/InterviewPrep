@@ -61,6 +61,10 @@ class CapabilityProfile:
 
     Centralised here so that temperatures, token budgets, and timeout values
     are *never* scattered across consumer modules.
+
+    Model selection requirements (``reasoning``, ``latency_priority``,
+    ``cost_priority``) are used by ``ModelSelector`` to pick the optimal
+    model for a given provider.  Consumers never see these fields.
     """
     temperature: float
     max_tokens: int
@@ -68,6 +72,10 @@ class CapabilityProfile:
     retry_policy: RetryPolicy
     structured_output: bool = False
     streaming: bool = False
+    # -- Model selection requirements (used by ModelSelector) ---------------
+    reasoning: str = "standard"           # "fast" | "standard" | "deep"
+    latency_priority: str = "balanced"    # "low" | "balanced" | "relaxed"
+    cost_priority: str = "balanced"       # "economy" | "balanced" | "premium"
 
 
 # ---------------------------------------------------------------------------
