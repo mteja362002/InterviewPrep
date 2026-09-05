@@ -90,7 +90,7 @@ def _is_leaf_node(node: dict) -> bool:
     return not (node.get("child_ids") or [])
 
 
-def _rollup_from_progress(node: dict, progress: dict, roadmap) -> dict:
+def _rollup_from_progress(node: dict, progress: dict, roadmap, canonical_progress: dict = None) -> dict:
     """Compute status + mastery + counts for a node from itself or its descendants."""
     is_leaf = _is_leaf_node(node)
     # Legacy migrations can insert a knowledge_nodes row keyed by a track/module
@@ -129,7 +129,7 @@ def _rollup_from_progress(node: dict, progress: dict, roadmap) -> dict:
 
     # The canonical engine is the authoritative rollup path; use it for parent nodes.
     if node.get("id") != "root":
-        canonical = build_canonical_progress(roadmap, progress)
+        canonical = canonical_progress if canonical_progress is not None else build_canonical_progress(roadmap, progress)
         return {
             **canonical.get(node["id"], {}),
             "revision_bucket": _bucket(
@@ -205,12 +205,13 @@ async def get_full_roadmap(user=Depends(get_current_user)):
     roadmap = get_roadmap(version)
     progress = await _load_user_progress(db, user["id"])
 
+    canonical_progress = build_canonical_progress(roadmap, progress)
     tracks = []
     for track in roadmap.tracks():
-        track_view = _shape_node(track, _rollup_from_progress(track, progress, roadmap))
+        track_view = _shape_node(track, _rollup_from_progress(track, progress, roadmap, canonical_progress))
         # Build nested modules → topics → subtopics (light)
         def hydrate(n):
-            v = _shape_node(n, _rollup_from_progress(n, progress, roadmap))
+            v = _shape_node(n, _rollup_from_progress(n, progress, roadmap, canonical_progress))
             v["children"] = [hydrate(roadmap.get(c)) for c in n.get("child_ids", []) if roadmap.get(c)]
             return v
         track_view["children"] = [hydrate(roadmap.get(c)) for c in track["child_ids"] if roadmap.get(c)]
@@ -231,14 +232,15 @@ async def get_node_detail(node_id: str, user=Depends(get_current_user)):
         raise HTTPException(status_code=404, detail="Node not found")
 
     progress_map = await _load_user_progress(db, user["id"])
-    node_progress = _rollup_from_progress(node, progress_map, roadmap)
+    canonical_progress = build_canonical_progress(roadmap, progress_map)
+    node_progress = _rollup_from_progress(node, progress_map, roadmap, canonical_progress)
 
     breadcrumb = [{"id": a["id"], "label": a["label"], "type": a.get("type")}
                   for a in roadmap.ancestors(node_id)]
 
     prereqs = [{
         "id": p["id"], "label": p["label"], "type": p.get("type"),
-        "progress": _rollup_from_progress(p, progress_map, roadmap),
+        "progress": _rollup_from_progress(p, progress_map, roadmap, canonical_progress),
     } for p in roadmap.prerequisites(node_id)]
 
     related = [{
@@ -345,6 +347,7 @@ async def get_progress(user=Depends(get_current_user)):
     version = await _ensure_user_version(db, user["id"])
     roadmap = get_roadmap(version)
     progress_map = await _load_user_progress(db, user["id"])
+    canonical_progress = build_canonical_progress(roadmap, progress_map)
     # Roll up per track and per module using the canonical backend engine.
     result = []
     for track in roadmap.tracks():
@@ -352,12 +355,12 @@ async def get_progress(user=Depends(get_current_user)):
         for module in track.get("modules", []) or []:
             modules.append({
                 "id": module["id"], "label": module["label"],
-                "progress": _rollup_from_progress(module, progress_map, roadmap),
+                "progress": _rollup_from_progress(module, progress_map, roadmap, canonical_progress),
                 "topic_count": len(module.get("topics", []) or []),
             })
         result.append({
             "id": track["id"], "label": track["label"], "icon": track.get("icon"),
-            "progress": _rollup_from_progress(track, progress_map, roadmap),
+            "progress": _rollup_from_progress(track, progress_map, roadmap, canonical_progress),
             "modules": modules,
         })
     return {"version": version, "tracks": result}
@@ -377,6 +380,7 @@ async def get_summary(user=Depends(get_current_user)):
     version = await _ensure_user_version(db, user["id"])
     roadmap = get_roadmap(version)
     progress_map = await _load_user_progress(db, user["id"])
+    canonical_progress = build_canonical_progress(roadmap, progress_map)
 
     today = datetime.now(timezone.utc).date().isoformat()
     tracks_summary = []
@@ -385,7 +389,7 @@ async def get_summary(user=Depends(get_current_user)):
     total_hours_remaining = 0.0
 
     for track in roadmap.tracks():
-        roll = _rollup_from_progress(track, progress_map, roadmap)
+        roll = _rollup_from_progress(track, progress_map, roadmap, canonical_progress)
         tracks_summary.append({
             "id": track["id"], "label": track["label"], "icon": track.get("icon"),
             "completion_pct": roll["completion_pct"],
