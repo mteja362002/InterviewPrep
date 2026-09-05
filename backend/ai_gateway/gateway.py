@@ -181,6 +181,12 @@ class Gateway:
             profile=profile,
             provider=provider,
         )
+        if not models:
+            raise AIProviderError(
+                "No configured model satisfies this AI capability.",
+                kind="model_not_found",
+                status_code=404,
+            )
 
         for model_index, model in enumerate(models):
             for attempt in range(retry.max_retries + 1):

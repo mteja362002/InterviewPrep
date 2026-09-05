@@ -24,19 +24,15 @@ Uses `ai_service.complete()` routed through the AI Gateway with automatic
 provider failover.
 """
 from __future__ import annotations
-import json
 import logging
-import re
 from typing import Any, Dict, Optional
 
 from ai_service import complete, AICapability, AIProviderError
+from ai_gateway.parsers import parse_llm_json
 
 from .context_builder import build_context, serialize_context
 
 logger = logging.getLogger(__name__)
-
-_JSON_FENCE = re.compile(r"```(?:json)?\s*(\{.*?\})\s*```", re.DOTALL)
-
 
 _PLANNER_SYSTEM = """You are the **PrepOS Adaptive Mission Planner**.
 Your job is to look at the learner's context and emit a short JSON envelope
@@ -69,28 +65,6 @@ Emit VALID JSON ONLY (no prose, no fences) matching this schema exactly:
     "target_companies": ["Google", "..."]
   }
 }"""
-
-
-def _parse_json(raw: str) -> Optional[dict]:
-    """Same tolerant parser used by the mentor lesson mode."""
-    if not raw:
-        return None
-    try:
-        return json.loads(raw)
-    except Exception:
-        pass
-    m = _JSON_FENCE.search(raw)
-    if m:
-        try:
-            return json.loads(m.group(1))
-        except Exception:
-            pass
-    if "{" in raw and "}" in raw:
-        try:
-            return json.loads(raw[raw.find("{") : raw.rfind("}") + 1])
-        except Exception:
-            pass
-    return None
 
 
 def _mission_snapshot(mission: dict) -> str:
@@ -136,7 +110,7 @@ async def generate_narrative_and_previews(db, *, user_id: str, mission: dict) ->
         logger.exception("mission_planner: unexpected failure — %s", e)
         return {}
 
-    parsed = _parse_json(raw)
+    parsed = parse_llm_json(raw)
     if not parsed:
         logger.warning("mission_planner: could not parse JSON envelope")
         return {}

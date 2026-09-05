@@ -25,7 +25,8 @@ from __future__ import annotations
 
 import logging
 import os
-from typing import Dict, Tuple
+from dataclasses import dataclass
+from typing import Dict, Mapping, Tuple
 
 from ai_gateway.models import AICapability, CapabilityProfile, ProviderDefinition
 
@@ -35,29 +36,84 @@ logger = logging.getLogger(__name__)
 # OpenRouter model tiers — edit HERE when swapping models.
 #
 # Each tier maps a ``reasoning`` level from CapabilityProfile to an ordered
-# list of eligible OpenRouter models.  The first entry is the normal choice;
-# later entries are deterministic fallbacks when OpenRouter reports that a
-# configured model is unavailable.  This keeps model-family choice inside the
-# gateway while allowing an operator to configure non-Gemini OpenRouter models
-# without consumer or routing changes.
+# list of eligible OpenRouter models. Candidate capabilities are declared in
+# this gateway-internal registry and deterministically matched to a profile.
+# The configured order is only the final tie-breaker; it is not a hard-coded
+# provider-family decision.
 #
 # ``OPENROUTER_MODEL_<TIER>`` accepts either one model ID (the existing
 # contract) or a comma-separated ordered candidate list.
 #
-# Defaults verified against OpenRouter /api/v1/models on 2026-09-05:
+# Defaults verified against OpenRouter model pages on 2026-09-05:
 #
-#   fast     → google/gemini-3.5-flash-lite
-#              Newest lightweight model.  Low latency, low cost.
-#              Ideal for narrative generation, simple formatting.
+#   fast     → Google Gemini 3.5 Flash-Lite, OpenAI GPT-4.1 Mini,
+#              Qwen3 30B A3B Instruct 2507.
 #
-#   standard → google/gemini-2.5-flash
-#              Proven workhorse.  Good structured output, balanced cost.
-#              Ideal for knowledge generation, lessons, mentor chat.
+#   standard → Google Gemini 2.5 Flash, OpenAI GPT-4.1 Mini,
+#              Qwen3 30B A3B Instruct 2507.
 #
-#   deep     → google/gemini-2.5-pro
-#              Strongest reasoning.  Higher latency/cost, best quality.
-#              Ideal for complex explanations, difficult assessments.
+#   deep     → Google Gemini 2.5 Pro, Anthropic Claude Sonnet 4.5,
+#              DeepSeek R1 0528.
 # ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class ModelCandidate:
+    """Static capability declaration for one OpenRouter model.
+
+    This is intentionally configuration, not a live model catalogue.  It
+    makes the policy inspectable and lets future gateway-owned task context
+    add deterministic constraints without exposing models to consumers.
+    """
+
+    model_id: str
+    family: str
+    reasoning_strength: str  # "fast" | "standard" | "deep"
+    latency_class: str       # "low" | "balanced" | "relaxed"
+    cost_class: str          # "economy" | "balanced" | "premium"
+    supports_structured_output: bool
+
+
+_MODEL_CAPABILITY_REGISTRY: Dict[str, ModelCandidate] = {
+    "google/gemini-3.5-flash-lite": ModelCandidate(
+        "google/gemini-3.5-flash-lite", "google", "fast", "low", "economy", True,
+    ),
+    "openai/gpt-4.1-mini": ModelCandidate(
+        "openai/gpt-4.1-mini", "openai", "standard", "low", "balanced", True,
+    ),
+    "qwen/qwen3-30b-a3b-instruct-2507": ModelCandidate(
+        "qwen/qwen3-30b-a3b-instruct-2507", "qwen", "standard", "low", "economy", True,
+    ),
+    "google/gemini-2.5-flash": ModelCandidate(
+        "google/gemini-2.5-flash", "google", "standard", "balanced", "balanced", True,
+    ),
+    "google/gemini-2.5-pro": ModelCandidate(
+        "google/gemini-2.5-pro", "google", "deep", "relaxed", "premium", True,
+    ),
+    "anthropic/claude-sonnet-4.5": ModelCandidate(
+        "anthropic/claude-sonnet-4.5", "anthropic", "deep", "relaxed", "premium", True,
+    ),
+    "deepseek/deepseek-r1-0528": ModelCandidate(
+        "deepseek/deepseek-r1-0528", "deepseek", "deep", "relaxed", "balanced", True,
+    ),
+}
+
+_REASONING_RANK = {"fast": 0, "standard": 1, "deep": 2}
+
+_DEFAULT_TIER_CANDIDATES: Dict[str, str] = {
+    "fast": (
+        "google/gemini-3.5-flash-lite,openai/gpt-4.1-mini,"
+        "qwen/qwen3-30b-a3b-instruct-2507"
+    ),
+    "standard": (
+        "google/gemini-2.5-flash,openai/gpt-4.1-mini,"
+        "qwen/qwen3-30b-a3b-instruct-2507"
+    ),
+    "deep": (
+        "google/gemini-2.5-pro,anthropic/claude-sonnet-4.5,"
+        "deepseek/deepseek-r1-0528"
+    ),
+}
 
 def _configured_candidates(env_name: str, default: str) -> Tuple[str, ...]:
     """Return a de-duplicated, ordered model list from one env setting."""
@@ -69,15 +125,8 @@ def _configured_candidates(env_name: str, default: str) -> Tuple[str, ...]:
 
 
 _MODEL_CANDIDATES: Dict[str, Tuple[str, ...]] = {
-    "fast": _configured_candidates(
-        "OPENROUTER_MODEL_FAST", "google/gemini-3.5-flash-lite",
-    ),
-    "standard": _configured_candidates(
-        "OPENROUTER_MODEL_STANDARD", "google/gemini-2.5-flash",
-    ),
-    "deep": _configured_candidates(
-        "OPENROUTER_MODEL_DEEP", "google/gemini-2.5-pro",
-    ),
+    tier: _configured_candidates(f"OPENROUTER_MODEL_{tier.upper()}", default)
+    for tier, default in _DEFAULT_TIER_CANDIDATES.items()
 }
 
 # Kept as the current tier's primary model for backwards-compatible imports
@@ -104,6 +153,14 @@ class ModelSelector:
         Returns the provider's configured ``model`` field unchanged.
     """
 
+    def __init__(
+        self,
+        model_registry: Mapping[str, ModelCandidate] | None = None,
+    ) -> None:
+        self._model_registry = (
+            model_registry if model_registry is not None else _MODEL_CAPABILITY_REGISTRY
+        )
+
     def select(
         self,
         *,
@@ -129,7 +186,11 @@ class ModelSelector:
         """
         adapter_name = getattr(provider.adapter, "name", None) if provider.adapter else None
         if adapter_name == "openrouter":
-            model = self._select_for_openrouter(profile)
+            candidates = self._select_for_openrouter_candidates(profile)
+            # ``select`` remains a simple compatibility API. Gateway uses
+            # ``select_candidates`` and can therefore fail over if no model
+            # satisfies a hard requirement.
+            model = candidates[0] if candidates else provider.model
             logger.debug(
                 "ModelSelector: %s → %s (reasoning=%s, provider=%s)",
                 capability.value, model,
@@ -163,23 +224,57 @@ class ModelSelector:
     # Provider-specific selection logic
     # ------------------------------------------------------------------
 
-    @staticmethod
-    def _select_for_openrouter(profile: CapabilityProfile) -> str:
+    def _select_for_openrouter(self, profile: CapabilityProfile) -> str:
         """Map capability requirements to an OpenRouter model.
 
-        The selection algorithm:
-            1. Read ``profile.reasoning`` — the primary signal.
-            2. Look up the model tier table.
-            3. Fall back to the global default.
-
-        Future: incorporate ``latency_priority``, ``cost_priority``, and
-        ``structured_output`` for finer-grained selection when the model
-        catalogue grows.
+        The selection algorithm filters out candidates that cannot satisfy
+        structured-output or minimum reasoning requirements. It then sorts
+        eligible candidates by: exact latency class, exact cost class, least
+        excess reasoning strength, then configured order.
         """
-        return ModelSelector._select_for_openrouter_candidates(profile)[0]
+        return self._select_for_openrouter_candidates(profile)[0]
+
+    def _select_for_openrouter_candidates(self, profile: CapabilityProfile) -> Tuple[str, ...]:
+        """Return eligible candidates, deterministically ordered for execution."""
+        reasoning = getattr(profile, "reasoning", "standard")
+        requested_rank = _REASONING_RANK.get(reasoning, _REASONING_RANK["standard"])
+        configured = _MODEL_CANDIDATES.get(reasoning, _MODEL_CANDIDATES["standard"])
+        candidates = tuple(
+            self._model_registry.get(model_id) or ModelCandidate(
+                model_id=model_id,
+                family="custom",
+                reasoning_strength=reasoning,
+                latency_class="balanced",
+                cost_class="balanced",
+                supports_structured_output=True,
+            )
+            for model_id in configured
+        )
+        eligible = [
+            candidate for candidate in candidates
+            if _REASONING_RANK.get(candidate.reasoning_strength, 0) >= requested_rank
+            and (not profile.structured_output or candidate.supports_structured_output)
+        ]
+
+        ranked = sorted(
+            enumerate(eligible),
+            key=lambda item: self._candidate_sort_key(
+                item[1], item[0], profile, requested_rank,
+            ),
+        )
+        return tuple(candidate.model_id for _, candidate in ranked)
 
     @staticmethod
-    def _select_for_openrouter_candidates(profile: CapabilityProfile) -> Tuple[str, ...]:
-        """Return configured candidates for the requested reasoning tier."""
-        reasoning = getattr(profile, "reasoning", "standard")
-        return _MODEL_CANDIDATES.get(reasoning, _MODEL_CANDIDATES["standard"])
+    def _candidate_sort_key(
+        candidate: ModelCandidate,
+        configured_index: int,
+        profile: CapabilityProfile,
+        requested_rank: int,
+    ) -> tuple[bool, bool, int, int]:
+        """A transparent lexicographic policy; no opaque weighted score."""
+        return (
+            candidate.latency_class != profile.latency_priority,
+            candidate.cost_class != profile.cost_priority,
+            _REASONING_RANK.get(candidate.reasoning_strength, requested_rank) - requested_rank,
+            configured_index,
+        )

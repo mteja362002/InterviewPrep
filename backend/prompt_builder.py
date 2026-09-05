@@ -5,9 +5,9 @@ of Gemini is parsed by `parse_content()` — malformed responses fall back
 to sensible empty defaults rather than crashing the caller.
 """
 from __future__ import annotations
-import json
-import re
 from typing import Any
+
+from ai_gateway.parsers import parse_llm_json
 
 
 SYSTEM_MESSAGE = (
@@ -117,34 +117,6 @@ RULES:
 """
 
 
-def _strip_code_fence(txt: str) -> str:
-    """Some models return ```json ... ``` even when asked not to."""
-    txt = txt.strip()
-    if txt.startswith("```"):
-        # Drop first line and trailing fence.
-        txt = re.sub(r"^```(?:json)?\s*", "", txt, count=1)
-        if txt.endswith("```"):
-            txt = txt[:-3]
-    return txt.strip()
-
-
-def _first_json_object(txt: str) -> str:
-    """Return the first balanced {...} slice — a last-resort recovery."""
-    start = txt.find("{")
-    if start == -1:
-        return txt
-    depth = 0
-    for i in range(start, len(txt)):
-        ch = txt[i]
-        if ch == "{":
-            depth += 1
-        elif ch == "}":
-            depth -= 1
-            if depth == 0:
-                return txt[start:i + 1]
-    return txt[start:]
-
-
 def parse_content(raw: str) -> dict:
     """Parse a Gemini response into the KnowledgeContent shape.
 
@@ -154,14 +126,9 @@ def parse_content(raw: str) -> dict:
     if not raw:
         return {"theory": None, "examples": [], "interview_tips": [], "common_mistakes": [],
                 "flashcards": [], "related_topics": [], "prerequisites": []}
-    cleaned = _strip_code_fence(raw)
-    for candidate in (cleaned, _first_json_object(cleaned)):
-        try:
-            obj = json.loads(candidate)
-            if isinstance(obj, dict):
-                return _normalize_shape(obj)
-        except Exception:
-            continue
+    obj = parse_llm_json(raw)
+    if obj is not None:
+        return _normalize_shape(obj)
     return {"theory": None, "examples": [], "interview_tips": [], "common_mistakes": [],
             "flashcards": [], "related_topics": [], "prerequisites": [],
             "_parse_error": True, "_raw": raw[:400]}

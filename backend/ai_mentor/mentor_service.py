@@ -16,12 +16,11 @@ Streaming is not enabled yet but the architecture supports it — replace the
 Everything else stays identical.
 """
 from __future__ import annotations
-import json
 import logging
-import re
 from typing import Optional, Tuple
 
 from ai_service import complete, AICapability, AIProviderError
+from ai_gateway.parsers import parse_llm_json
 
 from . import conversation_store as store
 from .context_builder import (
@@ -130,10 +129,11 @@ async def answer(db, *, user_id: str, user_message: str,
 
     structured = None
     if style == "lesson":
-        structured = _parse_lesson_json(reply)
+        structured = parse_llm_json(reply)
         # If parsing failed, fall back to chat mode gracefully — the raw text
         # still gets persisted so the user sees SOMETHING useful.
         if structured is None:
+            logger.warning("mentor_service: failed to parse lesson JSON; falling back to chat mode")
             style = "chat"
 
     # 6. Persist assistant turn.
@@ -155,32 +155,3 @@ async def answer(db, *, user_id: str, user_message: str,
         fresh = await store.get_conversation(db, conversation_id=convo.id, user_id=user_id)
 
     return fresh or convo, user_msg, assistant_msg, public_preview(context)
-
-
-_JSON_FENCE = re.compile(r"```(?:json)?\s*(\{.*?\})\s*```", re.DOTALL)
-
-
-def _parse_lesson_json(raw: str) -> Optional[dict]:
-    """Best-effort JSON parse — LLM sometimes wraps output in ``` fences."""
-    # 1. Direct.
-    try:
-        return json.loads(raw)
-    except Exception:
-        pass
-    # 2. Extract from fenced block.
-    m = _JSON_FENCE.search(raw)
-    if m:
-        try:
-            return json.loads(m.group(1))
-        except Exception:
-            pass
-    # 3. First-brace to last-brace slice.
-    if "{" in raw and "}" in raw:
-        start = raw.find("{")
-        end = raw.rfind("}") + 1
-        try:
-            return json.loads(raw[start:end])
-        except Exception:
-            pass
-    logger.warning("mentor_service: failed to parse lesson JSON; falling back to chat mode")
-    return None

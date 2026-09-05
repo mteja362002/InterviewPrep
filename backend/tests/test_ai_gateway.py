@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import asyncio
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Set
 from unittest.mock import AsyncMock, MagicMock, patch
 
@@ -531,7 +531,11 @@ class TestRequestPipeline:
 # 11. Model Selection (Phase 2)
 # ===========================================================================
 
-from ai_gateway.model_selection import ModelSelector, _MODEL_TIERS
+from ai_gateway.model_selection import (
+    ModelSelector,
+    _MODEL_CAPABILITY_REGISTRY,
+    _MODEL_TIERS,
+)
 
 
 class _FakeOpenRouterAdapter:
@@ -581,7 +585,11 @@ class TestModelSelector:
         selector = ModelSelector()
         model = selector.select(
             capability=AICapability.MISSION_NARRATIVE,
-            profile=self._profile("fast"),
+            profile=CapabilityProfile(
+                temperature=0.5, max_tokens=4096, timeout_seconds=30,
+                retry_policy=RetryPolicy(max_retries=1),
+                reasoning="fast", latency_priority="low", cost_priority="economy",
+            ),
             provider=self._openrouter_provider(),
         )
         assert model == _MODEL_TIERS["fast"]
@@ -600,7 +608,11 @@ class TestModelSelector:
         selector = ModelSelector()
         model = selector.select(
             capability=AICapability.ASSESSMENT_CONTENT,
-            profile=self._profile("deep"),
+            profile=CapabilityProfile(
+                temperature=0.5, max_tokens=4096, timeout_seconds=30,
+                retry_policy=RetryPolicy(max_retries=1),
+                reasoning="deep", latency_priority="relaxed", cost_priority="premium",
+            ),
             provider=self._openrouter_provider(),
         )
         assert model == _MODEL_TIERS["deep"]
@@ -611,6 +623,103 @@ class TestModelSelector:
         assert _MODEL_TIERS["fast"] != _MODEL_TIERS["deep"]
         # fast and standard may be the same (flash variants) but deep must differ
         assert _MODEL_TIERS["deep"] != _MODEL_TIERS["standard"]
+
+    def test_fast_tier_contains_multiple_model_families(self):
+        selector = ModelSelector()
+        candidates = selector.select_candidates(
+            capability=AICapability.MENTOR_CHAT,
+            profile=self._profile("fast"),
+            provider=self._openrouter_provider(),
+        )
+        families = {_MODEL_CAPABILITY_REGISTRY[model].family for model in candidates}
+        assert {"google", "openai", "qwen"}.issubset(families)
+
+    def test_fast_requirements_prefer_fast_economy_candidate(self):
+        selector = ModelSelector()
+        profile = CapabilityProfile(
+            temperature=0.5, max_tokens=256, timeout_seconds=30,
+            retry_policy=RetryPolicy(max_retries=0),
+            reasoning="fast", latency_priority="low", cost_priority="economy",
+        )
+        assert selector.select(
+            capability=AICapability.MENTOR_CHAT,
+            profile=profile,
+            provider=self._openrouter_provider(),
+        ) == "google/gemini-3.5-flash-lite"
+
+    def test_latency_and_cost_requirements_choose_matching_candidate(self):
+        selector = ModelSelector()
+        profile = CapabilityProfile(
+            temperature=0.5, max_tokens=256, timeout_seconds=30,
+            retry_policy=RetryPolicy(max_retries=0),
+            reasoning="fast", latency_priority="low", cost_priority="balanced",
+        )
+        assert selector.select(
+            capability=AICapability.MENTOR_CHAT,
+            profile=profile,
+            provider=self._openrouter_provider(),
+        ) == "openai/gpt-4.1-mini"
+
+    def test_deep_requirements_prefer_deep_balanced_cost_candidate(self):
+        selector = ModelSelector()
+        profile = CapabilityProfile(
+            temperature=0.5, max_tokens=256, timeout_seconds=30,
+            retry_policy=RetryPolicy(max_retries=0),
+            reasoning="deep", latency_priority="relaxed", cost_priority="balanced",
+            structured_output=True,
+        )
+        assert selector.select(
+            capability=AICapability.ASSESSMENT_CONTENT,
+            profile=profile,
+            provider=self._openrouter_provider(),
+        ) == "deepseek/deepseek-r1-0528"
+
+    def test_structured_output_excludes_unsupported_candidate(self):
+        registry = dict(_MODEL_CAPABILITY_REGISTRY)
+        registry["google/gemini-2.5-flash"] = replace(
+            registry["google/gemini-2.5-flash"],
+            supports_structured_output=False,
+        )
+        selector = ModelSelector(model_registry=registry)
+        profile = CapabilityProfile(
+            temperature=0.5, max_tokens=256, timeout_seconds=30,
+            retry_policy=RetryPolicy(max_retries=0),
+            reasoning="standard", structured_output=True,
+        )
+        candidates = selector.select_candidates(
+            capability=AICapability.KNOWLEDGE_GENERATION,
+            profile=profile,
+            provider=self._openrouter_provider(),
+        )
+        assert "google/gemini-2.5-flash" not in candidates
+        assert candidates[0] == "openai/gpt-4.1-mini"
+
+    def test_no_candidate_is_returned_when_all_fail_a_hard_requirement(self):
+        registry = {
+            model_id: replace(candidate, supports_structured_output=False)
+            for model_id, candidate in _MODEL_CAPABILITY_REGISTRY.items()
+        }
+        selector = ModelSelector(model_registry=registry)
+        profile = CapabilityProfile(
+            temperature=0.5, max_tokens=256, timeout_seconds=30,
+            retry_policy=RetryPolicy(max_retries=0),
+            reasoning="standard", structured_output=True,
+        )
+        assert selector.select_candidates(
+            capability=AICapability.KNOWLEDGE_GENERATION,
+            profile=profile,
+            provider=self._openrouter_provider(),
+        ) == ()
+
+    def test_selection_is_deterministic(self):
+        selector = ModelSelector()
+        profile = self._profile("standard")
+        results = [selector.select_candidates(
+            capability=AICapability.KNOWLEDGE_GENERATION,
+            profile=profile,
+            provider=self._openrouter_provider(),
+        ) for _ in range(3)]
+        assert results[0] == results[1] == results[2]
 
     # ---- Environment override tests ----------------------------------------
 
@@ -820,3 +929,57 @@ class TestOpenRouterPreferred:
         assert [call.kwargs["model"] for call in adapter.complete.await_args_list] == [
             "missing/model", "openai/configured-fallback",
         ]
+
+    def test_gemini_fallback_after_all_openrouter_candidates_are_unavailable(self):
+        adapter = _FakeOpenRouterAdapter()
+        adapter.complete = AsyncMock(side_effect=[
+            RuntimeError("model not found"), RuntimeError("model not found"),
+        ])
+        gemini_adapter = _FakeAdapter(response_text="gemini fallback")
+        openrouter = ProviderDefinition(
+            id="openrouter", priority=5, capabilities=set(AICapability),
+            model="unused-default", api_key="or-key", adapter=adapter,
+        )
+        gemini = ProviderDefinition(
+            id="gemini-primary", priority=10, capabilities=set(AICapability),
+            model="gemini-2.5-flash", api_key="gemini-key", adapter=gemini_adapter,
+        )
+        gw = Gateway()
+        gw._initialised = True
+        gw._provider_registry.register(openrouter)
+        gw._provider_registry.register(gemini)
+        with patch.object(
+            gw._model_selector,
+            "select_candidates",
+            side_effect=[("missing/one", "missing/two"), ("gemini-2.5-flash",)],
+        ):
+            response = asyncio.run(gw.complete(_make_request()))
+
+        assert response.provider_used == "gemini-primary"
+        assert response.model_used == "gemini-2.5-flash"
+        assert [call.kwargs["model"] for call in adapter.complete.await_args_list] == [
+            "missing/one", "missing/two",
+        ]
+
+    def test_gemini_fallback_when_no_openrouter_candidate_meets_requirements(self):
+        openrouter = ProviderDefinition(
+            id="openrouter", priority=5, capabilities=set(AICapability),
+            model="unused-default", api_key="or-key", adapter=_FakeOpenRouterAdapter(),
+        )
+        gemini_adapter = _FakeAdapter(response_text="gemini fallback")
+        gemini = ProviderDefinition(
+            id="gemini-primary", priority=10, capabilities=set(AICapability),
+            model="gemini-2.5-flash", api_key="gemini-key", adapter=gemini_adapter,
+        )
+        gw = Gateway()
+        gw._initialised = True
+        gw._provider_registry.register(openrouter)
+        gw._provider_registry.register(gemini)
+        with patch.object(
+            gw._model_selector,
+            "select_candidates",
+            side_effect=[(), ("gemini-2.5-flash",)],
+        ):
+            response = asyncio.run(gw.complete(_make_request()))
+
+        assert response.provider_used == "gemini-primary"

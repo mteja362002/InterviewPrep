@@ -185,7 +185,7 @@ Routes → Services → Data
 |---|---|
 | MongoDB Atlas | Cloud database (TLS via `mongodb+srv://`) |
 | SMTP (Gmail) | Transactional email delivery |
-| Gemini API | Default AI provider (via AI Gateway) |
+| OpenRouter API + Gemini API | Preferred multi-model transport with direct Gemini fallback (via AI Gateway) |
 
 ---
 
@@ -644,6 +644,7 @@ Deterministic evaluation system:
 Provider-agnostic AI abstraction:
 - Singleton gateway with lazy initialization
 - Pluggable provider architecture (OpenRouter preferred, Gemini fallback)
+- Deterministic, gateway-internal model selection across configured OpenRouter model families; capability requirements choose candidates without exposing models to consumers
 - Structured request/response models (`AIRequest`, `AIResponse`, `AICapability`)
 - Routing logic for provider selection
 
