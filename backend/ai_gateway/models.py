@@ -178,11 +178,42 @@ def _match_any(patterns: tuple, text: str) -> bool:
     return any(p.search(text) for p in patterns)
 
 
+# ---------------------------------------------------------------------------
+# Secret scrubbing (defense-in-depth)
+# ---------------------------------------------------------------------------
+
+_SECRET_PATTERNS = (
+    # OpenAI / OpenRouter style keys: sk-... or sk-proj-...
+    re.compile(r"\bsk-[A-Za-z0-9_-]{8,}\b"),
+    # Google API keys: AIza...
+    re.compile(r"\bAIza[A-Za-z0-9_-]{30,}\b"),
+    # Bearer tokens in error text (must precede generic key=value pattern)
+    re.compile(r"(?i)\bBearer\s+[A-Za-z0-9._~+/=-]{8,}"),
+    # Generic key=value patterns
+    re.compile(r"(?i)\b(?:api[_-]?key|apikey|api_key|secret|password|token|authorization)\s*[=:]\s*\S+"),
+)
+
+
+def _sanitize_message(text: str) -> str:
+    """Redact known secret patterns from an error message.
+
+    Applied to the ``classify_error`` fallback path to prevent provider
+    credentials from leaking into ``AIProviderError.message``, logs, or
+    consumer-facing error payloads.
+    """
+    for pattern in _SECRET_PATTERNS:
+        text = pattern.sub("[REDACTED]", text)
+    return text
+
+
 def classify_error(err: Exception) -> AIProviderError:
     """Bucket a raw SDK exception into a user-actionable ``AIProviderError``.
 
     Error messages are provider-neutral — they never reference
     "Settings page" or a specific provider name.
+
+    The fallback path sanitizes raw exception text to prevent provider
+    credentials from appearing in consumer-facing error messages.
     """
     cls_name = err.__class__.__name__ or ""
     msg = str(err) or cls_name
@@ -241,12 +272,13 @@ def classify_error(err: Exception) -> AIProviderError:
             kind="upstream", status_code=502,
         )
 
-    # --- fallback ----------------------------------------------------------
-    trimmed = msg.strip().split("\n", 1)[0][:180]
+    # --- fallback (sanitized) ----------------------------------------------
+    trimmed = _sanitize_message(msg.strip().split("\n", 1)[0][:180])
     return AIProviderError(
         f"AI generation failed: {trimmed or cls_name or 'unknown error'}",
         kind="unknown", status_code=502,
     )
+
 
 
 # ---------------------------------------------------------------------------
