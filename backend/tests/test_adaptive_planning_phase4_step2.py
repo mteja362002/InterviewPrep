@@ -155,6 +155,7 @@ def test_A3_strong_pf_declaration_progresses_into_java():
             "programming_fundamentals": 8, "java": 1, "dsa": 0,
             "dbms": 0, "operating_systems": 0,
             "computer_networks": 0, "lld": 0, "hld": 0,
+            "projects": 10, "behavioral": 10, "resume": 10
         },
     }
     rec = _pick(onboarding)
@@ -246,6 +247,7 @@ def test_D1_senior_with_weak_dsa_and_google_target_gets_dsa():
             "programming_fundamentals": 10, "java": 10,
             "dsa": 2, "dbms": 9, "operating_systems": 9,
             "computer_networks": 9, "lld": 9, "hld": 9,
+            "projects": 10, "behavioral": 10, "resume": 10
         },
     }
     rec = _pick(onboarding)
@@ -265,6 +267,7 @@ def test_D2_senior_with_weak_core_cs_gets_core_cs():
             "programming_fundamentals": 10, "java": 10, "dsa": 10,
             "dbms": 1, "operating_systems": 1,
             "computer_networks": 1, "lld": 8, "hld": 8,
+            "projects": 10, "behavioral": 10, "resume": 10
         },
     }
     rec = _pick(onboarding)
@@ -395,27 +398,32 @@ def test_J1_low_actual_mastery_outranks_high_self_assessment():
 # ===========================================================================
 
 def test_K_company_flips_priority_between_dsa_and_core_cs():
-    """Given the same learner (Java strong, DSA medium, DBMS/OS/CN weak),
-    Google's pick should skew DSA-ward while Oracle's should skew
-    Core CS-ward — a natural weighting outcome, not an if/else."""
+    """Given the same learner with near-equal DSA and DBMS knowledge gaps,
+    Google's pick should skew DSA-ward (company_importance: dsa=5) while
+    Oracle's should skew Core-CS-ward (company_importance: dbms=5).
+
+    This is a genuine company-signal test: the learner state is deliberately
+    balanced so that the ±6-point company importance delta (weight 3.0 × Δ2)
+    is the deciding factor.  OS and CN are set below the effective-completion
+    threshold (6 < 7) so they stay eligible but don't dominate scoring."""
     base = {
         "current_position": "1-3",
         "self_assessment": {
             "programming_fundamentals": 10, "java": 10,
-            "dsa": 5, "dbms": 2, "operating_systems": 2,
-            "computer_networks": 2, "lld": 4, "hld": 4,
+            "dsa": 3, "dbms": 4, "operating_systems": 6,
+            "computer_networks": 6, "lld": 4, "hld": 4,
         },
     }
     google_pick = _pick({**base, "target_companies": ["google"]})
     oracle_pick = _pick({**base, "target_companies": ["oracle"]})
     assert google_pick is not None and oracle_pick is not None
     core_cs = {"dbms", "operating_systems", "computer_networks"}
-    # Google's pick should prefer DSA (or at least not be one of the
-    # three "pure" Core CS tracks). Oracle's pick should be in Core CS.
+    # Oracle's company signal boosts DBMS enough to win over DSA.
     assert oracle_pick["track"] in core_cs, (
         f"expected Oracle to land on Core CS, got {oracle_pick['track']!r}"
     )
-    # Either google picks dsa, or at least a different track than oracle.
+    # Google's company signal boosts DSA enough to win; the two companies
+    # must pick different tracks.
     assert google_pick["track"] != oracle_pick["track"], (
         f"Google and Oracle both picked {oracle_pick['track']!r}; expected "
         f"company weighting to differentiate them."

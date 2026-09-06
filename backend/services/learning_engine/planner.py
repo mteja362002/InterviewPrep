@@ -287,17 +287,32 @@ async def get_today_learning_node(
             recent_track_ids=list(context.recent_track_ids or []),
         )
         if plan.task_plans:
-            primary = plan.task_plans[0]
-            node = roadmap.get(primary.node_id)
-            if node is not None:
+            # Score ALL session-pipeline candidates through the ranking
+            # engine so the deterministic priority model — not roadmap
+            # dictionary order — decides which subject gets today's
+            # primary recommendation.  Subject Progression determined
+            # what is structurally eligible; Ranking determines what is
+            # *preferred* among those candidates.
+            best_priority = None
+            best_tp = None
+            best_node = None
+            for tp in plan.task_plans:
+                node = roadmap.get(tp.node_id)
+                if node is None:
+                    continue
                 priority = score_candidate(node, context)
-                insight = _attach_insight(priority, context)
+                if best_priority is None or priority.score > best_priority.score:
+                    best_priority = priority
+                    best_tp = tp
+                    best_node = node
+            if best_node is not None and best_priority is not None and best_tp is not None:
+                insight = _attach_insight(best_priority, context)
                 # Enrich insight with session explanations
                 insight["task_explanations"] = plan.plan_insight.get("task_explanations", [])
                 if plan.plan_narrative:
                     insight["plan_narrative"] = plan.plan_narrative
-                top_progress = context.progress_map.get(primary.node_id, {})
-                return _finalize(node, top_progress, context, insight=insight)
+                top_progress = context.progress_map.get(best_tp.node_id, {})
+                return _finalize(best_node, top_progress, context, insight=insight)
     except Exception:
         # Defensive: if the session pipeline fails for any reason,
         # fall through to the existing candidate generation pipeline.

@@ -1,6 +1,5 @@
 import os
 import sys
-import json
 
 # Add backend to path so we can import modules
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__))))
@@ -15,8 +14,8 @@ base_onboarding = {
     "current_position": "1-3",
     "self_assessment": {
         "programming_fundamentals": 10, "java": 10,
-        "dsa": 5, "dbms": 2, "operating_systems": 2,
-        "computer_networks": 2, "lld": 4, "hld": 4,
+        "dsa": 2, "dbms": 3, "operating_systems": 3,
+        "computer_networks": 3, "lld": 4, "hld": 4,
     },
 }
 
@@ -25,25 +24,19 @@ def analyze_company(company_name):
     onboarding = {**base_onboarding, "target_companies": [company_name.lower()]}
     ctx = build_learner_context(onboarding=onboarding)
     
-    # We want to score a node from DSA and a node from Core CS (e.g., DBMS)
     dsa_node = next((n for n in roadmap.get_learning_nodes() if n.get("track") == "dsa"), None)
     dbms_node = next((n for n in roadmap.get_learning_nodes() if n.get("track") == "dbms"), None)
     
-    print(f"\nEffective Completed Subjects: {ctx.effective_completed_subject_ids(roadmap)}")
-    
     for label, node in [("DSA", dsa_node), ("DBMS", dbms_node)]:
         if not node:
-            print(f"Could not find node for {label}")
             continue
-            
-        print(f"\n--- SCORING: {label} ({node['id']}) ---")
         score_details = score_learning_node(
             node=node,
             progress={},
             target_companies=[company_name.lower()],
             learner_context=ctx
         )
-        print(json.dumps(score_details, indent=2))
+        print(f"{label}: total_score = {score_details['total_score']}")
 
 analyze_company("google")
 analyze_company("oracle")

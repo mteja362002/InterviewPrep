@@ -112,6 +112,7 @@ def test_e2e_pf9_java1_resolves_to_java():
             "programming_fundamentals": 9, "java": 1, "dsa": 0,
             "dbms": 0, "operating_systems": 0,
             "computer_networks": 0, "lld": 0, "hld": 0,
+            "projects": 10, "behavioral": 10, "resume": 10
         },
     })
     assert rec is not None

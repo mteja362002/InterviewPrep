@@ -72,7 +72,8 @@ def test_first_time_beginner_starts_from_programming_fundamentals():
     onboarding = {
         "current_position": "student",
         "self_assessment": {"dsa": 8, "java": 8, "lld": 8, "hld": 8,
-                            "operating_systems": 8, "dbms": 8, "computer_networks": 8},
+                            "operating_systems": 8, "dbms": 8, "computer_networks": 8,
+                            "projects": 10, "behavioral": 10, "resume": 10},
     }
 
     recommendation = asyncio.run(
@@ -84,7 +85,8 @@ def test_first_time_beginner_starts_from_programming_fundamentals():
     zero_ratings = {
         "current_position": "5+",
         "self_assessment": {"dsa": 0, "java": 0, "lld": 0, "hld": 0,
-                            "operating_systems": 0, "dbms": 0, "computer_networks": 0},
+                            "operating_systems": 0, "dbms": 0, "computer_networks": 0,
+                            "projects": 10, "behavioral": 10, "resume": 10},
     }
     recommendation = asyncio.run(
         get_today_learning_node("user-1", db=FakeDB([]), onboarding=zero_ratings, recent_completions=[])
