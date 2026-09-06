@@ -172,6 +172,24 @@ def _derive_subject_status(
     if subject_prereqs and not all(sp in completed_subjects for sp in subject_prereqs):
         return "locked"
 
+    # Gate 1.5: effective completion (planner-only).
+    # When the planner's unified completed_subjects set already contains
+    # this track (via actual node completion OR onboarding-derived
+    # effective knowledge), treat it as "completed" for scheduling
+    # purposes.  This prevents the session pipeline from serving
+    # entry-level nodes on a track the learner has declared mastery of.
+    #
+    # We still distinguish "completed" from "mastered": mastered requires
+    # every node actually done.  The effective-completion path can only
+    # produce "completed" because no actual nodes have been touched.
+    if track_id in completed_subjects:
+        all_done = all(
+            (progress_map.get(n["id"], {}).get("status") or "").lower()
+            in _COMPLETED_STATUSES
+            for n in track_nodes
+        )
+        return "mastered" if all_done else "completed"
+
     # Gate 2: any progress at all?
     has_progress = any(
         (progress_map.get(n["id"], {}).get("status") or "").lower()
@@ -582,19 +600,28 @@ def build_subject_learning_session(
 def build_all_sessions(
     roadmap,
     progress_map: Dict[str, dict],
+    *,
+    effective_completed_subjects: Set[str],
 ) -> Dict[str, SubjectLearningSession]:
-    """Build learning sessions for every track in the roadmap."""
-    # Derive completed subjects from progress
-    completed_node_ids = {
-        nid for nid, row in progress_map.items()
-        if (row.get("status") or "").lower() in _COMPLETED_STATUSES
-    }
-    completed_subjects = set(roadmap.completed_subject_ids(completed_node_ids))
+    """Build learning sessions for every track in the roadmap.
 
+    ``effective_completed_subjects`` is REQUIRED (keyword-only).  It must
+    be the union of actual completion and onboarding-derived effective
+    completion, as computed by
+    ``LearnerContext.effective_completed_subject_ids(roadmap)``.
+
+    This function previously derived ``completed_subjects`` independently
+    from node-level progress, ignoring the effective-knowledge signal
+    the eligibility engine already respected.  That inconsistency meant
+    a learner with PF=9 onboarding would see PF marked "eligible" in
+    the session pipeline (no nodes completed → not in completed_subjects)
+    even though the eligibility engine already unlocked Java's nodes.
+    Making the input explicit and required eliminates this class of bug.
+    """
     sessions: Dict[str, SubjectLearningSession] = {}
     for track_id in roadmap.track_ids():
         sessions[track_id] = build_subject_learning_session(
-            track_id, roadmap, completed_subjects, progress_map,
+            track_id, roadmap, effective_completed_subjects, progress_map,
         )
     return sessions
 

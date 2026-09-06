@@ -243,7 +243,7 @@ class LearnerContext:
                 continue
             if row.get("track") == track:
                 counter[row.get("track")] += 1
-        return int(counter.get(track, 0))
+        return counter.get(track, 0)
 
     def track_average_mastery(self, track: Optional[str]) -> Optional[float]:
         """Return the mean mastery_percentage across the learner's rows
@@ -261,6 +261,8 @@ class LearnerContext:
             if not isinstance(row, dict) or row.get("track") != track:
                 continue
             val = row.get("mastery_percentage", row.get("mastery"))
+            if val is None:
+                continue
             try:
                 masteries.append(float(val))
             except (TypeError, ValueError):
@@ -341,6 +343,45 @@ class LearnerContext:
                 result.add(track)
         return result
 
+    def effective_completed_subject_ids(
+        self,
+        roadmap,
+        *,
+        threshold: float = EFFECTIVE_SUBJECT_COMPLETE_THRESHOLD,
+    ) -> Set[str]:
+        """Return the complete set of subject IDs the planner treats as
+        finished for prerequisite gates.
+
+        Combines two sources:
+        1. **Actual completion** — subjects whose foundation+core nodes
+           are ALL completed (via ``roadmap.completed_subject_ids``).
+        2. **Effective completion** — subjects whose blended knowledge
+           score (onboarding self-assessment + actual mastery) exceeds
+           the threshold (via :meth:`effectively_completed_tracks`).
+
+        This is the single authoritative source of truth for the session
+        pipeline's ``completed_subjects`` parameter. It replaces the
+        previous architecture where ``build_all_sessions`` derived
+        completion independently from node status alone, ignoring the
+        onboarding-driven effective knowledge that the eligibility
+        engine already respected — which caused PF=9 learners to be
+        stuck on Programming Fundamentals instead of advancing to Java.
+
+        The distinction between actual and effective completion is
+        preserved: ``roadmap.completed_subject_ids`` (actual) is still
+        used by the KB and Roadmap UI for display-level unlock rules.
+        This method is planner-only.
+        """
+        # Actual: subjects where every foundation+core node is completed
+        actual_completed_nodes = self.completed_node_ids()
+        actual_subjects = set(roadmap.completed_subject_ids(actual_completed_nodes))
+
+        # Effective: subjects where the blended knowledge score exceeds
+        # the threshold (e.g. PF=8 onboarding → effective score 80 ≥ 70)
+        effective_subjects = self.effectively_completed_tracks(threshold=threshold)
+
+        return actual_subjects | effective_subjects
+
     def virtual_completed_node_ids(
         self,
         *,
@@ -367,7 +408,9 @@ class LearnerContext:
         ids: Set[str] = set()
         for node in roadmap.get_learning_nodes():
             if node.get("track") in effective_tracks:
-                ids.add(node.get("id"))
+                node_id = node.get("id")
+                if node_id is not None:
+                    ids.add(node_id)
         return ids
 
     def recent_topics(self, limit: int = 5) -> List[str]:
@@ -418,7 +461,7 @@ def build_learner_context(
     """
     rows = list(progress_rows or [])
     progress_map = {row.get("node_id"): row for row in rows if row.get("node_id")}
-    resolved_companies = [str(c) for c in (target_companies or [])]
+    resolved_companies = list(target_companies or [])
 
     if company_context is None:
         # Local import avoids any import cycle at module load time and keeps
@@ -457,7 +500,7 @@ def build_learner_context(
         knowledge_rows=list(knowledge_rows or []),
         skip_node_ids=set(skip_node_ids or []),
         company_context=company_context,
-        company_intelligence_enabled=bool(company_intelligence_enabled),
+        company_intelligence_enabled=company_intelligence_enabled,
         learner_intelligence=learner_intelligence,
-        learner_intelligence_enabled=bool(learner_intelligence_enabled),
+        learner_intelligence_enabled=learner_intelligence_enabled,
     )

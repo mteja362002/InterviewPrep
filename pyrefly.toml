@@ -1,0 +1,12 @@
+# Pyrefly type checker configuration for PrepOS
+# The Python source root is backend/ — all imports (roadmap, services.*,
+# models, auth_utils, etc.) resolve relative to that directory.
+
+project-includes = ["backend"]
+project-excludes = ["**/.[!/.]*", "**/*venv/**", "**/node_modules/**", "frontend/**"]
+search-path = ["backend"]
+site-package-path = ["backend/.venv/Lib/site-packages"]
+python-interpreter-path = "backend/.venv/Scripts/python.exe"
+
+python-version = "3.11"
+python-platform = "windows"

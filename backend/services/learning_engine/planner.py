@@ -264,7 +264,7 @@ async def get_today_learning_node(
     if entry_node is not None:
         priority = score_candidate(entry_node, context)
         insight = _attach_insight(priority, context)
-        entry_progress = context.progress_map.get(entry_node.get("id"), {})
+        entry_progress = context.progress_map.get(entry_node.get("id") or "", {})
         return _finalize(entry_node, entry_progress, context, insight=insight)
 
     # ---- 3.5 Curriculum Progression Engine (session-based pipeline) ------
@@ -277,7 +277,11 @@ async def get_today_learning_node(
         from services.learning_engine.subject_progression import (
             build_all_sessions, build_daily_learning_plan,
         )
-        sessions = build_all_sessions(roadmap, context.progress_map)
+        sessions = build_all_sessions(
+            roadmap,
+            context.progress_map,
+            effective_completed_subjects=context.effective_completed_subject_ids(roadmap),
+        )
         plan = build_daily_learning_plan(
             sessions, roadmap,
             recent_track_ids=list(context.recent_track_ids or []),
@@ -315,7 +319,7 @@ async def get_today_learning_node(
         return None
 
     # ---- 6. Assemble the recommendation ---------------------------------
-    top_progress = context.progress_map.get(top.node.get("id"), {})
+    top_progress = context.progress_map.get(top.node.get("id") or "", {})
     insight = _attach_insight(top, context)
     return _finalize(top.node, top_progress, context, insight=insight)
 

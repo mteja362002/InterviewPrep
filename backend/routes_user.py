@@ -1,5 +1,6 @@
 """Onboarding & Profile & Settings routes."""
 from datetime import datetime, timezone
+from typing import Any, Dict, Optional
 from fastapi import APIRouter, Depends, HTTPException
 
 from auth_utils import get_current_user
@@ -18,7 +19,9 @@ def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def _clean(doc: dict) -> dict:
+def _clean(doc: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    if not doc:
+        return {}
     doc.pop("_id", None)
     return doc
 
@@ -58,6 +61,25 @@ async def submit_onboarding(payload: OnboardingPayload, user=Depends(get_current
     # Upsert
     existing = await db.onboarding.find_one({"user_id": user["id"]})
     doc = record.model_dump()
+
+    # Detect whether mission-relevant onboarding fields changed.
+    # These are the fields the planner consumes for effective-knowledge
+    # computation and cold-start routing: self_assessment (drives
+    # effective_knowledge_score → subject prerequisites) and
+    # current_position (drives cold-start strategy selection).
+    # Fields like daily_study_hours and interview_target_date affect
+    # pacing/estimation but NOT today's track selection.
+    mission_relevant_change = False
+    if not existing:
+        mission_relevant_change = True
+    else:
+        old_sa = existing.get("self_assessment", {})
+        new_sa = doc.get("self_assessment", {})
+        if old_sa != new_sa:
+            mission_relevant_change = True
+        if existing.get("current_position") != doc.get("current_position"):
+            mission_relevant_change = True
+
     if existing:
         doc["id"] = existing["id"]
         doc["created_at"] = existing["created_at"]
@@ -65,6 +87,15 @@ async def submit_onboarding(payload: OnboardingPayload, user=Depends(get_current
         await db.onboarding.replace_one({"user_id": user["id"]}, doc)
     else:
         await db.onboarding.insert_one(doc)
+
+    # Invalidate any cached daily mission so the planner re-generates
+    # it using the updated onboarding signals.
+    if mission_relevant_change:
+        from mission_engine import today_date_str
+        await db.daily_missions.delete_many({
+            "user_id": user["id"],
+            "date": today_date_str(),
+        })
 
     await db.users.update_one(
         {"id": user["id"]}, {"$set": {"onboarding_completed": True}}
@@ -76,7 +107,7 @@ async def submit_onboarding(payload: OnboardingPayload, user=Depends(get_current
     await seed_knowledge_nodes_from_self_assessment(
         db, user["id"], payload.self_assessment.model_dump(), get_roadmap(CURRENT_VERSION),
     )
-    return OnboardingRecord(**doc)
+    return OnboardingRecord(**_clean(doc))
 
 
 @router.get("/onboarding", response_model=OnboardingRecord | None)
@@ -112,6 +143,8 @@ async def update_profile(payload: ProfileUpdate, user=Depends(get_current_user))
         )
         await db.activity_events.insert_one(ev.model_dump())
     updated = await db.users.find_one({"id": user["id"]})
+    if not updated:
+        raise HTTPException(status_code=404, detail="User not found")
     updated.pop("_id", None)
     updated.pop("password_hash", None)
     return updated
@@ -154,4 +187,8 @@ async def update_settings(payload: SettingsUpdate, user=Depends(get_current_user
         )
         await db.activity_events.insert_one(ev.model_dump())
     doc = await db.settings.find_one({"user_id": user["id"]})
+    if not doc:
+        settings = UserSettings(user_id=user["id"])
+        await db.settings.insert_one(settings.model_dump())
+        return settings
     return UserSettings(**_clean(doc))

@@ -133,8 +133,9 @@ def build_mission_context(
     rep_ids: List[str] = []
     if activity_type in _CODING_ACTIVITIES and pattern:
         rep_ids = [
-            p.get("id")
+            pid
             for p in representative_pool(pattern, learning_stage=learning_stage)
+            if (pid := p.get("id")) is not None
         ]
 
     prerequisites = list(node.get("prerequisites", []) or [])
