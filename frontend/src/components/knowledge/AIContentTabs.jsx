@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   BookOpen, Sparkles, Bookmark,
-  Layers, Users, AlertTriangle, RefreshCw, Loader2, Wand2,
+  Layers, Users, AlertTriangle, RefreshCw, Loader2, Wand2, ChevronRight,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { GlassCard } from '@/components/common/GlassCard';
