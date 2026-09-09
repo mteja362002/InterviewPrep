@@ -377,12 +377,14 @@ class TestPlannerAdapter:
 # --------------------------------------------------------------------------- #
 class TestPlannerIntegration:
     def _rows(self):
-        return [{"node_id": "dsa.arrays.core", "track": "dsa", "status": "in_progress",
+        from tests.evidence_fixtures import certified
+        row = {"node_id": "dsa.foundations.arrays.traversal", "track": "dsa", "status": "in_progress",
                  "weakness_score": 70, "mastery_percentage": 30, "attempts": 4,
-                 "confidence": 3, "revision_stage": 0}]
+                 "confidence": 3, "revision_stage": 0}
+        return [{**row, **certified(row)}]
 
     def _node(self):
-        return {"id": "dsa.arrays.core", "track": "dsa", "difficulty": "medium",
+        return {"id": "dsa.foundations.arrays.traversal", "track": "dsa", "difficulty": "medium",
                 "estimated_minutes": 30}
 
     def test_enabled_changes_score(self):

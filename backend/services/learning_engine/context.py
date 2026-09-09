@@ -97,6 +97,9 @@ class LearnerContext:
     # eligibility. Callers can populate either; the property below fills
     # the other on demand.
     progress_map: Dict[str, dict] = field(default_factory=dict)
+    # Certified-only population for evidence weights. Legacy/runtime baseline rows
+    # stay in progress_map as explicit compatibility inputs for stage/ranking.
+    actual_progress_rows: List[dict] = field(default_factory=list)
 
     # ---- Pacing (interview deadline / capacity) -----------------------------
     pacing_state: dict = field(default_factory=dict)
@@ -235,7 +238,7 @@ class LearnerContext:
         if not track:
             return 0
         counter: Counter = Counter()
-        for row in self.progress_rows or []:
+        for row in self.actual_progress_rows or []:
             if not isinstance(row, dict):
                 continue
             status = (row.get("status") or "").lower()
@@ -257,7 +260,7 @@ class LearnerContext:
         if not track:
             return None
         masteries: List[float] = []
-        for row in self.progress_rows or []:
+        for row in self.actual_progress_rows or []:
             if not isinstance(row, dict) or row.get("track") != track:
                 continue
             val = row.get("mastery_percentage", row.get("mastery"))
@@ -372,15 +375,14 @@ class LearnerContext:
         used by the KB and Roadmap UI for display-level unlock rules.
         This method is planner-only.
         """
-        # Actual: subjects where every foundation+core node is completed
-        actual_completed_nodes = self.completed_node_ids()
-        actual_subjects = set(roadmap.completed_subject_ids(actual_completed_nodes))
+        # Planner-only completion, including explicit legacy compatibility.
+        planning_subjects = set(roadmap.completed_subject_ids(self.completed_node_ids()))
 
         # Effective: subjects where the blended knowledge score exceeds
         # the threshold (e.g. PF=8 onboarding → effective score 80 ≥ 70)
         effective_subjects = self.effectively_completed_tracks(threshold=threshold)
 
-        return actual_subjects | effective_subjects
+        return planning_subjects | effective_subjects
 
     def virtual_completed_node_ids(
         self,
@@ -459,8 +461,13 @@ def build_learner_context(
     explicitly). This is ADDITIVE and planner-inert — no scoring path reads
     it, so the recommendation output is unchanged.
     """
-    rows = list(progress_rows or [])
-    progress_map = {row.get("node_id"): row for row in rows if row.get("node_id")}
+    from roadmap import get_roadmap
+    from services.evidence import actual_row, certified_fields, planner_row
+    roadmap = get_roadmap()
+    raw_rows = list(progress_rows or [])
+    actual_rows = [actual_row(row, roadmap) for row in raw_rows if certified_fields(row)]
+    progress_map = {row["node_id"]: planner_row(row) for row in raw_rows if row.get("node_id")}
+    rows = list(progress_map.values())
     resolved_companies = list(target_companies or [])
 
     if company_context is None:
@@ -478,8 +485,10 @@ def build_learner_context(
     if learner_intelligence is None:
         from services.learner_intelligence.engine import build_snapshot
         learner_intelligence = build_snapshot(
-            progress_rows=rows,
-            recent_completions=list(recent_completions or []),
+            progress_rows=actual_rows,
+            recent_completions=[{**actual_row(row, roadmap),
+                                 "completion_date": row.get("completion_date")}
+                                for row in (recent_completions or [])],
             completed_dates=list(completed_dates or []),
             recent_track_ids=list(recent_track_ids or []),
             skipped_node_ids=list(skipped_node_ids or []),
@@ -489,6 +498,7 @@ def build_learner_context(
     return LearnerContext(
         onboarding=dict(onboarding or {}),
         progress_rows=rows,
+        actual_progress_rows=actual_rows,
         progress_map=progress_map,
         pacing_state=dict(pacing_state or {}),
         target_companies=resolved_companies,

@@ -16,6 +16,8 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
 from typing import List, Optional
+from services.evidence import planner_row, certified_fields, LEGACY, ACTUAL
+from services.progress_repository import upsert_progress_fields
 
 REVISION_STAGES_DAYS = [1, 3, 7, 14, 30, 60]
 
@@ -60,20 +62,18 @@ async def mark_node_for_revision(
     existing = await db.knowledge_nodes.find_one(
         {"user_id": user_id, "roadmap_version": roadmap_version, "node_id": node_id}, {"_id": 0},
     )
-    if existing and existing.get("next_revision"):
+    # A historical schedule stays inspectable, but cannot certify an inherited
+    # revision-stage count. The forward evidence schedule has its own history.
+    existing = certified_fields(existing or {})
+    if existing.get("next_revision"):
         current_stage = int(existing.get("revision_stage") or 0)
         next_stage, next_date = schedule_next_revision(current_stage, confidence)
     else:
         next_stage, next_date = 0, first_revision_date(confidence)
 
-    await db.knowledge_nodes.update_one(
-        {"user_id": user_id, "roadmap_version": roadmap_version, "node_id": node_id},
-        {"$set": {
-            "user_id": user_id, "roadmap_version": roadmap_version, "node_id": node_id,
-            "next_revision": next_date, "revision_stage": next_stage,
-            "updated_at": datetime.now(timezone.utc).isoformat(),
-        }},
-        upsert=True,
+    await upsert_progress_fields(
+        db, user_id=user_id, roadmap_version=roadmap_version, node_id=node_id,
+        fields={"next_revision": next_date, "revision_stage": next_stage}, source="revision",
     )
 
 
@@ -95,15 +95,18 @@ async def get_revisions_for_user(
         roadmap = _get_roadmap(roadmap_version or _CURRENT_VERSION)
 
     today = datetime.now(timezone.utc).date().isoformat()
-    query: dict = {
-        "user_id": user_id, "roadmap_version": roadmap_version,
-        "next_revision": {"$ne": None},
-    }
-    if due_only:
-        query["next_revision"]["$lte"] = today
-
-    cur = db.knowledge_nodes.find(query, {"_id": 0}).sort("next_revision", 1).limit(limit)
-    rows = await cur.to_list(length=limit)
+    # Both schedules remain usable; a new attributable schedule takes precedence.
+    # Filter/sort after projection so a superseded legacy due date cannot win.
+    from services.progress_engine import load_user_progress_rows
+    raw_rows = await load_user_progress_rows(db, user_id, roadmap_version)
+    rows = []
+    for raw in raw_rows.values():
+        row = planner_row(raw)
+        due = row.get("next_revision")
+        if due and (not due_only or due[:10] <= today):
+            row["evidence_classification"] = ACTUAL if "next_revision" in certified_fields(raw) else LEGACY
+            rows.append(row)
+    rows = sorted(rows, key=lambda row: (row["next_revision"], row["node_id"]))[:limit]
 
     out: List[dict] = []
     for row in rows:
@@ -119,6 +122,7 @@ async def get_revisions_for_user(
             "next_review_date": next_review_date,
             "stage": row.get("revision_stage", 0),
             "is_due": bool(next_review_date) and next_review_date <= today,
-            "confidence": row.get("confidence"),
+            "confidence": certified_fields(row).get("confidence"),
+            "evidence_classification": row["evidence_classification"],
         })
     return out

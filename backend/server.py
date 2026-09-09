@@ -162,16 +162,7 @@ async def on_startup():
                 {"user_id": uid, "roadmap_version": CURRENT_VERSION, "node_id": track_id},
                 {"_id": 0},
             )
-            if existing:
-                # Only refresh derived fields — preserve any user notes
-                await db.knowledge_nodes.update_one(
-                    {"user_id": uid, "roadmap_version": CURRENT_VERSION, "node_id": track_id},
-                    {"$set": {
-                        **fields,
-                        "updated_at": datetime.now(timezone.utc).isoformat(),
-                    }},
-                )
-            else:
+            if not existing:
                 await db.knowledge_nodes.insert_one({
                     "user_id": uid, "roadmap_version": CURRENT_VERSION,
                     "node_id": track_id,
@@ -203,15 +194,7 @@ async def on_startup():
                 {"user_id": uid, "roadmap_version": CURRENT_VERSION, "node_id": nid},
                 {"_id": 0},
             )
-            if existing:
-                await db.knowledge_nodes.update_one(
-                    {"user_id": uid, "roadmap_version": CURRENT_VERSION, "node_id": nid},
-                    {"$set": {
-                        **fields,
-                        "updated_at": datetime.now(timezone.utc).isoformat(),
-                    }},
-                )
-            else:
+            if not existing:
                 await db.knowledge_nodes.insert_one({
                     "user_id": uid, "roadmap_version": CURRENT_VERSION,
                     "node_id": nid,

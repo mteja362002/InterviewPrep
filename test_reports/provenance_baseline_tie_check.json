@@ -1,0 +1,8 @@
+{
+  "head": "c5601272f7437adb9131707e76d7ae212bc4fd64",
+  "file_unchanged": true,
+  "test": "test_mission_roadmap_catalog.py::test_candidate_ranking_uses_seeded_rng_for_exact_ties",
+  "head_test_expected": "second",
+  "head_function_result": "first",
+  "classification": "pre-existing stale RNG expectation; unchanged deterministic tie break"
+}

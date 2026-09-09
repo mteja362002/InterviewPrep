@@ -62,23 +62,12 @@ async def submit_onboarding(payload: OnboardingPayload, user=Depends(get_current
     existing = await db.onboarding.find_one({"user_id": user["id"]})
     doc = record.model_dump()
 
-    # Detect whether mission-relevant onboarding fields changed.
-    # These are the fields the planner consumes for effective-knowledge
-    # computation and cold-start routing: self_assessment (drives
-    # effective_knowledge_score → subject prerequisites) and
-    # current_position (drives cold-start strategy selection).
-    # Fields like daily_study_hours and interview_target_date affect
-    # pacing/estimation but NOT today's track selection.
-    mission_relevant_change = False
-    if not existing:
-        mission_relevant_change = True
-    else:
-        old_sa = existing.get("self_assessment", {})
-        new_sa = doc.get("self_assessment", {})
-        if old_sa != new_sa:
-            mission_relevant_change = True
-        if existing.get("current_position") != doc.get("current_position"):
-            mission_relevant_change = True
+    # Invalidate only today's mission when a consumed planning/pacing input changes.
+    mission_fields = ("self_assessment", "current_position", "target_companies",
+                      "daily_study_hours", "interview_target_date")
+    mission_relevant_change = not existing or any(
+        existing.get(key) != doc.get(key) for key in mission_fields
+    )
 
     if existing:
         doc["id"] = existing["id"]
@@ -102,8 +91,7 @@ async def submit_onboarding(payload: OnboardingPayload, user=Depends(get_current
     )
     from services.roadmap_progress import initialize_roadmap_progress_for_user
     await initialize_roadmap_progress_for_user(db, user["id"])
-    # Canonical planner input: seed `knowledge_nodes` (not `roadmap_node_progress`)
-    # so the Learning Engine ranks tracks per this user's self-assessment from day one.
+    # Compatibility no-op: the planner now projects this persisted baseline at runtime.
     await seed_knowledge_nodes_from_self_assessment(
         db, user["id"], payload.self_assessment.model_dump(), get_roadmap(CURRENT_VERSION),
     )

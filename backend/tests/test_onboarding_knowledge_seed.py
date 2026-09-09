@@ -1,26 +1,15 @@
-"""Phase-2 adaptive mission engine: onboarding seeds `knowledge_nodes`.
+"""Onboarding stage projection is runtime-only; persisted evidence stays untouched.
 
-Verifies that converting self-assessment sliders into baseline
-`knowledge_nodes` rows (services/progress_engine.py::seed_knowledge_nodes_from_self_assessment)
-gives the planner (services/learning_engine) different inputs for different
-learners, without hardcoding any specific mission/node name.
-
-RC1.3.6A Phase 2 replaced the old "identical value for every node in the
-track" seeding with STAGE-AWARE seeding: a track's rating now selects a
-starting `learning_stage` (foundation < core < intermediate < advanced).
-Nodes below that stage are seeded as already understood
-(`status="completed"`, so later stages become legitimately eligible), nodes
-at that stage are seeded proportionally to the rating (`status="in_progress"`),
-and nodes above that stage are left unseeded (a genuine cold start). Tracks
-with no stage progression (behavioral/projects/resume) keep the old flat
-uniform baseline.
+The original stage/eligibility expectations remain. Persistence assertions now
+exercise the approved baseline-only contract; independent tracks retain zero
+runtime baseline (the former neutral-five assertion was already failing).
 """
 import asyncio
 
 from roadmap import get_roadmap
 from services.learning_engine.planner import get_today_learning_node
 from services.learning_engine.ranking import rank_learning_nodes
-from services.progress_engine import seed_knowledge_nodes_from_self_assessment, _node_stage_index, _STAGE_ORDER
+from services.progress_engine import seed_knowledge_nodes_from_self_assessment, onboarding_planner_projection, _node_stage_index, _STAGE_ORDER
 
 
 class FakeCursor:
@@ -63,10 +52,9 @@ SELF_ASSESSMENT_HIGH_DSA = {
 
 
 def test_seed_covers_every_roadmap_track_with_stage_aware_rows():
-    """Every roadmap track is seeded (item 6), but a stage-structured track
-    only gets rows up to the learner's starting stage — never every node
+    """The runtime stage projection covers tracks up to the starting stage — never every node
     flatly — while tracks the onboarding UI never asks about
-    (behavioral/projects/resume) still get a neutral flat baseline."""
+    (behavioral/projects/resume) receive no declared baseline and retain a zero runtime starting state."""
     roadmap = get_roadmap()
     db = FakeDB()
 
@@ -75,12 +63,12 @@ def test_seed_covers_every_roadmap_track_with_stage_aware_rows():
     )
 
     rows_by_track = {}
-    for row in db.knowledge_nodes._rows:
+    for row in onboarding_planner_projection(SELF_ASSESSMENT_LOW_DSA, roadmap).values():
         node = roadmap.get(row["node_id"])
         rows_by_track.setdefault(node["track"], []).append(row)
 
     assert inserted == len(db.knowledge_nodes._rows)
-    assert inserted > 0
+    assert inserted == 0  # no onboarding-derived persisted evidence
 
     # dsa rating=1 -> starting stage "foundation": only foundation-stage dsa
     # nodes are seeded; anything core/intermediate/advanced is left cold.
@@ -90,19 +78,15 @@ def test_seed_covers_every_roadmap_track_with_stage_aware_rows():
     assert dsa_seeded_ids == dsa_foundation_ids
     assert len(dsa_seeded_ids) < len(dsa_nodes)
 
-    # Tracks never covered by onboarding sliders AND with no stage progression
-    # of their own (behavioral/projects/resume) still get a full neutral flat
-    # baseline. (Programming Fundamentals is also never asked about by the
-    # onboarding sliders and, unlike dsa/java/etc., is never seeded at all —
-    # see test_programming_fundamentals_is_never_seeded_from_onboarding below
-    # — so it is deliberately excluded from this "flat track" check.)
+    # Independent tracks retain the old zero runtime starting state. PF's
+    # effective prerequisite credit is supplied separately by LearnerContext.
     flat_tracks = {"behavioral", "projects", "resume"}
     unrated_track = next(
         t for t in roadmap.track_ids() if t not in SELF_ASSESSMENT_LOW_DSA and t in flat_tracks
     )
     unrated_rows = rows_by_track.get(unrated_track, [])
     assert len(unrated_rows) == len(roadmap.get_track_learning_nodes(unrated_track))
-    assert all(row["confidence"] == 5.0 and row["status"] == "in_progress" for row in unrated_rows)
+    assert all(row["confidence"] == 0.0 and row["status"] == "not_started" for row in unrated_rows)
 
 
 def test_high_rating_marks_earlier_stages_completed_so_later_stages_unlock():
@@ -118,7 +102,7 @@ def test_high_rating_marks_earlier_stages_completed_so_later_stages_unlock():
     )
 
     dsa_nodes = roadmap.get_track_learning_nodes("dsa")
-    rows = {row["node_id"]: row for row in db.knowledge_nodes._rows if roadmap.get(row["node_id"])["track"] == "dsa"}
+    rows = {nid: row for nid, row in onboarding_planner_projection(SELF_ASSESSMENT_HIGH_DSA, roadmap).items() if roadmap.get(nid)["track"] == "dsa"}
 
     below_advanced = [n for n in dsa_nodes if _node_stage_index(n) < _STAGE_ORDER.index("advanced")]
     at_advanced = [n for n in dsa_nodes if _node_stage_index(n) == _STAGE_ORDER.index("advanced")]
@@ -190,8 +174,9 @@ def test_planner_input_differs_between_low_and_high_dsa_self_assessment():
     asyncio.run(seed_knowledge_nodes_from_self_assessment(db_a, "user-a", SELF_ASSESSMENT_LOW_DSA, roadmap))
     asyncio.run(seed_knowledge_nodes_from_self_assessment(db_b, "user-b", SELF_ASSESSMENT_HIGH_DSA, roadmap))
 
-    rows_a = {r["node_id"]: r for r in db_a.knowledge_nodes._rows}
-    rows_b = {r["node_id"]: r for r in db_b.knowledge_nodes._rows}
+    assert db_a.knowledge_nodes._rows == db_b.knowledge_nodes._rows == []
+    rows_a = onboarding_planner_projection(SELF_ASSESSMENT_LOW_DSA, roadmap)
+    rows_b = onboarding_planner_projection(SELF_ASSESSMENT_HIGH_DSA, roadmap)
 
     # Foundation-stage dsa nodes with no prerequisites are seeded under both
     # scenarios (A: at-stage/in_progress: B: below-stage/completed), so their
@@ -220,6 +205,6 @@ def test_planner_input_differs_between_low_and_high_dsa_self_assessment():
     # — the single globally-best node can coincidentally land on the same
     # non-dsa node for both users when their other tracks share identical
     # ratings, which is expected and unrelated to what this test verifies).
-    recommendation_a = asyncio.run(get_today_learning_node("user-a", db=db_a))
-    recommendation_b = asyncio.run(get_today_learning_node("user-b", db=db_b))
+    recommendation_a = asyncio.run(get_today_learning_node("user-a", db=db_a, onboarding={"self_assessment": SELF_ASSESSMENT_LOW_DSA}))
+    recommendation_b = asyncio.run(get_today_learning_node("user-b", db=db_b, onboarding={"self_assessment": SELF_ASSESSMENT_HIGH_DSA}))
     assert recommendation_a is not None and recommendation_b is not None

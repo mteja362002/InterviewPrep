@@ -22,6 +22,7 @@ import { cn } from '@/lib/utils';
 import { formatDistanceToNow, parseISO } from 'date-fns';
 import { StatusBadge } from '@/components/progress/StatusBadge';
 import { NodeActions } from '@/components/progress/NodeActions';
+import { ProgressProvenance } from '@/components/knowledge/ProgressProvenance';
 import { AIContentTabs } from '@/components/knowledge/AIContentTabs';
 import { AIInterviewCards } from '@/components/knowledge/AIInterviewCards';
 import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
@@ -200,10 +201,12 @@ export default function DeepTopicPage() {
               ) : null}
             </div>
             <div className="mt-5 grid grid-cols-3 gap-4 max-w-md">
-              <Stat label="Mastery" value={`${Math.round(progress.mastery_percentage || 0)}%`} />
+              <Stat label="Actual Mastery" value={`${Math.round(progress.mastery_percentage || 0)}%`} />
               <Stat label="Confidence" value={`${(progress.confidence || 0).toFixed(1)}/10`} />
-              <Stat label="Attempts" value={`${progress.attempts || 0}`} />
+              <Stat label="Recorded Attempts" value={`${progress.attempts || 0}`} />
             </div>
+
+            <div className="mt-4"><ProgressProvenance progress={progress} details /></div>
 
             {/* Quick actions — attempt + status transitions */}
             <div className="mt-5 flex flex-wrap items-center gap-2" data-testid="topic-quick-actions">

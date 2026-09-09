@@ -226,7 +226,7 @@ export default function CommandAnalytics() {
         <GlassCard className="p-4 lg:col-span-2">
           <div className="flex items-center gap-2 mb-4">
             <TrendingUp className="h-4 w-4 text-primary" />
-            <h3 className="font-display text-sm font-semibold tracking-tight">Topic Mastery</h3>
+            <h3 className="font-display text-sm font-semibold tracking-tight">Actual Topic Mastery</h3>
           </div>
           {knowledgeSorted.length === 0 ? (
             <div className="text-xs text-muted-foreground py-4 text-center">

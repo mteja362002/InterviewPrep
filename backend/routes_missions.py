@@ -232,13 +232,13 @@ async def _record_completed_task_progress(
     db, user_id: str, task: dict, difficulty: str, baseline: dict, now: str,
 ) -> str:
     """Persist one completed task on the canonical per-node progress row."""
-    from services.progress_repository import upsert_progress_from_score
+    from services.progress_repository import upsert_progress_from_score, upsert_progress_fields
     node_id = _progress_node_id_for_task(task)
     existing_node = await db.knowledge_nodes.find_one(
         {"user_id": user_id, "roadmap_version": CURRENT_VERSION, "node_id": node_id}, {"_id": 0},
     )
-    baseline_score = baseline.get(task["topic"], 5) * 10
-    current = float(existing_node["mastery_percentage"]) if existing_node else float(baseline_score)
+    from services.evidence import certified_fields
+    current = float(certified_fields(existing_node).get("mastery_percentage", 0))
     new_score = apply_knowledge_gain(current, difficulty, task["kind"])
     await upsert_progress_from_score(
         db,
@@ -246,9 +246,15 @@ async def _record_completed_task_progress(
         roadmap_version=CURRENT_VERSION,
         node_id=node_id,
         score=new_score,
+        source="task_completion",
         status_override="completed",
         completion_date=now,
     )
+    if task["kind"] == "revise":
+        await upsert_progress_fields(
+            db, user_id=user_id, roadmap_version=CURRENT_VERSION, node_id=node_id,
+            fields={"last_revision": now}, source="revision",
+        )
     await mark_node_for_revision(db, user_id, CURRENT_VERSION, node_id)
     return node_id
 
@@ -320,10 +326,11 @@ async def _attach_problems_to_mission(db, mission: DailyMission) -> None:
 async def _generate_today_mission(db, user_id: str) -> DailyMission:
     onboarding = await _require_onboarding(db, user_id)
     knowledge = await _get_knowledge(db, user_id)
-    knowledge_node_rows = await db.knowledge_nodes.find(
-        {"user_id": user_id}, {"_id": 0}
-    ).to_list(length=2000)
-    knowledge_nodes = {row["node_id"]: row for row in knowledge_node_rows}
+    knowledge_node_rows = list((await load_user_progress_rows(db, user_id)).values())
+    from services.progress_engine import planner_progress_rows
+    knowledge_nodes = {row["node_id"]: row for row in planner_progress_rows(
+        get_roadmap(), knowledge_node_rows, onboarding,
+    )}
     revisions_due = await _get_due_revisions(db, user_id)
     recent_feedback = await _get_recent_feedback(db, user_id, hours=36)
     extra_yesterday = await _count_extra_practice_yesterday(db, user_id)
@@ -343,8 +350,10 @@ async def _generate_today_mission(db, user_id: str) -> DailyMission:
     # ---- Learning recommendation with continuity + readiness estimate ----
     # `recent_completions` feeds continuity_score; sorted newest-first so
     # `chain_from_history` picks up yesterday's last touched node.
+    from services.evidence import planner_row
+    recorded_rows = [planner_row(row) for row in knowledge_node_rows]
     recent_completions = sorted(
-        [row for row in knowledge_node_rows if row.get("completion_date")],
+        [row for row in recorded_rows if row.get("completion_date")],
         key=lambda r: r.get("completion_date") or "",
         reverse=True,
     )
@@ -353,7 +362,7 @@ async def _generate_today_mission(db, user_id: str) -> DailyMission:
         return await get_today_learning_node(
             user_id, db=db, pacing_state=pacing_state,
             target_companies=onboarding.get("target_companies"),
-            completed_dates=[row.get("completion_date") for row in knowledge_node_rows if row.get("completion_date")],
+            completed_dates=[row.get("completion_date") for row in recorded_rows if row.get("completion_date")],
             recent_node_ids=recent_node_ids,
             onboarding=onboarding,
             knowledge_rows=knowledge,
@@ -721,6 +730,8 @@ async def get_pattern_catalog():
         result.append({
             "pattern": pattern,
             "label": label,
+            "metric_basis": "certified_actual",
+            "onboarding_baseline": baseline.get(domain) * 10 if domain in baseline else None,
             "domain": domain,
             "count": count,
         })
@@ -963,7 +974,8 @@ async def submit_problem_feedback(
                     {"user_id": user["id"], "roadmap_version": _V, "node_id": nid},
                     {"_id": 0},
                 )
-                prev_conf = float(existing.get("confidence", 0.0)) if existing else 0.0
+                from services.evidence import certified_fields
+                prev_conf = float(certified_fields(existing).get("confidence", 0.0))
                 new_conf = round((prev_conf * 3 + payload.confidence) / 4, 2)
                 solved = payload.solved_status != "could_not_solve"
                 status = "mastered" if solved and new_conf >= 9 else "completed" if solved else "in_progress"
@@ -973,6 +985,7 @@ async def submit_problem_feedback(
                     roadmap_version=_V,
                     node_id=nid,
                     confidence=new_conf,
+                    source="problem_feedback",
                     status_override=status,
                     completion_date=_now_iso() if solved else None,
                 )
@@ -1032,7 +1045,7 @@ async def get_knowledge_tree(user=Depends(get_current_user)):
     for domain in DOMAIN_ORDER:
         # Domain progress
         kp = by_topic.get(domain)
-        domain_score = kp["score"] if kp else (baseline.get(domain, 5) * 10)
+        domain_score = kp["score"] if kp else 0.0
 
         # Sub-topics: for DSA come from PATTERN_TO_DOMAIN filtered by domain
         sub_rows = []
@@ -1075,6 +1088,8 @@ async def get_knowledge_tree(user=Depends(get_current_user)):
                 })
 
         tree.append({
+            "metric_basis": "certified_actual",
+            "onboarding_baseline": baseline.get(domain) * 10 if domain in baseline else None,
             "domain": domain,
             "label": TOPIC_META.get(domain, {}).get("label", domain),
             "score": round(domain_score, 1),
@@ -1162,13 +1177,15 @@ async def get_dashboard(user=Depends(get_current_user)):
         if kp:
             score = kp["score"]
         else:
-            score = baseline.get(track_id, 0) * 10
+            score = 0.0
 
         track = roadmap.get(track_id)
         label = getattr(track, "title", track_id.replace("_", " ").title())
 
         knowledge_view.append({
             "topic": track_id,
+            "metric_basis": "certified_actual",
+            "onboarding_baseline": baseline.get(track_id) * 10 if track_id in baseline else None,
             "label": label,
             "score": round(score, 1),
             "completions": kp.get("completions", 0) if kp else 0,

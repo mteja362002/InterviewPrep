@@ -85,7 +85,8 @@ function KnowledgeCard({ row }) {
             {typeof confidence === 'number' && confidence > 0 && (
               <span>conf {confidence.toFixed(1)}/10</span>
             )}
-            <span>{mastery}% mastery</span>
+            <span>{mastery}% actual mastery</span>
+            {progress.legacy_progress && <span>Unverified legacy: {progress.legacy_progress.mastery_percentage}%</span>}
             {meta && (
               <span
                 className={cn(

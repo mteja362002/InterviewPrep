@@ -64,7 +64,7 @@ from services.learning_engine.priority_engine import (
 )
 from services.learning_engine.revision import get_highest_priority_revision
 from services.learning_engine.stage_engine import compute_all_subject_states
-from services.progress_engine import load_user_progress_rows
+from services.progress_engine import load_user_progress_rows, planner_progress_rows
 from roadmap import get_roadmap
 
 
@@ -209,7 +209,7 @@ async def get_today_learning_node(
 
     context = build_learner_context(
         onboarding=onboarding,
-        progress_rows=progress_rows,
+        progress_rows=planner_progress_rows(get_roadmap(), progress_rows, onboarding),
         pacing_state=pacing_state,
         target_companies=target_companies,
         recent_completions=recent_completions,
@@ -227,7 +227,7 @@ async def get_today_learning_node(
     # Spaced-repetition items ALWAYS win over new content. This gate is a
     # single-line pipeline stage — never a branching decision the planner
     # itself owns beyond "did the engine surface one?".
-    revision = get_highest_priority_revision(user_id, progress_rows=progress_rows)
+    revision = get_highest_priority_revision(user_id, progress_rows=context.progress_rows)
     if revision is not None and revision.get("node_id") not in context.skip_node_ids:
         roadmap = get_roadmap()
         node = roadmap.get(revision.get("node_id"))

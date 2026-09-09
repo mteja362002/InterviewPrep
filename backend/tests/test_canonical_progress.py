@@ -2,9 +2,11 @@ from unittest.mock import patch
 
 from roadmap import RoadmapEngine
 from services.progress_engine import build_canonical_progress
+from tests.evidence_fixtures import certified
 
 
 class FakeRoadmap:
+    version = "v1"
     def __init__(self):
         self._nodes = {
             "root": {"id": "root", "child_ids": ["module"]},
@@ -36,7 +38,7 @@ def test_canonical_progress_rolls_up_from_children():
         }
     }
 
-    result = build_canonical_progress(roadmap, progress_rows)
+    result = build_canonical_progress(roadmap, {nid: certified(row) for nid, row in progress_rows.items()})
 
     assert result["module"]["completed_topics"] == 1
     assert result["module"]["total_topics"] == 1
@@ -68,7 +70,7 @@ def test_canonical_progress_walks_real_track_roots():
         }
     }
 
-    result = build_canonical_progress(roadmap, progress_rows)
+    result = build_canonical_progress(roadmap, {nid: certified(row) for nid, row in progress_rows.items()})
 
     assert result["module"]["completion_pct"] == 100.0
     assert result["dsa"]["completion_pct"] == 100.0
@@ -158,7 +160,7 @@ def test_canonical_progress_partial_completion_is_not_completed():
     roadmap = SectionRoadmap()
     progress_rows = {"a": {"status": "completed", "mastery_percentage": 80.0}}
 
-    result = build_canonical_progress(roadmap, progress_rows)
+    result = build_canonical_progress(roadmap, {nid: certified(row) for nid, row in progress_rows.items()})
 
     assert result["section"]["completed_topics"] == 1
     assert result["section"]["total_topics"] == 5
@@ -201,6 +203,6 @@ def test_canonical_progress_all_children_completed_is_completed():
         "b": {"status": "mastered", "mastery_percentage": 100.0},
     }
 
-    result = build_canonical_progress(roadmap, progress_rows)
+    result = build_canonical_progress(roadmap, {nid: certified(row) for nid, row in progress_rows.items()})
 
     assert result["section"]["status"] == "completed"

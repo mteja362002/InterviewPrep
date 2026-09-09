@@ -299,11 +299,17 @@ class WeaknessRecord(BaseModel):
 # ============ Roadmap Knowledge Graph ============
 
 class KnowledgeNode(BaseModel):
-    """Per-user per-node state on a versioned roadmap."""
+    """Per-user state. Top-level historical scores have unverified provenance.
+
+    Forward writers store only attributable fields in certified_progress.
+    """
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     user_id: str
     roadmap_version: str = "v1"
     node_id: str
+    track: Optional[str] = None
+    progress_schema_version: Optional[int] = None
+    certified_progress: dict = Field(default_factory=dict)
     status: str = "not_started"  # not_started | in_progress | completed | mastered | revision_due
     confidence: float = 0.0  # 0-10
     weakness_score: float = 0.0  # 0-100 (higher = weaker)

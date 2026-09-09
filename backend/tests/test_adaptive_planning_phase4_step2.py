@@ -26,6 +26,7 @@ from typing import Dict, List, Optional
 import pytest
 
 from services.learning_engine.planner import get_today_learning_node
+from tests.evidence_fixtures import certified
 
 
 # ---------------------------------------------------------------------------
@@ -68,7 +69,7 @@ def _completed(node_id: str, *, mastery: float = 100.0, track: Optional[str] = N
     }
     if track:
         row["track"] = track
-    return row
+    return certified(row)
 
 
 def _in_progress(node_id: str, *, mastery: float = 20.0, track: Optional[str] = None) -> dict:
@@ -81,7 +82,7 @@ def _in_progress(node_id: str, *, mastery: float = 20.0, track: Optional[str] = 
     }
     if track:
         row["track"] = track
-    return row
+    return certified(row)
 
 
 def _pick(onboarding: dict, rows: Optional[List[dict]] = None, **kwargs) -> Optional[dict]:

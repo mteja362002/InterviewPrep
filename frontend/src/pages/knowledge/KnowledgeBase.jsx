@@ -15,6 +15,7 @@ import { matchNode } from '@/hooks/useProgressTree';
 import { useRoadmapTree, useRoadmapSummary, useRevisions } from '@/queries/hooks';
 import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
 import { KnowledgeViewTabs, KNOWLEDGE_VIEWS } from '@/components/knowledge/KnowledgeViewTabs';
+import { ProgressProvenance } from '@/components/knowledge/ProgressProvenance';
 import { KnowledgeStats } from '@/components/knowledge/KnowledgeStats';
 import { KnowledgeCardList } from '@/components/knowledge/KnowledgeCardList';
 import {
@@ -99,7 +100,7 @@ function TopicItem({ topic, depth, hasKids, isOpen, onToggle }) {
         )}
         <StatusBadge status={status} className="hidden sm:inline-block" />
         <span className="font-mono text-[11px] text-muted-foreground w-10 text-right">
-          {Math.round(topic.progress?.mastery_percentage || 0)}%
+          <span title="Certified actual mastery">{Math.round(topic.progress?.mastery_percentage || 0)}%</span>
         </span>
       </div>
     </div>
@@ -124,6 +125,7 @@ function ModuleBlock({ module, isOpen, onToggle, expanded, toggleNode }) {
           {Math.round(modMastery)}%
         </span>
       </button>
+      <div className="px-4 pb-2"><ProgressProvenance progress={{ legacy_progress: module.progress?.legacy_progress }} /></div>
       {isOpen && (
         <div className="px-4 pb-3 pt-1 space-y-1">
           {rows.map((r) => (
@@ -162,13 +164,14 @@ function TrackBlock({ track, isOpen, onToggle, expanded, toggleNode }) {
             <div className="h-1.5 flex-1 rounded-full bg-white/[0.05] overflow-hidden">
               <div className="h-full bg-gradient-to-r from-primary to-secondary" style={{ width: `${mastery}%` }} />
             </div>
-            <span className="font-mono text-xs text-muted-foreground w-14 text-right">
-              {Math.round(mastery)}%
+            <span className="font-mono text-xs text-muted-foreground text-right">
+              Actual Progress: {Math.round(mastery)}%
             </span>
           </div>
         </div>
         <ChevronRight className={cn('h-4 w-4 text-muted-foreground shrink-0 transition-transform', isOpen && 'rotate-90')} />
       </button>
+      <div className="px-6 pb-3"><ProgressProvenance progress={track.progress} /></div>
       {isOpen && (
         <div className="px-6 pb-5 pt-1 space-y-2">
           {modules.map((m) => (

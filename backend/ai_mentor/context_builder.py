@@ -27,6 +27,8 @@ from typing import Any, Dict, List, Optional
 
 from roadmap import get_roadmap, CURRENT_VERSION
 from knowledge_generation import read_cache as read_kb_cache
+from services.evidence import actual_row, certified_fields, legacy_fields
+from services.progress_engine import load_user_progress_rows, build_canonical_progress
 
 log = logging.getLogger(__name__)
 
@@ -48,9 +50,10 @@ async def _load_user_profile(db, user_id: str) -> Dict[str, Any]:
     onboarding = await db.onboarding.find_one(
         {"user_id": user_id},
         {"_id": 0, "target_companies": 1, "interview_target_date": 1,
-         "daily_study_hours": 1, "current_position": 1},
+         "daily_study_hours": 1, "current_position": 1, "self_assessment": 1},
     ) or {}
     return {
+        "onboarding_baseline": onboarding.get("self_assessment") or {},
         "name": user.get("name"),
         "email": user.get("email"),
         "target_companies": onboarding.get("target_companies") or [],
@@ -60,10 +63,10 @@ async def _load_user_profile(db, user_id: str) -> Dict[str, Any]:
     }
 
 
-async def _load_progress(db, user_id: str) -> List[Dict[str, Any]]:
+async def _load_progress(db, user_id: str, version=CURRENT_VERSION) -> List[Dict[str, Any]]:
     """All `knowledge_nodes` rows for the user."""
-    cur = db.knowledge_nodes.find({"user_id": user_id}, {"_id": 0})
-    return await cur.to_list(length=1000)
+    rows = await load_user_progress_rows(db, user_id, version)
+    return [actual_row(row, get_roadmap(version)) for row in rows.values() if certified_fields(row)]
 
 
 def _weak_and_strong(progress: List[Dict[str, Any]], roadmap) -> Dict[str, List[Dict[str, Any]]]:
@@ -211,15 +214,15 @@ async def _current_topic_block(db, roadmap, *, node_id: Optional[str],
 
 async def _summary_progress(db, user_id: str, roadmap) -> Dict[str, Any]:
     """Cheap overall stats — completion %, hours remaining."""
-    progress = await db.knowledge_nodes.count_documents({"user_id": user_id})
-    completed = await db.knowledge_nodes.count_documents(
-        {"user_id": user_id, "status": {"$in": ["completed", "mastered"]}},
-    )
-    total_topics = sum(1 for _ in roadmap.all_nodes())
+    rows = await load_user_progress_rows(db, user_id, roadmap.version)
+    canonical = build_canonical_progress(roadmap, rows)
+    tracks = [canonical[track["id"]] for track in roadmap.tracks()]
     return {
-        "total_roadmap_nodes": total_topics,
-        "nodes_touched": progress,
-        "nodes_completed": completed,
+        "metric_basis": "certified_actual",
+        "total_roadmap_nodes": sum(track["total_topics"] for track in tracks),
+        "nodes_touched": sum(bool(certified_fields(row)) for row in rows.values()),
+        "nodes_completed": sum(track["completed_topics"] for track in tracks),
+        "unverified_legacy_nodes": sum(bool(legacy_fields(row)) for row in rows.values()),
     }
 
 
@@ -329,16 +332,21 @@ async def _load_prerequisite_analysis(db, user_id: str, roadmap,
     if not target_node:
         return None
     # Build a lookup of every progress row so the walker doesn't need to hit Mongo per-node.
-    cur = db.knowledge_nodes.find(
-        {"user_id": user_id},
-        {"_id": 0, "node_id": 1, "status": 1, "mastery_percentage": 1, "confidence": 1},
-    )
-    rows = await cur.to_list(length=5000)
-    progress_by_id = {r["node_id"]: r for r in rows}
+    from services.learning_engine.context import build_learner_context
+    rows = await load_user_progress_rows(db, user_id, roadmap.version)
+    onboarding = await db.onboarding.find_one({"user_id": user_id}, {"_id": 0}) or {}
+    from services.progress_engine import planner_progress_rows
+    context = build_learner_context(onboarding=onboarding, progress_rows=planner_progress_rows(
+        roadmap, rows.values(), onboarding,
+    ))
+    progress_by_id = dict(context.progress_map)
+    for nid in context.virtual_completed_node_ids():
+        progress_by_id[nid] = {"node_id": nid, "status": "completed"}
 
     chain = _walk_prereq_chain(roadmap, target_id, progress_by_id)
     first_missing = _first_incomplete(chain)
     return {
+        "metric_basis": "effective_planner_knowledge_not_actual_completion",
         "target": {"id": target_id, "label": target_node["label"]},
         "chain": chain,
         "first_incomplete": first_missing,
@@ -422,10 +430,14 @@ def _serialize_context(context: Dict[str, Any]) -> str:
 
     # Summary
     lines.append(
-        f"* **Roadmap progress**: {s.get('nodes_completed', 0)} completed · "
+        f"* **Certified actual roadmap progress**: {s.get('nodes_completed', 0)} completed · "
         f"{s.get('nodes_touched', 0)} touched · "
         f"{s.get('total_roadmap_nodes', 0)} total nodes"
     )
+
+    lines.append(f"* **Onboarding baseline (declared, 0-10)**: {p.get('onboarding_baseline', {})}")
+    lines.append(f"* **Unverified legacy nodes**: {s.get('unverified_legacy_nodes', 0)}; excluded from actual metrics.")
+    lines.append("* Prerequisite analysis is effective planner knowledge, not proof of curriculum completion.")
 
     # Weak / strong
     weak = ws.get("weak") or []
@@ -529,7 +541,7 @@ async def build_context(db, *, user_id: str, node_id: Optional[str] = None) -> D
     # Parallel-ish loads (motor is async, but await sequentially since motor
     # already dispatches on a single event loop).
     profile = await _load_user_profile(db, user_id)
-    progress = await _load_progress(db, user_id)
+    progress = await _load_progress(db, user_id, version)
     focus = _weak_and_strong(progress, roadmap)
     prerequisite_analysis = await _load_prerequisite_analysis(db,user_id,roadmap,node_id,focus["weak"],)
     mission = await _load_todays_mission(db, user_id)

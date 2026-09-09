@@ -39,7 +39,7 @@ class FakeCollection:
 
 class FakeDB:
     def __init__(self, rows):
-        self.knowledge_nodes = FakeCollection(rows)
+        self.knowledge_nodes = FakeCollection([{**row, "roadmap_version": "v1"} for row in rows])
 
 
 def test_unlock_logic_respects_prerequisites():

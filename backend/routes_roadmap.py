@@ -13,6 +13,8 @@ from problem_bank import problem_by_id
 from ai_service import AIProviderError
 from knowledge_generation import ensure_content, read_cache, clear_cache
 from services.progress_engine import build_canonical_progress, load_user_progress_rows, confidence_to_node_fields
+from services.evidence import certified_fields, historical_facts
+from services.progress_repository import upsert_progress_fields
 from services.revision_engine import first_revision_date
 from services.learning_engine.roi import compute_learning_roi
 from services.learning_engine.ranking import _is_foundation_node
@@ -82,91 +84,37 @@ async def _load_user_progress(db, user_id: str) -> dict:
     Delegates to the canonical Progress Engine loader (services/progress_engine.py)
     so every route module queries `knowledge_nodes` the same way.
     """
-    return await load_user_progress_rows(db, user_id)
-
-
-def _is_leaf_node(node: dict) -> bool:
-    """A node is a leaf if it has no descendants — those are the units we count."""
-    return not (node.get("child_ids") or [])
+    return await load_user_progress_rows(db, user_id, await _get_user_version(db, user_id))
 
 
 def _rollup_from_progress(node: dict, progress: dict, roadmap, canonical_progress: dict = None) -> dict:
-    """Compute status + mastery + counts for a node from itself or its descendants."""
-    is_leaf = _is_leaf_node(node)
-    # Legacy migrations can insert a knowledge_nodes row keyed by a track/module
-    # id (e.g. node_id == "dsa") from pre-roadmap per-track progress. Such a row
-    # must never be treated as leaf-level progress for a non-leaf node — doing so
-    # short-circuits the structural rollup and incorrectly zeroes total_topics.
-    prog = progress.get(node["id"]) if is_leaf else None
-    if prog:
-        status = _normalize_status(prog.get("status"), prog.get("next_revision"))
-        mastery = float(prog.get("mastery_percentage", 0.0))
-        est_min = int(node.get("estimated_minutes") or 0)
-        is_done = status in (STATUS_COMPLETED, STATUS_MASTERED)
-        completed_topics = 1 if is_done else 0
-        total_topics = 1
-        remaining_minutes = 0 if is_done else est_min
-        return {
-            "status": status,
-            "confidence": round(prog.get("confidence", 0.0), 2),
-            "weakness_score": round(prog.get("weakness_score", 0.0), 2),
-            "mastery_percentage": round(mastery, 2),
-            "revision_bucket": prog.get("revision_bucket", "green"),
-            "has_progress": True,
-            "bookmarked": bool(prog.get("bookmarked", False)),
-            "favorite": bool(prog.get("favorite", False)),
-            "attempts": int(prog.get("attempts", 0)),
-            "actual_solve_minutes": int(prog.get("actual_solve_minutes", 0)),
-            "completion_date": prog.get("completion_date"),
-            "last_revision": prog.get("last_revision"),
-            "next_revision": prog.get("next_revision"),
-            "total_topics": total_topics,
-            "completed_topics": completed_topics,
-            "remaining_topics": total_topics - completed_topics,
-            "completion_pct": 100.0 if is_done else 0.0,
-            "estimated_hours_remaining": round(remaining_minutes / 60.0, 2),
-        }
+    """One certified aggregation; historical facts remain separately inspectable."""
+    canonical = canonical_progress if canonical_progress is not None else build_canonical_progress(roadmap, progress)
+    raw = progress.get(node["id"], {})
+    actual = certified_fields(raw)
+    roll = dict(canonical.get(node["id"], {}))
+    status = _normalize_status(roll.get("status"), actual.get("next_revision"))
+    roll.update({
+        "status": status,
+        "revision_bucket": _bucket(roll.get("confidence", 0), roll.get("weakness_score", 0)),
+        "has_progress": bool(actual),
+        "bookmarked": bool(raw.get("bookmarked")), "favorite": bool(raw.get("favorite")),
+        "attempts": actual.get("attempts", 0),
+        "actual_solve_minutes": actual.get("actual_solve_minutes", 0),
+        "completion_date": actual.get("completion_date"),
+        "last_revision": actual.get("last_revision"),
+        "next_revision": actual.get("next_revision", raw.get("next_revision")),
+        "historical_facts": historical_facts(raw),
+    })
+    if not roadmap.children(node["id"]):
+        remaining = 0 if roll.get("completed_topics") else int(node.get("estimated_minutes") or 0)
+        roll["estimated_hours_remaining"] = round(remaining / 60, 2)
+    return roll
 
-    # The canonical engine is the authoritative rollup path; use it for parent nodes.
-    if node.get("id") != "root":
-        canonical = canonical_progress if canonical_progress is not None else build_canonical_progress(roadmap, progress)
-        return {
-            **canonical.get(node["id"], {}),
-            "revision_bucket": _bucket(
-                canonical.get(node["id"], {}).get("confidence", 0.0),
-                canonical.get(node["id"], {}).get("weakness_score", 0.0),
-            ),
-            "has_progress": bool(progress.get(node["id"])),
-            "bookmarked": bool(progress.get(node["id"], {}).get("bookmarked", False)),
-            "favorite": bool(progress.get(node["id"], {}).get("favorite", False)),
-            "attempts": int(progress.get(node["id"], {}).get("attempts", 0)),
-            "actual_solve_minutes": int(progress.get(node["id"], {}).get("actual_solve_minutes", 0)),
-            "completion_date": progress.get(node["id"], {}).get("completion_date"),
-            "last_revision": progress.get(node["id"], {}).get("last_revision"),
-            "next_revision": progress.get(node["id"], {}).get("next_revision"),
-        }
 
-    # Fallback for synthetic root node.
-    return {
-        "status": STATUS_NOT_STARTED,
-        "confidence": 0.0,
-        "weakness_score": 0.0,
-        "mastery_percentage": 0.0,
-        "revision_bucket": "green",
-        "has_progress": False,
-        "bookmarked": False,
-        "favorite": False,
-        "attempts": 0,
-        "actual_solve_minutes": 0,
-        "completion_date": None,
-        "last_revision": None,
-        "next_revision": None,
-        "total_topics": 0,
-        "completed_topics": 0,
-        "remaining_topics": 0,
-        "completion_pct": 0.0,
-        "estimated_hours_remaining": 0.0,
-    }
+async def _canonical_for_user(db, user_id, roadmap, progress):
+    onboarding = await db.onboarding.find_one({"user_id": user_id}, {"_id": 0}) or {}
+    return build_canonical_progress(roadmap, progress, onboarding)
 
 
 def _shape_node(n: dict, progress_view: dict) -> dict:
@@ -205,7 +153,7 @@ async def get_full_roadmap(user=Depends(get_current_user)):
     roadmap = get_roadmap(version)
     progress = await _load_user_progress(db, user["id"])
 
-    canonical_progress = build_canonical_progress(roadmap, progress)
+    canonical_progress = await _canonical_for_user(db, user["id"], roadmap, progress)
     tracks = []
     for track in roadmap.tracks():
         track_view = _shape_node(track, _rollup_from_progress(track, progress, roadmap, canonical_progress))
@@ -232,7 +180,7 @@ async def get_node_detail(node_id: str, user=Depends(get_current_user)):
         raise HTTPException(status_code=404, detail="Node not found")
 
     progress_map = await _load_user_progress(db, user["id"])
-    canonical_progress = build_canonical_progress(roadmap, progress_map)
+    canonical_progress = await _canonical_for_user(db, user["id"], roadmap, progress_map)
     node_progress = _rollup_from_progress(node, progress_map, roadmap, canonical_progress)
 
     breadcrumb = [{"id": a["id"], "label": a["label"], "type": a.get("type")}
@@ -341,13 +289,36 @@ async def get_node_detail(node_id: str, user=Depends(get_current_user)):
 
 # ============ Progress ============
 
+@router.get("/legacy-progress")
+async def get_legacy_progress(user=Depends(get_current_user)):
+    """Inspect all preserved unknown values, including unmapped/versionless rows."""
+    from server import db
+    from services.evidence import legacy_fields, LEGACY
+    rows = await db.knowledge_nodes.find({"user_id": user["id"]}, {"_id": 0}).to_list(length=None)
+    result = []
+    for row in rows:
+        fields = legacy_fields(row)
+        if not fields:
+            continue
+        track = None
+        try:
+            roadmap = get_roadmap(row["roadmap_version"])
+            node = roadmap.get(row.get("node_id"))
+            track = (node.get("track") or node["id"]) if node else None
+        except (KeyError, FileNotFoundError, TypeError):
+            pass
+        result.append({"node_id": row.get("node_id"), "roadmap_version": row.get("roadmap_version"),
+                       "track": track, "identity_resolved": track is not None,
+                       "classification": LEGACY, "stored_fields": fields})
+    return {"records": result, "metric_basis": LEGACY}
+
 @router.get("/progress")
 async def get_progress(user=Depends(get_current_user)):
     from server import db
     version = await _ensure_user_version(db, user["id"])
     roadmap = get_roadmap(version)
     progress_map = await _load_user_progress(db, user["id"])
-    canonical_progress = build_canonical_progress(roadmap, progress_map)
+    canonical_progress = await _canonical_for_user(db, user["id"], roadmap, progress_map)
     # Roll up per track and per module using the canonical backend engine.
     result = []
     for track in roadmap.tracks():
@@ -380,7 +351,7 @@ async def get_summary(user=Depends(get_current_user)):
     version = await _ensure_user_version(db, user["id"])
     roadmap = get_roadmap(version)
     progress_map = await _load_user_progress(db, user["id"])
-    canonical_progress = build_canonical_progress(roadmap, progress_map)
+    canonical_progress = await _canonical_for_user(db, user["id"], roadmap, progress_map)
 
     today = datetime.now(timezone.utc).date().isoformat()
     tracks_summary = []
@@ -392,6 +363,9 @@ async def get_summary(user=Depends(get_current_user)):
         roll = _rollup_from_progress(track, progress_map, roadmap, canonical_progress)
         tracks_summary.append({
             "id": track["id"], "label": track["label"], "icon": track.get("icon"),
+            "metric_basis": roll["metric_basis"],
+            "onboarding_baseline": roll["onboarding_baseline"],
+            "legacy_progress": roll["legacy_progress"],
             "completion_pct": roll["completion_pct"],
             "mastery_percentage": roll["mastery_percentage"],
             "completed_topics": roll["completed_topics"],
@@ -421,13 +395,13 @@ async def get_summary(user=Depends(get_current_user)):
     # Today's completed topics — count knowledge_nodes whose completion_date is today.
     today_completed_ids: list[str] = []
     for nid, prog in progress_map.items():
-        cd = prog.get("completion_date")
+        cd = certified_fields(prog).get("completion_date", prog.get("completion_date"))
         if cd and cd[:10] == today:
             today_completed_ids.append(nid)
 
     revision_due_count = sum(
         1 for _, p in progress_map.items()
-        if _normalize_status(p.get("status"), p.get("next_revision")) == STATUS_REVISION_DUE
+        if (certified_fields(p).get("next_revision", p.get("next_revision")) or "9999")[:10] <= today
     )
     bookmarked_count = sum(1 for _, p in progress_map.items() if p.get("bookmarked"))
     favorite_count = sum(1 for _, p in progress_map.items() if p.get("favorite"))
@@ -530,19 +504,10 @@ async def update_confidence(node_id: str, payload: KnowledgeConfidenceUpdate, us
     fields = confidence_to_node_fields(conf)
     status = fields["status"]
 
-    set_doc = {
-        "user_id": user["id"], "node_id": node_id, "roadmap_version": version,
-        **fields,
-        "updated_at": _now_iso(),
-    }
-    # Stamp completion_date when transitioning into completed/mastered.
     if status in (STATUS_COMPLETED, STATUS_MASTERED):
-        set_doc["completion_date"] = _now_iso()
-    await db.knowledge_nodes.update_one(
-        {"user_id": user["id"], "node_id": node_id, "roadmap_version": version},
-        {"$set": set_doc},
-        upsert=True,
-    )
+        fields["completion_date"] = _now_iso()
+    await upsert_progress_fields(db, user_id=user["id"], roadmap_version=version,
+                                 node_id=node_id, fields=fields, source="confidence_update")
     return {"ok": True, "node_id": node_id, "confidence": conf, "status": status}
 
 
@@ -558,33 +523,19 @@ async def update_status(node_id: str, payload: KnowledgeStatusUpdate, user=Depen
 
     status = payload.status
     now = _now_iso()
-    set_doc = {
-        "user_id": user["id"], "node_id": node_id, "roadmap_version": version,
-        "status": status, "updated_at": now,
-    }
-    # When marking completed/mastered, snap sensible defaults if the row was empty.
+    fields = {"status": status}
     if status in (STATUS_COMPLETED, STATUS_MASTERED):
-        set_doc["completion_date"] = now
-        # Load existing row for confidence lookup and mastery baseline check.
+        fields["completion_date"] = now
         existing = await db.knowledge_nodes.find_one(
-            {"user_id": user["id"], "node_id": node_id, "roadmap_version": version},
-            {"mastery_percentage": 1, "confidence": 1},
+            {"user_id": user["id"], "node_id": node_id, "roadmap_version": version}, {"_id": 0},
         ) or {}
-        # Schedule a first revision via canonical Revision Engine (confidence-adjusted).
-        existing_conf = int(existing.get("confidence", 6))
-        set_doc["next_revision"] = first_revision_date(existing_conf)
-        # Bump mastery baseline if none yet.
-        if not existing.get("mastery_percentage"):
-            set_doc["mastery_percentage"] = 100.0 if status == STATUS_MASTERED else 80.0
-        if not existing.get("confidence"):
-            set_doc["confidence"] = 9.0 if status == STATUS_MASTERED else 7.0
+        actual = certified_fields(existing)
+        fields["next_revision"] = first_revision_date(int(actual.get("confidence", 6)))
+        # A completion records completion; it does not measure mastery/confidence.
     elif status == STATUS_REVISION_DUE:
-        set_doc["next_revision"] = now
-    await db.knowledge_nodes.update_one(
-        {"user_id": user["id"], "node_id": node_id, "roadmap_version": version},
-        {"$set": set_doc},
-        upsert=True,
-    )
+        fields["next_revision"] = now
+    await upsert_progress_fields(db, user_id=user["id"], roadmap_version=version,
+                                 node_id=node_id, fields=fields, source="status_update")
     return {"ok": True, "node_id": node_id, "status": status}
 
 
@@ -643,23 +594,12 @@ async def record_attempt(node_id: str, payload: KnowledgeAttemptUpdate, user=Dep
     if payload.actual_minutes:
         inc_doc["actual_solve_minutes"] = int(payload.actual_minutes)
 
-    await db.knowledge_nodes.update_one(
-        {"user_id": user["id"], "node_id": node_id, "roadmap_version": version},
-        {
-            "$inc": inc_doc,
-            "$set": {
-                "user_id": user["id"], "node_id": node_id, "roadmap_version": version,
-                "updated_at": _now_iso(),
-            },
-            # If this is a brand-new row, seed status to in_progress.
-            "$setOnInsert": {"status": STATUS_IN_PROGRESS},
-        },
-        upsert=True,
-    )
-    row = await db.knowledge_nodes.find_one(
-        {"user_id": user["id"], "node_id": node_id, "roadmap_version": version},
-        {"_id": 0, "attempts": 1, "actual_solve_minutes": 1},
+    await upsert_progress_fields(db, user_id=user["id"], roadmap_version=version,
+                                 node_id=node_id, fields={}, source="attempt", increments=inc_doc)
+    raw = await db.knowledge_nodes.find_one(
+        {"user_id": user["id"], "node_id": node_id, "roadmap_version": version}, {"_id": 0},
     ) or {}
+    row = certified_fields(raw)
     return {
         "ok": True, "node_id": node_id,
         "attempts": int(row.get("attempts", 0)),

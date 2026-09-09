@@ -267,8 +267,7 @@ export function useSetNodeStatus() {
  * Save confidence (0-10) for a knowledge node.
  *
  * Optimistic:  node.progress.confidence updates instantly.
- * Invalidates: only the deep-node view (confidence doesn't move
- *              top-level dashboard counters).
+ * Invalidates: actual mastery/completion rollups and readiness consumers.
  */
 export function useSetNodeConfidence() {
   const qc = useQueryClient();
@@ -288,8 +287,9 @@ export function useSetNodeConfidence() {
       toast.error(formatApiError(err));
     },
     onSettled: (_data, _err, { nodeId }) => {
-      qc.invalidateQueries({ queryKey: qk.roadmapNode(userId, nodeId) });
-      qc.invalidateQueries({ queryKey: qk.roadmapTree(userId) });
+      nodeAffectedKeys(userId, nodeId).forEach((k) => qc.invalidateQueries({ queryKey: k }));
+      qc.invalidateQueries({ queryKey: qk.dashboard(userId) });
+      qc.invalidateQueries({ queryKey: qk.revisions(userId) });
     },
   });
 }

@@ -9,8 +9,6 @@ same `knowledge_nodes` collection the same way.
 """
 from __future__ import annotations
 
-import uuid
-from datetime import datetime, timezone
 from typing import Dict, Iterable, Optional
 
 
@@ -31,7 +29,7 @@ def _normalize_status(raw: Optional[str]) -> str:
     return raw or "not_started"
 
 
-def build_canonical_progress(roadmap, progress_rows: Optional[Dict[str, dict]] = None) -> Dict[str, dict]:
+def _aggregate_progress(roadmap, progress_rows: Optional[Dict[str, dict]] = None) -> Dict[str, dict]:
     """Return canonical progress rollups keyed by roadmap node id."""
     progress_rows = progress_rows or {}
     cache: Dict[str, dict] = {}
@@ -168,6 +166,41 @@ def build_canonical_progress(roadmap, progress_rows: Optional[Dict[str, dict]] =
     return cache
 
 
+def build_canonical_progress(roadmap, progress_rows=None, onboarding=None):
+    """Certified actual rollups with separate, explicitly unverified legacy views.
+
+    Aggregation math is unchanged. Only the admissible evidence population changes.
+    Onboarding is a subject declaration, never a topic completion projection here.
+    """
+    from services.evidence import actual_row, legacy_fields, LEGACY
+    rows = progress_rows or {}
+    actual = _aggregate_progress(roadmap, {nid: actual_row({**row, "node_id": nid}, roadmap) for nid, row in rows.items()})
+    legacy_rows = {nid: legacy_fields(row) for nid, row in rows.items() if legacy_fields(row)}
+    legacy = _aggregate_progress(roadmap, legacy_rows)
+    baseline = (onboarding or {}).get("self_assessment") or {}
+    # Only authored onboarding fields are declarations; independent tracks have none.
+    from models import OnboardingSelfAssessment
+    baseline = {key: float(value) * 10 for key, value in baseline.items()
+                if key in OnboardingSelfAssessment.model_fields}
+    for nid, roll in actual.items():
+        node = roadmap.get(nid) or {}
+        track = node.get("track") or nid
+        roll["metric_basis"] = "certified_actual"
+        roll["onboarding_baseline"] = baseline.get(track)
+        # Include a legacy aggregate only when a descendant actually has stored state.
+        stack = [nid]
+        has_legacy = False
+        while stack:
+            child_id = stack.pop()
+            if child_id in legacy_rows:
+                has_legacy = True
+                break
+            stack.extend(child["id"] for child in roadmap.children(child_id))
+        roll["legacy_progress"] = ({**legacy.get(nid, {}), "classification": LEGACY,
+                                    "stored_fields": legacy_rows.get(nid)} if has_legacy else None)
+    return actual
+
+
 def count_remaining_learning_nodes(roadmap, progress_rows: Dict[str, dict]) -> int:
     """Count roadmap learning nodes not yet completed/mastered.
 
@@ -183,16 +216,19 @@ def count_remaining_learning_nodes(roadmap, progress_rows: Dict[str, dict]) -> i
     return remaining
 
 
-async def load_user_progress_rows(db, user_id: str) -> Dict[str, dict]:
+async def load_user_progress_rows(db, user_id: str, roadmap_version=None) -> Dict[str, dict]:
     """Canonical loader for a user's `knowledge_nodes` rows, keyed by node_id.
 
     Single shared query used by every consumer (Roadmap API, Mission Engine,
     dashboard readiness) instead of each route module querying the collection
     independently.
     """
+    from roadmap import CURRENT_VERSION
+    version = roadmap_version or CURRENT_VERSION
     cur = db.knowledge_nodes.find({"user_id": user_id}, {"_id": 0})
     docs = await cur.to_list(length=2000)
-    return {d["node_id"]: d for d in docs}
+    # A missing version cannot safely be assigned to the current curriculum.
+    return {d["node_id"]: d for d in docs if d.get("roadmap_version") == version}
 
 
 def score_to_node_fields(score: float) -> dict:
@@ -287,61 +323,14 @@ def _node_stage_index(node: dict) -> int:
     return len(_STAGE_ORDER)
 
 
-async def seed_knowledge_nodes_from_self_assessment(
-    db, user_id: str, self_assessment: Dict[str, float], roadmap,
-) -> int:
-    """Onboarding-only baseline seed of `knowledge_nodes` from self-assessment.
+def onboarding_planner_projection(self_assessment, roadmap):
+    """Existing stage projection, runtime only. Never persisted or actual evidence.
 
-    Each track's self-assessment slider (1-10) selects a starting learning
-    STAGE for that track (`_stage_for_rating`) rather than stamping one
-    identical confidence/mastery value onto every node in the track:
-
-      - Nodes at a stage BELOW the learner's starting stage are seeded as
-        already understood (`status="completed"`, a solid but non-mastered
-        baseline) — this is what legitimately makes later-stage nodes
-        eligible, e.g. DSA=8 marks foundation/core/intermediate nodes
-        understood so advanced DP becomes reachable through the real
-        prerequisite chain instead of everything being flatly identical.
-      - Nodes AT the learner's starting stage are seeded proportionally to
-        their actual rating (status="in_progress") — still differentiates
-        e.g. a 5 from a 6 even though both land in "intermediate".
-      - Nodes ABOVE the learner's starting stage are left unseeded (no row)
-        — a genuine cold start, never pre-unlocked from a slider alone.
-
-    Tracks with no stage progression (every node carries the flat
-    "company_specific" fallback stage — behavioral/projects/resume) keep the
-    old flat/uniform baseline (`status="in_progress"` for every node), since
-    there is no stage to project a rating onto.
-
-    The initialization remains fully deterministic (pure function of the
-    rating + each node's authored `learning_stage`), preserves the existing
-    `knowledge_nodes` collection shape, and preserves this function's public
-    signature/return type. Idempotent and non-destructive — a learning node
-    that already has a `knowledge_nodes` row for this user + roadmap version
-    is always left untouched.
+    Retains the authored stage ordering and root treatment for planner compatibility.
+    PF prerequisite credit still comes from effective knowledge, exactly as before.
     """
-    cur = db.knowledge_nodes.find(
-        {"user_id": user_id, "roadmap_version": roadmap.version}, {"_id": 0, "node_id": 1},
-    )
-    existing_ids = {row["node_id"] for row in await cur.to_list(length=5000)}
-
-    now = datetime.now(timezone.utc).isoformat()
-    rows = []
+    rows = {}
     self_assessment = self_assessment or {}
-    # Curriculum Sync Phase 3: derive (never hardcode) which tracks get no
-    # baseline at all vs. a flat neutral baseline, straight from the
-    # roadmap's own `subject_prerequisites` DAG metadata.
-    #   - root_subjects: the true entry point(s) of the academic chain
-    #     (Programming Fundamentals) — never pre-seeded at all; a brand-new
-    #     learner earns progress here only by actually studying it.
-    #   - isolated_subjects: subjects with no `subject_prerequisites` AND no
-    #     `subject_unlocks` (Projects, Resume & LinkedIn, Behavioral) — the
-    #     onboarding sliders never ask about these, so they must also start
-    #     at a genuine 0% (status="not_started"), never an inherited/default
-    #     completion value. Every other roadmap track keeps the existing
-    #     flat/neutral "5" baseline (matching the "5" default used elsewhere
-    #     for unrated tracks, e.g. mission_engine.compute_readiness) so it
-    #     stays on equal footing until the learner actually engages with it.
     root_subjects = set(roadmap.root_subject_ids())
     isolated_subjects = set(roadmap.subjects_without_prerequisites()) - root_subjects
     for track in roadmap.track_ids():
@@ -357,8 +346,6 @@ async def seed_knowledge_nodes_from_self_assessment(
 
         for node in nodes:
             node_id = node["id"]
-            if node_id in existing_ids:
-                continue
 
             if not is_staged_track:
                 # Flat track (behavioral/projects/resume): uniform baseline —
@@ -377,25 +364,28 @@ async def seed_knowledge_nodes_from_self_assessment(
                     fields = score_to_node_fields(rating * 10.0)
                     fields["status"] = "in_progress"  # never "mastered" from a slider alone
 
-            existing_ids.add(node_id)
-            rows.append({
-                "id": str(uuid.uuid4()),
-                "user_id": user_id,
-                "roadmap_version": roadmap.version,
+            rows[node_id] = {
                 "node_id": node_id,
+                "roadmap_version": roadmap.version,
                 **fields,
-                "last_revision": None,
-                "next_revision": None,
-                "revision_stage": 0,
-                "completion_date": None,
-                "attempts": 0,
-                "actual_solve_minutes": 0,
-                "bookmarked": False,
-                "favorite": False,
-                "notes": None,
-                "updated_at": now,
-            })
+                "planner_progress_source": "onboarding_baseline",
+            }
+    return rows
 
-    if rows:
-        await db.knowledge_nodes.insert_many(rows)
-    return len(rows)
+
+async def seed_knowledge_nodes_from_self_assessment(db, user_id, self_assessment, roadmap):
+    """Compatibility entry point: baseline lives in onboarding, never knowledge_nodes.
+
+    Planner stage inputs are supplied by onboarding_planner_projection at runtime.
+    No historical or certified row is overwritten on onboarding updates.
+    """
+    return 0
+
+
+def planner_progress_rows(roadmap, rows, onboarding):
+    """Apply the former seed only at the planner boundary, not to evidence readers."""
+    from services.evidence import planner_row
+    scores = (onboarding or {}).get("self_assessment")
+    progress = onboarding_planner_projection(scores, roadmap) if scores is not None else {}
+    progress.update({row["node_id"]: planner_row(row) for row in rows if row.get("node_id")})
+    return list(progress.values())

@@ -1,0 +1,64 @@
+{
+  "node": "pf.intro.core",
+  "roadmap_version": "v1",
+  "production_writes": 0,
+  "characterization": {
+    "concurrent_cache_miss_provider_calls": 2,
+    "subsequent_cache_hit_provider_calls": 0,
+    "sync_adapter_probe": {
+      "unrelated_ran_inside_sdk": false,
+      "unrelated_ran_when_adapter_returned": false,
+      "adapter_ms": 100.45000026002526
+    }
+  },
+  "mongo_first_cache_lookup_ms": 354.9986002035439,
+  "mongo_warm_cache_lookup_ms": 36.32099973037839,
+  "mongo_cache_hit": true,
+  "mongo_cache_indexes": {
+    "_id_": {
+      "v": 2,
+      "key": [
+        [
+          "_id",
+          1
+        ]
+      ]
+    }
+  },
+  "mongo_cached_documents": 11,
+  "configured_chain": [
+    {
+      "provider": "openrouter",
+      "models": [
+        "google/gemini-2.5-flash",
+        "openai/gpt-4.1-mini",
+        "qwen/qwen3-30b-a3b-instruct-2507"
+      ]
+    },
+    {
+      "provider": "gemini-primary",
+      "models": [
+        "gemini-2.5-flash"
+      ]
+    }
+  ],
+  "live_probe": {
+    "adapter_attempts": [
+      {
+        "provider": "openrouter",
+        "model": "google/gemini-2.5-flash",
+        "ms": 20373.15980019048
+      }
+    ],
+    "prompt_build_ms": 0.023799948394298553,
+    "prompt_chars": 2356,
+    "facade_gateway_ms": 20373.247899580747,
+    "parse_validate_ms": 0.12099975720047951,
+    "response_chars": 10460,
+    "success": true,
+    "generation_total_ms": 20375.014299992472,
+    "max_event_loop_lag_ms": 3883.8376002572477,
+    "mongo_write_ms": null,
+    "note": "Real provider request; cache miss/write simulated in memory. Not a browser or HTTP latency measurement."
+  }
+}
