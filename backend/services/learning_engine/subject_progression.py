@@ -172,23 +172,52 @@ def _derive_subject_status(
     if subject_prereqs and not all(sp in completed_subjects for sp in subject_prereqs):
         return "locked"
 
-    # Gate 1.5: effective completion (planner-only).
+    # Gate 1.5: completion status (planner-only).
     # When the planner's unified completed_subjects set already contains
-    # this track (via actual node completion OR onboarding-derived
-    # effective knowledge), treat it as "completed" for scheduling
-    # purposes.  This prevents the session pipeline from serving
-    # entry-level nodes on a track the learner has declared mastery of.
+    # this track, we must distinguish:
     #
-    # We still distinguish "completed" from "mastered": mastered requires
-    # every node actually done.  The effective-completion path can only
-    # produce "completed" because no actual nodes have been touched.
+    #   ACTUAL completion  — the learner has real certified progress on
+    #       enough nodes that the track is genuinely finished.
+    #   EFFECTIVE completion — the onboarding self-assessment score
+    #       exceeds the threshold, but the curriculum has NOT been
+    #       traversed (all "completed" rows are onboarding baselines).
+    #
+    # Actual completion  → "mastered" or "completed" (stops scheduling).
+    # Effective-only     → "effectively_completed" (session pipeline
+    #                       engages at P6, the walker finds the first
+    #                       advanced-stage incomplete node, and the
+    #                       learner is routed to genuine gaps rather
+    #                       than beginner content).
     if track_id in completed_subjects:
         all_done = all(
             (progress_map.get(n["id"], {}).get("status") or "").lower()
             in _COMPLETED_STATUSES
             for n in track_nodes
         )
-        return "mastered" if all_done else "completed"
+        if all_done:
+            return "mastered"
+        # Check whether any node has ACTUAL (certified) completion.
+        # The evidence pipeline stamps onboarding-seeded rows with
+        # planner_progress_source="onboarding_baseline"; certified real
+        # progress gets "certified_actual".  Unverified legacy rows
+        # ("unverified_legacy" or absent) must NOT be treated as
+        # certified evidence — only "certified_actual" qualifies.
+        has_actual_completion = any(
+            (progress_map.get(n["id"], {}).get("status") or "").lower()
+            in _COMPLETED_STATUSES
+            and progress_map.get(n["id"], {}).get("planner_progress_source")
+            == "certified_actual"
+            for n in track_nodes
+        )
+        if has_actual_completion:
+            return "completed"
+        # Effectively completed only — the learner declared knowledge
+        # via onboarding but has not traversed the curriculum.  Return
+        # "effectively_completed" — a distinct status the session
+        # pipeline's P6 (enrichment) can service, BELOW P5 (newly
+        # eligible subjects).  This prevents effectively-completed
+        # tracks from starving genuinely new/eligible subjects.
+        return "effectively_completed"
 
     # Gate 2: any progress at all?
     has_progress = any(
@@ -662,7 +691,9 @@ def select_subjects_for_today(
     3. Serve assessment due
     4. Continue active subject (continuity)
     5. Start newly eligible subject
-    6. Elective enrichment
+    6. Resume effectively-completed subject (onboarding-declared mastery,
+       no actual curriculum traversal — advanced nodes still need work)
+    7. Elective enrichment
     """
     selected: List[Tuple[SubjectLearningSession, str]] = []
     used_tracks: Set[str] = set()
@@ -681,7 +712,8 @@ def select_subjects_for_today(
 
     schedulable = {
         tid: s for tid, s in sessions.items()
-        if s.status in ("eligible", "active", "paused", "completed")
+        if s.status in ("eligible", "active", "paused", "completed",
+                        "effectively_completed")
     }
 
     # Priority 1: Unfinished sessions (mid-lifecycle topics)
@@ -732,6 +764,20 @@ def select_subjects_for_today(
                 break
             _add(s, "new_subject")
 
+    # Priority 6: Effectively-completed subjects — onboarding declared
+    # mastery but curriculum not traversed.  The walker will pick the
+    # first advanced-stage incomplete node so the learner is routed to
+    # genuine gaps, not beginner content.
+    if len(selected) < max_subjects:
+        eff_completed = [
+            s for tid, s in schedulable.items()
+            if s.status == "effectively_completed" and tid not in used_tracks
+        ]
+        for s in eff_completed:
+            if len(selected) >= max_subjects:
+                break
+            _add(s, "resume_declared")
+
     return selected[:max_subjects]
 
 
@@ -764,6 +810,10 @@ def explain_task_selection(
             f"last active {session.days_since_activity or '?'} days ago"
         ),
         "elective": f"{session.track_label} for enrichment",
+        "resume_declared": (
+            f"Advanced {topic} in {session.track_label} \u2014 "
+            f"you declared knowledge here, time to verify and deepen"
+        ),
     }
     return templates.get(scheduling_reason, f"Studying {topic}")
 

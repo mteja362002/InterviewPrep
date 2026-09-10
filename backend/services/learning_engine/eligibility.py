@@ -116,10 +116,15 @@ def eligible_learning_nodes(
     eligible: List[dict] = []
     for node in unlocked:
         node_id = node.get("id")
-        # Skip both fully-completed and virtually-completed nodes — a
-        # virtually-completed track's nodes are treated as done, not as
-        # today's next step.
-        if node_id in completed_ids or node_id in skip_ids or node_id in virtual:
+        # Skip nodes that are fully completed (actual or onboarding-seeded
+        # lower-stage) or explicitly skipped.  Do NOT exclude virtual-
+        # completed nodes here: the virtual set exists for DAG unlocking
+        # (lines 104-114 above) so dependent tracks get properly opened,
+        # but advanced-stage nodes from effectively-completed tracks must
+        # remain eligible — the onboarding seed already marks lower-stage
+        # nodes as "completed" (which lands in completed_ids), while
+        # advanced nodes retain "in_progress" status and stay eligible.
+        if node_id in completed_ids or node_id in skip_ids:
             continue
         subject_state = subject_states.get(node.get("track"))
         if subject_state is None:

@@ -476,14 +476,35 @@ export default function AIMentor() {
                 ))}
               </AnimatePresence>
               {m.sending && (
-                <div className="flex gap-3 py-4">
+                <motion.div
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex gap-3 py-4"
+                  data-testid="mentor-typing-indicator"
+                >
                   <div className="h-9 w-9 rounded-lg bg-primary/15 border border-primary/30 flex items-center justify-center shrink-0">
-                    <Loader2 className="h-4 w-4 text-primary animate-spin" />
+                    <Sparkles className="h-4 w-4 text-primary" />
                   </div>
-                  <div className="rounded-2xl px-4 py-3 border hairline bg-foreground/[0.02] text-sm text-muted-foreground">
-                    Mentor is thinking…
+                  <div className="rounded-2xl px-4 py-3 border hairline bg-foreground/[0.02] flex items-center gap-1.5">
+                    <span className="text-xs text-muted-foreground mr-1.5">Thinking</span>
+                    {[0, 1, 2].map((i) => (
+                      <span
+                        key={i}
+                        className="inline-block h-1.5 w-1.5 rounded-full bg-primary/70"
+                        style={{
+                          animation: 'mentorDotBounce 1.4s infinite ease-in-out',
+                          animationDelay: `${i * 0.16}s`,
+                        }}
+                      />
+                    ))}
+                    <style>{`
+                      @keyframes mentorDotBounce {
+                        0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+                        40% { transform: scale(1); opacity: 1; }
+                      }
+                    `}</style>
                   </div>
-                </div>
+                </motion.div>
               )}
             </div>
           </div>

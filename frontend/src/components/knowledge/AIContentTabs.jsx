@@ -41,13 +41,24 @@ export function AIContentTabs({ nodeId }) {
 
   const handleGenerate = ({ regenerate = false } = {}) => generate({ regenerate });
 
+  /* ---- Loading: shimmer skeleton mimicking the real content layout ---- */
   if (loading) {
     return (
       <GlassCard className="p-6" data-testid="ai-content-loading">
-        <div className="flex items-center gap-2 text-muted-foreground text-sm">
-          <Loader2 className="h-4 w-4 animate-spin" />
-          <span className="overline">Loading AI content</span>
+        <ContentSkeleton />
+      </GlassCard>
+    );
+  }
+
+  /* ---- Generating: show shimmer overlay with honest "Generating" label ---- */
+  if (generating) {
+    return (
+      <GlassCard className="p-6" data-testid="ai-content-generating">
+        <div className="flex items-center gap-3 mb-4">
+          <Loader2 className="h-4 w-4 text-primary animate-spin" />
+          <span className="text-sm text-muted-foreground">Generating content with AI&hellip;</span>
         </div>
+        <ContentSkeleton />
       </GlassCard>
     );
   }
@@ -122,6 +133,63 @@ export function AIContentTabs({ nodeId }) {
 }
 
 
+/* ---- Skeleton shimmer component ---- */
+function SkeletonBar({ className }) {
+  return (
+    <div
+      className={cn(
+        'rounded bg-white/[0.04] animate-pulse',
+        className,
+      )}
+    />
+  );
+}
+
+function ContentSkeleton() {
+  return (
+    <div className="space-y-4" data-testid="ai-content-skeleton">
+      {/* Tab strip skeleton */}
+      <div className="flex gap-2">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <SkeletonBar key={i} className="h-8 w-24" />
+        ))}
+      </div>
+      {/* Section header */}
+      <SkeletonBar className="h-4 w-40 mt-2" />
+      {/* Paragraph lines */}
+      <div className="space-y-2">
+        <SkeletonBar className="h-3 w-full" />
+        <SkeletonBar className="h-3 w-5/6" />
+        <SkeletonBar className="h-3 w-4/6" />
+      </div>
+      {/* Second section */}
+      <SkeletonBar className="h-4 w-32 mt-2" />
+      <div className="space-y-2">
+        <SkeletonBar className="h-3 w-full" />
+        <SkeletonBar className="h-3 w-3/4" />
+        <SkeletonBar className="h-3 w-5/6" />
+        <SkeletonBar className="h-3 w-2/3" />
+      </div>
+      {/* Bullet list skeleton */}
+      <div className="grid grid-cols-2 gap-4 mt-2">
+        <div className="space-y-2">
+          <SkeletonBar className="h-4 w-24" />
+          <SkeletonBar className="h-3 w-full" />
+          <SkeletonBar className="h-3 w-5/6" />
+          <SkeletonBar className="h-3 w-3/4" />
+        </div>
+        <div className="space-y-2">
+          <SkeletonBar className="h-4 w-28" />
+          <SkeletonBar className="h-3 w-full" />
+          <SkeletonBar className="h-3 w-4/6" />
+          <SkeletonBar className="h-3 w-5/6" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
 function PlaceholderBlock({ label }) {
   return (
     <div className="rounded-xl border border-dashed border-white/[0.08] bg-white/[0.015] p-8 text-center"
@@ -168,7 +236,7 @@ function EmptyState({ onGenerate, generating, error }) {
           className="h-9 text-xs"
         >
           {generating ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <Wand2 className="h-3.5 w-3.5 mr-1.5" />}
-          {generating ? 'Generating…' : 'Generate with AI'}
+          {generating ? 'Generating\u2026' : 'Generate with AI'}
         </Button>
       </div>
     </div>

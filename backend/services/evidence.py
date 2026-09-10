@@ -57,9 +57,19 @@ def planner_row(row):
 
     A track derived for legacy display MUST NOT enter the evidence-weight formula.
     The context computes that formula from actual_row exclusively.
+
+    The stamp is earned by the ``status`` field specifically, never by the row
+    as a whole. Consumers read ``planner_progress_source == ACTUAL`` to mean
+    "this node's completion is certified", so an attempt/revision write — which
+    certifies ``attempts`` or ``next_revision`` but says nothing about status —
+    must not promote an unverified legacy ``status`` into certified evidence.
+    Per-field stamps already prevent that in ``certified_fields``; collapsing
+    them to a row-level flag here would reintroduce it.
     """
-    return {**row, **certified_fields(row),
-            "planner_progress_source": ACTUAL if certified_fields(row) else row.get("planner_progress_source", LEGACY)}
+    certified = certified_fields(row)
+    return {**row, **certified,
+            "planner_progress_source": ACTUAL if "status" in certified
+            else row.get("planner_progress_source", LEGACY)}
 
 
 def historical_facts(row):

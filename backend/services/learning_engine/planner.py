@@ -287,16 +287,29 @@ async def get_today_learning_node(
             recent_track_ids=list(context.recent_track_ids or []),
         )
         if plan.task_plans:
-            # Score ALL session-pipeline candidates through the ranking
-            # engine so the deterministic priority model — not roadmap
-            # dictionary order — decides which subject gets today's
-            # primary recommendation.  Subject Progression determined
-            # what is structurally eligible; Ranking determines what is
-            # *preferred* among those candidates.
+            # Score session-pipeline candidates through the ranking
+            # engine, but respect the session pipeline's priority
+            # cascade.  Higher-priority reason_codes (P1-P5) always
+            # beat lower-priority ones (P6: resume_declared).  The
+            # ranking engine only breaks ties WITHIN the same tier.
+            _PRIORITY_TIER = {
+                "continue_session": 1, "revision_due": 2,
+                "assessment_ready": 3, "next_topic": 4,
+                "new_subject": 5, "resume_declared": 6,
+            }
+            task_plans_with_tier = [
+                (tp, _PRIORITY_TIER.get(tp.reason_code, 99))
+                for tp in plan.task_plans
+            ]
+            min_tier = min(t for _, t in task_plans_with_tier)
+            top_tier_plans = [
+                tp for tp, t in task_plans_with_tier if t == min_tier
+            ]
+
             best_priority = None
             best_tp = None
             best_node = None
-            for tp in plan.task_plans:
+            for tp in top_tier_plans:
                 node = roadmap.get(tp.node_id)
                 if node is None:
                     continue
