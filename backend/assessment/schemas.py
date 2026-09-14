@@ -247,6 +247,7 @@ class CreateAssessmentRequest(BaseModel):
 
 
 class SubmitAssessmentRequest(BaseModel):
+    # ---- existing coding fields (unchanged, backward-compatible) ----
     passed_tests: int = 0
     total_tests: int = 0
     edge_cases_passed: int = 0
@@ -256,3 +257,8 @@ class SubmitAssessmentRequest(BaseModel):
     explanation: Optional[str] = None
     code: Optional[str] = None
     solved: Optional[bool] = None
+    # ---- Sprint 3A: non-coding submission fields (additive) ----
+    response_text: Optional[str] = None      # behavioral / system_design free-text
+    selected_option: Optional[int] = None    # MCQ/theory single-question answer index
+    metadata: dict = Field(default_factory=dict)  # type-specific extensibility
+

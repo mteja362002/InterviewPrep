@@ -1,9 +1,8 @@
 """Assessment type registry — the extensibility seam.
 
-Each assessment type maps to a generator callable. Only CODING is implemented
-in Phase 3A; every other type is REGISTERED so the platform supports it
-architecturally, and raises a clear ``AssessmentTypeNotSupported`` until a
-generator is provided — no redesign needed to add one later.
+Each assessment type maps to a generator callable. Sprint 3A implements:
+CODING (canonical problem_bank), MCQ, THEORY, BEHAVIORAL, SYSTEM_DESIGN.
+Types without a registered generator raise ``AssessmentTypeNotSupported``.
 """
 from __future__ import annotations
 
@@ -19,8 +18,14 @@ class AssessmentTypeNotSupported(Exception):
 # Types the platform knows about (all future types included by design).
 SUPPORTED_TYPES = [t for t in AssessmentType]
 
-# Only these are implemented in Phase 3A.
-IMPLEMENTED_TYPES = {AssessmentType.CODING}
+# Sprint 3A: implemented assessment types.
+IMPLEMENTED_TYPES = {
+    AssessmentType.CODING,
+    AssessmentType.MCQ,
+    AssessmentType.THEORY,
+    AssessmentType.BEHAVIORAL,
+    AssessmentType.SYSTEM_DESIGN,
+}
 
 _GENERATORS: Dict[AssessmentType, Callable] = {}
 

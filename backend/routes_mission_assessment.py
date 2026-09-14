@@ -19,9 +19,32 @@ from fastapi import APIRouter, Depends, HTTPException
 from auth_utils import get_current_user
 from assessment import assessment_engine as engine
 from assessment import assessment_history as assessment_history
-from assessment.schemas import CreateAssessmentRequest
+from assessment.schemas import AssessmentType, CreateAssessmentRequest
+from services.mission_context import build_mission_context
 
 router = APIRouter(prefix="/api", tags=["mission-assessment"])
+
+
+# ---- Deterministic roadmap assessment_type → AssessmentType enum ---------- #
+# The roadmap stamps an assessment_type string on each node.  This mapping is
+# the single source of truth for how that string becomes an enum value.
+# "design" (LLD) and "system_design" (HLD) both map to SYSTEM_DESIGN — there
+# is no AssessmentType.DESIGN.  "none" means no assessment is applicable.
+
+_ROADMAP_TO_ENUM = {
+    "coding":        AssessmentType.CODING,
+    "quiz":          AssessmentType.MCQ,
+    "behavioral":    AssessmentType.BEHAVIORAL,
+    "design":        AssessmentType.SYSTEM_DESIGN,
+    "system_design": AssessmentType.SYSTEM_DESIGN,
+}
+
+
+def _resolve_assessment_type(roadmap_assessment_type: Optional[str]) -> Optional[AssessmentType]:
+    """Map a roadmap assessment_type string to an AssessmentType enum, or None."""
+    if not roadmap_assessment_type or roadmap_assessment_type == "none":
+        return None
+    return _ROADMAP_TO_ENUM.get(roadmap_assessment_type)
 
 
 def _clean(doc):
@@ -59,10 +82,11 @@ def _tasks_all_complete(mission_doc: dict) -> bool:
 
 
 def _derive_assessment_context(mission_doc: dict) -> dict:
-    """Pick the roadmap node + difficulty the assessment should target.
+    """Pick the roadmap node, difficulty, AND assessment_type.
 
     Prefer a coding (practice) task's node, else a study task's node, else the
-    mission focus topic. Reuses data already on the mission — no new generator.
+    mission focus topic. The assessment_type is resolved from the roadmap node
+    via build_mission_context — the roadmap is the single source of truth.
     """
     node_id = None
     for t in _coding_tasks(mission_doc):
@@ -78,7 +102,21 @@ def _derive_assessment_context(mission_doc: dict) -> dict:
         # last resort: the mission's recommendation insight node, else topic
         insight = mission_doc.get("recommendation_insight") or {}
         node_id = insight.get("node_id") or insight.get("id") or mission_doc.get("focus_topic")
-    return {"node_id": node_id, "difficulty": mission_doc.get("difficulty")}
+
+    # Resolve the assessment type from the roadmap node — deterministic.
+    roadmap_assessment_type = None
+    if node_id:
+        try:
+            mc = build_mission_context(node_id)
+            roadmap_assessment_type = mc.assessment_type
+        except Exception:  # node_id is a topic string, not a roadmap node
+            pass
+
+    return {
+        "node_id": node_id,
+        "difficulty": mission_doc.get("difficulty"),
+        "assessment_type": roadmap_assessment_type,
+    }
 
 
 async def _linked_assessment(db, mission_doc: dict, user_id: str):
@@ -178,8 +216,16 @@ async def generate_mission_assessment(mission_id: str, user=Depends(get_current_
     companies = onboarding.get("target_companies") or []
     target_company = companies[0] if companies else None
 
+    # Resolve the assessment type dynamically from the roadmap node.
+    resolved_type = _resolve_assessment_type(ctx.get("assessment_type"))
+    if resolved_type is None:
+        raise HTTPException(
+            status_code=400,
+            detail="This mission's topic does not have an associated assessment type.",
+        )
+
     req = CreateAssessmentRequest(
-        assessment_type="coding",
+        assessment_type=resolved_type,
         roadmap_node_id=ctx["node_id"],
         mission_id=mission_id,
         target_company=target_company,

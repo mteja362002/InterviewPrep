@@ -25,8 +25,43 @@ _CODING_RUBRIC: List[RubricDimension] = [
                     description="Structural quality heuristics of the code."),
 ]
 
+# Sprint 3A: MCQ rubric — single dimension, deterministic binary evaluation.
+_MCQ_RUBRIC: List[RubricDimension] = [
+    RubricDimension(key="accuracy", label="Accuracy", weight=1.0,
+                    description="Binary: correct answer selected or not."),
+]
+
+# Sprint 3A: Behavioral rubric — qualitative structure for feedback only.
+# No deterministic evaluator exists; this rubric supports question generation
+# and feedback structure, NOT certified evidence.
+_BEHAVIORAL_RUBRIC: List[RubricDimension] = [
+    RubricDimension(key="relevance", label="Relevance", weight=0.40,
+                    description="Response addresses the STAR scenario directly."),
+    RubricDimension(key="depth", label="Depth", weight=0.30,
+                    description="Specificity and detail of examples provided."),
+    RubricDimension(key="communication", label="Communication", weight=0.30,
+                    description="Clarity and structure of the response."),
+]
+
+# Sprint 3A: System Design rubric — qualitative structure for feedback only.
+# Covers both LLD (design) and HLD (system_design). No deterministic evaluator.
+_SYSTEM_DESIGN_RUBRIC: List[RubricDimension] = [
+    RubricDimension(key="requirements", label="Requirements Coverage", weight=0.30,
+                    description="All functional/non-functional requirements addressed."),
+    RubricDimension(key="architecture", label="Architecture Quality", weight=0.30,
+                    description="Soundness of component design and interactions."),
+    RubricDimension(key="trade_offs", label="Trade-off Analysis", weight=0.20,
+                    description="Awareness of design trade-offs and alternatives."),
+    RubricDimension(key="communication", label="Communication", weight=0.20,
+                    description="Clarity and structure of the design explanation."),
+]
+
 _RUBRICS: Dict[str, List[RubricDimension]] = {
     AssessmentType.CODING.value: _CODING_RUBRIC,
+    AssessmentType.MCQ.value: _MCQ_RUBRIC,
+    AssessmentType.THEORY.value: _MCQ_RUBRIC,  # same evaluation as MCQ
+    AssessmentType.BEHAVIORAL.value: _BEHAVIORAL_RUBRIC,
+    AssessmentType.SYSTEM_DESIGN.value: _SYSTEM_DESIGN_RUBRIC,
 }
 
 
